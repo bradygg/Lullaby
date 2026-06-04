@@ -230,8 +230,48 @@ const AD={
 };
 function getAD(a){const ks=Object.keys(AD).map(Number).sort((a,b)=>a-b);return AD[ks.reduce((p,c)=>c<=a?c:p,ks[0])];}
 const ALF={0:'Newborn',1:'1 Month',2:'2 Months',3:'3 Months',4:'4 Months',5:'5 Months',6:'6 Months',7:'7 Months',8:'8 Months',9:'9 Months',10:'10 Months',11:'11 Months',12:'12 Months'};
-const WKD={4:{s:'🫐',n:'Poppy seed',d:'Implantation happening. Neural tube forming.',tip:'Start prenatal vitamins now.'},6:{s:'🫑',n:'Pea',d:'Heart beating ~100 bpm.',tip:'First OB appointment soon.'},8:{s:'🍒',n:'Raspberry',d:'All major organs forming.',tip:'Morning sickness peaks. Ginger helps.'},10:{s:'🍓',n:'Strawberry',d:'Officially a fetus! Fingerprints forming.',tip:'First trimester screening opens.'},12:{s:'🍋',n:'Lime',d:'Sucking reflex. Miscarriage risk drops.',tip:'Most people share the news now!'},16:{s:'🥑',n:'Avocado',d:'Can make facial expressions.',tip:'You might feel first movements soon.'},20:{s:'🍌',n:'Banana',d:'Can hear sounds. Halfway there!',tip:'Anatomy scan this week!'},24:{s:'🌽',n:'Ear of corn',d:'Face fully formed. Taste buds work.',tip:'Glucose challenge test window.'},28:{s:'🍆',n:'Eggplant',d:'Eyes can open. Regular sleep cycles.',tip:'Tdap vaccine recommended.'},32:{s:'🥥',n:'Coconut',d:'Practice breathing. Gaining ~0.5lb/week.',tip:'Pack hospital bag!'},36:{s:'🥬',n:'Head of lettuce',d:'Lungs nearly ready.',tip:'Group B Strep test.'},40:{s:'🍉',n:'Small watermelon',d:'Fully developed and ready!',tip:'Any day now!'}};
-function getWD(w){const ks=Object.keys(WKD).map(Number).sort((a,b)=>a-b);return WKD[ks.reduce((p,c)=>c<=w?c:p,ks[0])];}
+const WKD={
+  4:{s:'🌱',n:'Poppy seed',d:'Implantation happening. Neural tube forming.',tip:'Start prenatal vitamins now.'},
+  5:{s:'🫘',n:'Sesame seed',d:'Heart begins beating. Brain and spinal cord forming.',tip:'Folic acid is critical right now.'},
+  6:{s:'🫑',n:'Pea',d:'Nose, ears and eyes starting to form.',tip:'First OB appointment soon.'},
+  7:{s:'🫐',n:'Blueberry',d:'Hands and feet are forming. Brain growing fast.',tip:'Morning sickness peaks around now. Ginger helps.'},
+  8:{s:'🍒',n:'Raspberry',d:'All major organs forming. Webbed fingers and toes.',tip:'Morning sickness peaks. Small frequent meals help.'},
+  9:{s:'🍇',n:'Grape',d:'Tail disappears. Baby can move, though you can\'t feel it.',tip:'Stay hydrated — amniotic fluid is mostly water.'},
+  10:{s:'🍓',n:'Strawberry',d:'Officially a fetus! Fingerprints forming.',tip:'First trimester screening opens.'},
+  11:{s:'🫒',n:'Fig',d:'Bones are hardening. Baby can hiccup.',tip:'Energy may start returning soon.'},
+  12:{s:'🍋',n:'Lime',d:'Sucking reflex developing. Miscarriage risk drops.',tip:'Most people share the news now!'},
+  13:{s:'🥚',n:'Egg',d:'Fingerprints fully formed. Vocal cords developing.',tip:'Second trimester starts — energy often returns.'},
+  14:{s:'🍑',n:'Peach',d:'Making facial expressions. Kidneys producing urine.',tip:'Best trimester for travel and exercise for many.'},
+  15:{s:'🍎',n:'Apple',d:'Can sense light. Legs now longer than arms.',tip:'You may start feeling flutters soon.'},
+  16:{s:'🥑',n:'Avocado',d:'Can make facial expressions. Circulatory system working.',tip:'You might feel first movements (quickening) soon.'},
+  17:{s:'🍐',n:'Pear',d:'Fat starting to form under skin. Skeleton hardening.',tip:'Round ligament pain is common now — normal!'},
+  18:{s:'🫑',n:'Bell pepper',d:'Yawning, hiccupping, swallowing. Can hear your voice.',tip:'Talk and sing to baby — they can hear you!'},
+  19:{s:'🥭',n:'Mango',d:'Vernix coating forming. Sensory development rapid.',tip:'Sleep on your left side for best circulation.'},
+  20:{s:'🍌',n:'Banana',d:'Can hear sounds. Halfway there! Hair covering body.',tip:'Anatomy scan this week!'},
+  21:{s:'🥕',n:'Carrot',d:'Eyebrows and eyelids fully formed.',tip:'Iron needs increase — eat iron-rich foods.'},
+  22:{s:'🌽',n:'Corn cob',d:'Lips and eyes more distinct. Grip reflex developing.',tip:'Start thinking about childbirth classes.'},
+  23:{s:'🍆',n:'Large eggplant',d:'Sense of movement developing. Can feel you dancing!',tip:'Glucose test coming up at 24–28 weeks.'},
+  24:{s:'🌽',n:'Ear of corn',d:'Face fully formed. Taste buds work. Lungs developing.',tip:'Glucose challenge test window. Start kick counting.'},
+  25:{s:'🥦',n:'Head of broccoli',d:'Nostrils begin to open. Startle reflex present.',tip:'Heartburn common now — eat smaller meals.'},
+  26:{s:'🥬',n:'Bunch of kale',d:'Eyes beginning to open. Inhaling and exhaling amniotic fluid.',tip:'Consider a hospital tour this trimester.'},
+  27:{s:'🥒',n:'Cucumber',d:'Brain tissue developing rapidly. Can recognize your voice.',tip:'Third trimester starts next week!'},
+  28:{s:'🍆',n:'Eggplant',d:'Eyes can open. Regular sleep/wake cycles.',tip:'Tdap vaccine recommended. RhoGAM if Rh negative.'},
+  29:{s:'🎃',n:'Small butternut squash',d:'Muscle tone developing. Head may be turning down.',tip:'Kick counts — 10 kicks in 2 hours.'},
+  30:{s:'🥥',n:'Large coconut',d:'Brain has billions of neurons. Lanugo starting to disappear.',tip:'Pack hospital bag soon!'},
+  31:{s:'🍈',n:'Honeydew melon',d:'All five senses working. Rapid weight gain begins.',tip:'Sleeping gets harder — pillow between knees helps.'},
+  32:{s:'🥥',n:'Coconut',d:'Practice breathing movements. Gaining ~0.5lb/week.',tip:'Start kick counting daily. Pack hospital bag!'},
+  33:{s:'🍍',n:'Pineapple',d:'Bones hardening except skull. Immune system developing.',tip:'Braxton Hicks contractions are normal now.'},
+  34:{s:'🎾',n:'Large cantaloupe',d:'Fingernails fully grown. Central nervous system maturing.',tip:'Group B Strep test coming at 35–37 weeks.'},
+  35:{s:'🥬',n:'Romaine lettuce',d:'Kidneys fully developed. Liver processing waste.',tip:'Baby could safely arrive now. Hospital bag packed?'},
+  36:{s:'🥬',n:'Head of lettuce',d:'Lungs nearly ready. Dropping lower in pelvis.',tip:'Group B Strep test. Weekly appointments begin.'},
+  37:{s:'🌿',n:'Bunch of chard',d:'Full term! Grasp is firm enough to hold your finger.',tip:'Baby is considered early term — still developing!'},
+  38:{s:'🎃',n:'Small pumpkin',d:'Vocal cords complete. Brain and lungs still maturing.',tip:'Any day now could be the day!'},
+  39:{s:'🍉',n:'Mini watermelon',d:'Chest is prominent. Billions of neurons connected.',tip:'Know your labor signs. Bag packed?'},
+  40:{s:'🍉',n:'Small watermelon',d:'Fully developed and ready! Skull bones flexible for birth.',tip:'Any day now! Know your labor signs.'},
+  41:{s:'🎃',n:'Large pumpkin',d:'Still growing! Post-term monitoring begins.',tip:'Talk to your provider about induction options.'},
+  42:{s:'🎃',n:'Very large pumpkin',d:'Post-term. Provider will discuss next steps.',tip:'Follow your provider\'s guidance closely.'},
+};
+function getWD(w){return WKD[w]||WKD[40];}
 const SOLIDS=[
   {name:'Avocado',e:'🥑',al:false,nut:['Healthy fats','Folate'],prep6:['Halve, remove pit, scoop flesh','Mash with fork until smooth','Thin with breastmilk if needed','Serve 1–2 tsp'],prep8:['Mash with fork — leave some texture','Small soft 1cm pieces OK'],prep10:['Baton strips — must squish between fingers'],tex6:'Smooth puree',tex8:'Soft mash',tex10:'Soft strips'},
   {name:'Sweet Potato',e:'🍠',al:false,nut:['Vitamin A','Vitamin C','Fiber'],prep6:['Peel and cube','Steam 15 min until very soft','Blend until completely smooth'],prep8:['Steam soft, mash with fork'],prep10:['1cm cubes — must squish between fingers'],tex6:'Smooth puree',tex8:'Mashed',tex10:'Soft cubes'},
@@ -397,15 +437,38 @@ function daysL(){if(!S.pregDue)return'—';const d=Math.ceil((new Date(S.pregDue
 function rWeek(){
   const el=document.getElementById('p-week');if(!el)return;
   const w=calcW();const wd=getWD(w);const pct=Math.round((w/40)*100);
-  let h=`<div class="wk-hero"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div><div style="font-size:9px;color:#C4B5FD;text-transform:uppercase;font-weight:600">Week ${w} of 40</div><div style="font-size:10px;color:#A78BFA;margin-top:1px">${trimOf(w)}</div></div><div style="text-align:right"><div style="font-size:9px;color:#7A6AAA">Due Date</div><div style="font-size:13px;color:#C4B5FD;font-weight:500">${S.pregDue||'Not set'}</div></div></div><div class="size-big">${wd.s}</div><div style="text-align:center;margin-bottom:8px"><div style="font-size:18px;font-weight:700;color:#F5EEFF">Size of a ${wd.n}</div><div style="font-size:11px;color:#8875B0;margin-top:1px">${daysL()} to go</div></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><div style="display:flex;justify-content:space-between;font-size:8px;color:#7A6AAA"><span>Week 1</span><span>${pct}%</span><span>Week 40</span></div></div>`;
-  h+=`<div class="panel"><div style="font-size:13px;color:#EDE8FA;font-weight:500;margin-bottom:5px">🍼 Baby this week</div><div style="font-size:11px;color:#9B87BF;line-height:1.7">${wd.d}</div></div>`;
-  h+=`<div class="good-box">💡 ${wd.tip}</div>`;
+  let h=`<div class="wk-hero"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div><div id="wk-num" style="font-size:9px;color:#C4B5FD;text-transform:uppercase;font-weight:600">Week ${w} of 40</div><div id="wk-tri" style="font-size:10px;color:#A78BFA;margin-top:1px">${trimOf(w)}</div></div><div style="text-align:right"><div style="font-size:9px;color:#7A6AAA">Due Date</div><div style="font-size:13px;color:#C4B5FD;font-weight:500">${S.pregDue||'Not set'}</div></div></div><div class="size-big">${wd.s}</div><div style="text-align:center;margin-bottom:8px"><div id="wk-size-name" style="font-size:18px;font-weight:700;color:#F5EEFF">Size of a ${wd.n}</div><div id="wk-days" style="font-size:11px;color:#8875B0;margin-top:1px">${daysL()} to go</div></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><div style="display:flex;justify-content:space-between;font-size:8px;color:#7A6AAA"><span>Week 1</span><span id="wk-pct">${pct}%</span><span>Week 40</span></div></div>`;
+  h+=`<div class="panel"><div style="font-size:13px;color:#EDE8FA;font-weight:500;margin-bottom:5px">🍼 Baby this week</div><div id="wk-dev" style="font-size:11px;color:#9B87BF;line-height:1.7">${wd.d}</div></div>`;
+  h+=`<div id="wk-tip" class="good-box">💡 ${wd.tip}</div>`;
   h+=shd('Week Selector');
   h+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><input type="range" min="4" max="42" value="${w}" id="week-slider" style="flex:1;accent-color:#A066FF"><span style="font-size:13px;color:#D4C0F5;min-width:28px" id="week-lbl">W${w}</span></div>`;
   h+=shd('Labor Signs');
   [{s:'Regular contractions',d:'5-1-1 rule: 5 min apart, 1 min long, 1 hour — call provider',c:'#F87171'},{s:'Water breaks',d:'Clear/pinkish fluid — call provider immediately',c:'#FB923C'},{s:'Bloody show',d:'Pink or brown mucus — labor hours or days away',c:'#FCA5A5'},{s:'Baby drops (lightening)',d:'Easier to breathe, more pelvic pressure',c:'#86EFAC'}].forEach(s=>h+=`<div style="display:flex;gap:9px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="width:3px;background:${s.c};border-radius:3px;flex-shrink:0"></div><div><div style="font-size:12px;color:#EDE8FA;font-weight:500">${s.s}</div><div style="font-size:10px;color:#9B87BF;margin-top:1px">${s.d}</div></div></div>`);
   el.innerHTML=h;
-  document.getElementById('week-slider')?.addEventListener('input',function(){S.pregWeek=+this.value;document.getElementById('week-lbl').textContent='W'+this.value;rWeek();});
+  document.getElementById('week-slider')?.addEventListener('input',function(){
+    const w=+this.value;
+    S.pregWeek=w;
+    document.getElementById('week-lbl').textContent='W'+w;
+    // Update just the hero elements without full re-render
+    const wd=getWD(w);
+    const pct=Math.round((w/40)*100);
+    const sizeEl=document.querySelector('.size-big');
+    const nameEl=document.querySelector('.wk-hero .brand-name-week');
+    const devEl=document.querySelector('.wk-hero .dev-text');
+    const tipEl=document.querySelector('.good-box');
+    const fillEl=document.querySelector('.prog-fill');
+    const wkEl=document.querySelector('.wk-hero .wk-num');
+    const triEl=document.querySelector('.wk-hero .tri-lbl');
+    if(sizeEl)sizeEl.textContent=wd.s;
+    if(document.getElementById('wk-size-name'))document.getElementById('wk-size-name').textContent='Size of a '+wd.n;
+    if(document.getElementById('wk-days'))document.getElementById('wk-days').textContent=daysL()+' to go';
+    if(document.getElementById('wk-dev'))document.getElementById('wk-dev').textContent=wd.d;
+    if(document.getElementById('wk-tip'))document.getElementById('wk-tip').textContent='💡 '+wd.tip;
+    if(fillEl)fillEl.style.width=pct+'%';
+    if(document.getElementById('wk-pct'))document.getElementById('wk-pct').textContent=pct+'%';
+    if(document.getElementById('wk-num'))document.getElementById('wk-num').textContent='Week '+w+' of 40';
+    if(document.getElementById('wk-tri'))document.getElementById('wk-tri').textContent=trimOf(w);
+  });
 }
 
 let cActive=false,cStart=null,cIv=null;
