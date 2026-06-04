@@ -293,8 +293,8 @@ const TRIMC=[{id:'t1ob',t:'First OB appointment (8–10 weeks)',s:'Confirm pregn
 const BPQ=[{id:'pain',q:'Pain Management',opts:['Unmedicated','Epidural if needed','Definitely epidural','Open to options']},{id:'cord',q:'Cord Clamping',opts:['Delayed (1–3 min)','Immediate','Partner cuts cord']},{id:'skin',q:'Skin-to-Skin',opts:['Immediate','After assessments','As soon as possible']},{id:'feed',q:'Feeding',opts:['Breastfeeding','Formula','Combination','Undecided']},{id:'room',q:'Who\'s in the Room',opts:['Partner only','Partner + doula','Partner + parents']}];
 const VACCS={0:['Hepatitis B (1st)'],2:['DTaP','Hib','IPV','PCV15','RV','Hep B (2nd)'],4:['DTaP (2nd)','Hib (2nd)','IPV (2nd)','PCV15 (2nd)','RV (2nd)'],6:['DTaP (3rd)','Hib (3rd)','PCV15 (3rd)','Flu','Hep B (3rd)'],12:['MMR','Varicella','Hep A','PCV15 (4th)','Hib (4th)']};
 const PSYM=['Nausea','Fatigue','Heartburn','Back pain','Swelling','Headache','Insomnia','Braxton Hicks'];
-const MODE_TABS={ttc:['cycle','log','insights','checklist','ask'],preg:['week','track','appts','birthplan','checklist','ask'],baby:['schedule','track','feeds','sleep','develop','health','ask']};
-const TAB_LABELS={cycle:'🌸 Cycle',log:'📝 Log',insights:'📊 Insights',checklist:'✅ Checklist',ask:'✨ Ask',week:'🤰 Week',track:'📝 Track',appts:'📅 Appts',birthplan:'📋 Birth Plan',schedule:'📋 Schedule',feeds:'🍼 Feeds',sleep:'💤 Sleep',develop:'👶 Develop',health:'🩺 Health'};
+const MODE_TABS={ttc:['cycle','log','insights','checklist','ask'],preg:['week','track','appts','birthplan','checklist','nursery','ask'],baby:['schedule','track','feeds','sleep','develop','health','postpartum','newborn','photos','ask']};
+const TAB_LABELS={cycle:'🌸 Cycle',log:'📝 Log',insights:'📊 Insights',checklist:'✅ Checklist',ask:'✨ Ask',week:'🤰 Week',track:'📝 Track',appts:'📅 Appts',birthplan:'📋 Birth Plan',nursery:'🛏️ Nursery',schedule:'📋 Schedule',feeds:'🍼 Feeds',sleep:'💤 Sleep',develop:'👶 Develop',health:'🩺 Health',postpartum:'💙 Postpartum',newborn:'📋 Newborn',photos:'📸 Photos'};
 
 // ── STATE ──
 let S={mode:'',tab:'',babyName:'',babyAge:2,unit:'oz',logs:[],foods:[],health:{temps:[],meds:[],vaccs:[],visits:[],moods:[]},ms:{},growth:[],wtKg:null,ttMins:0,wtSets:{L:0,R:0},ttcName:'',pregName:'',pregDue:'',pregWeek:20,cycleLen:28,periodLen:5,periods:[],bbt:[],lh:[],symptoms:[],preconCheck:{},trimCheck:{},pregSymptoms:[],pregWeight:[],appts:[],kicks:[],contractions:[],birthPlan:{},hospitalBag:{},exp:null,mType:null,devTab:'activities',fsTab:'milk',solidIdx:null};
@@ -317,9 +317,37 @@ function shd(t){return`<div class="section-hd">${t}</div>`}
 function setMode(m){
   S.mode=m;
   S.tab=MODE_TABS[m][0];
+  // Auto-set birthday when entering baby mode for the first time
+  if(m==='baby'&&!S.babyBirthday){
+    const today=new Date().toISOString().slice(0,10);
+    S.babyBirthday=today;
+    // Auto-calculate age in months from birthday
+    S.babyAge=0;
+  }
   document.getElementById('screen-landing').style.display='none';
   document.getElementById('screen-app').style.display='flex';
   sv();ra();
+}
+
+// Calculate baby age in months from birthday
+function calcBabyAge(){
+  if(!S.babyBirthday)return S.babyAge||0;
+  const birth=new Date(S.babyBirthday);
+  const now=new Date();
+  let months=(now.getFullYear()-birth.getFullYear())*12+(now.getMonth()-birth.getMonth());
+  if(now.getDate()<birth.getDate())months--;
+  return Math.max(0,Math.min(12,months));
+}
+function getBabyAgeDisplay(){
+  if(!S.babyBirthday)return ALF[S.babyAge]||'?';
+  const birth=new Date(S.babyBirthday);
+  const now=new Date();
+  const days=Math.floor((now-birth)/86400000);
+  if(days<7)return days===0?'Born today! 🎉':days+' day'+(days===1?'':'s')+' old';
+  if(days<30){const w=Math.floor(days/7);return w+' week'+(w===1?'':'s')+' old';}
+  const m=calcBabyAge();
+  const rem=days-(m*30);
+  return ALF[m]+(rem>0?' + '+rem+'d':'');
 }
 function switchMode(){
   document.getElementById('screen-landing').style.display='flex';
@@ -337,7 +365,12 @@ function rHdr(){
   let stats=[];
   if(S.mode==='ttc')stats=[{l:'Cycle Day',v:cycDay()||'—'},{l:'Cycle',v:S.cycleLen+'d'},{l:'Ovulation',v:'Day '+ovDay()},{l:'Next Period',v:nextP()}];
   else if(S.mode==='preg'){const w=calcW();stats=[{l:'Week',v:w},{l:'Trimester',v:trimOf(w)},{l:'Days Left',v:daysL()},{l:'Due',v:S.pregDue||'Not set'}];}
-  else{const d=getAD(S.babyAge);stats=[{l:'Age',v:ALF[S.babyAge]||'?'},{l:'Wake Win',v:d.ww},{l:'Naps',v:d.naps},{l:'Bedtime',v:d.bt}];}
+  else{
+    // Use birthday-calculated age if available
+    if(S.babyBirthday)S.babyAge=calcBabyAge();
+    const d=getAD(S.babyAge);
+    stats=[{l:'Age',v:getBabyAgeDisplay()},{l:'Wake Win',v:d.ww},{l:'Naps',v:d.naps},{l:'Bedtime',v:d.bt}];
+  }
   sb.innerHTML=stats.map((s,i)=>`<div class="stat"${i===stats.length-1?' style="border-right:none"':''}><div class="sv">${s.v}</div><div class="sl">${s.l}</div></div>`).join('');
 }
 function rNav(){
@@ -351,7 +384,7 @@ function rNav(){
   content.innerHTML=tabs.map(t=>`<div id="p-${t}" class="page${S.tab===t?' active':''}"></div>`).join('');
 }
 function rPage(){
-  const fn={cycle:rCycle,log:rTtcLog,insights:rInsights,checklist:rChecklist,ask:rAsk,week:rWeek,track:()=>S.mode==='preg'?rPregTrack():rBabyTrack(),appts:rAppts,birthplan:rBirthPlan,schedule:rSchedule,feeds:rFeeds,sleep:rSleep,develop:rDevelop,health:rHealth};
+  const fn={cycle:rCycle,log:rTtcLog,insights:rInsights,checklist:rChecklist,ask:rAsk,week:rWeek,track:()=>S.mode==='preg'?rPregTrack():rBabyTrack(),appts:rAppts,birthplan:rBirthPlan,nursery:rNursery,schedule:rSchedule,feeds:rFeeds,sleep:rSleep,develop:rDevelop,health:rHealth,postpartum:rPostpartum,newborn:rNewborn,photos:rPhotos};
   if(fn[S.tab])fn[S.tab]();
 }
 
@@ -516,10 +549,149 @@ function rAppts(){
 
 function rBirthPlan(){
   const el=document.getElementById('p-birthplan');if(!el)return;
-  let h=`<p style="font-size:12px;color:#8875B0;margin-bottom:10px;line-height:1.6">Select your preferences — share with your care team.</p>`;
-  BPQ.forEach(q=>{h+=`<div class="bp-section"><div class="bp-q">${q.q}</div><div class="bp-opts">`;q.opts.forEach(opt=>{h+=`<button class="bp-opt${S.birthPlan[q.id]===opt?' sel':''}" data-q="${q.id}" data-opt="${opt}">${opt}</button>`;});h+=`</div></div>`;});
+  if(!S.birthPlan)S.birthPlan={};
+
+  const SECTIONS=[
+    {id:'labor',title:'🕯️ Labor Environment',type:'multi',opts:[
+      'Dim lighting','Quiet room','Play my music','Wear my own clothing',
+      'Bring items from home (blankets, photos)','Aromatherapy scents',
+      'Video/photos taken during labor','I prefer minimal interruptions'
+    ]},
+    {id:'mobility',title:'🚶 Mobility',type:'single',opts:[
+      'Full mobility — walking and changing positions freely',
+      'Move around in bed, get up to use bathroom',
+      'Mobility is not a priority to me'
+    ]},
+    {id:'hydration',title:'🥤 Hydration & Nourishment',type:'single',opts:[
+      'Light snacks and clear fluids whenever possible',
+      'IV for hydration is fine if necessary',
+      'Saline lock only — no fluids or medication unless needed'
+    ]},
+    {id:'monitoring',title:'📡 Fetal Monitoring',type:'single',opts:[
+      'Minimal monitoring — only as needed',
+      'As much monitoring as possible',
+      'Mobile monitoring preferred',
+      'Fetal monitoring in bed is fine with me'
+    ]},
+    {id:'pain_nonmed',title:'💆 Pain Relief — Non-Medical',type:'multi',opts:[
+      'Relaxation techniques','Changing positions / walking',
+      'Visualization','Massage','Fitness ball',
+      'Breathing techniques','Tub / shower',
+      'Hot and cold packs'
+    ]},
+    {id:'pain_med',title:'💊 Pain Relief — Medical',type:'single',opts:[
+      'Open to analgesic medication',
+      'Prefer epidural anesthesia',
+      'Prefer pain medication only if I ask for it',
+      'Prefer to avoid all medical pain relief if possible'
+    ]},
+    {id:'augmentation',title:'⏱️ If Labor Slows Down',type:'single',opts:[
+      'Try non-medical methods first (walking, upright positions)',
+      'Okay with provider breaking my bag of waters',
+      'Prefer bag of waters breaks on its own',
+      'Open to IV Pitocin — understand benefits and risks',
+      'Pitocin only after all other methods tried and only if medically necessary'
+    ]},
+    {id:'pushing',title:'🫁 Pushing',type:'multi',opts:[
+      'Wait to push until I feel the urge or baby descends',
+      'Use a variety of pushing positions',
+      'Mirror placed so I can watch baby\'s birth',
+      'Push when I feel like it (self-directed)',
+      'Prefer to be directed when to push',
+      'Prefer natural tearing over episiotomy',
+      'Episiotomy is okay if needed',
+      'Avoid forceps / vacuum unless absolutely necessary',
+      'I would like to touch baby\'s head as it crowns',
+      'Provider hands baby to me immediately if no complications'
+    ]},
+    {id:'cord',title:'🧬 Umbilical Cord',type:'single',opts:[
+      'Delayed cord clamping (wait until cord stops pulsing)',
+      'Immediate cord clamping',
+      'Partner / support person cuts the cord',
+      'I would like to donate cord blood'
+    ]},
+    {id:'skin',title:'👶 After Birth — Skin-to-Skin',type:'single',opts:[
+      'Immediate skin-to-skin and breastfeed as soon as possible',
+      'Skin-to-skin after routine assessments are done',
+      'Partner does skin-to-skin if I am unable',
+      'As soon as medically possible'
+    ]},
+    {id:'newborn',title:'🩺 Newborn Procedures',type:'single',opts:[
+      'All routine tests, shots, and procedures for newborn',
+      'Routine procedures done while I hold baby if possible',
+      'Prefer to choose tests — will discuss with pediatrician',
+    ]},
+    {id:'feeding',title:'🍼 Feeding',type:'single',opts:[
+      'Breastfeeding exclusively — no pacifiers, bottles, or formula',
+      'Formula feeding only',
+      'Combination of breastfeeding and formula',
+      'Undecided — will decide after birth'
+    ]},
+    {id:'rooming',title:'🛏️ Rooming',type:'single',opts:[
+      'Room in with baby at all times',
+      'Nursery care available for overnight recovery',
+      'Flexible — decide after birth'
+    ]},
+    {id:'csection',title:'🏥 If C-Section Needed',type:'multi',opts:[
+      'Partner accompanies me during surgery',
+      'Music played in operating room if possible',
+      'Drape/screen lowered so I can see the birth',
+      'Surgeon describes procedure as it progresses',
+      'Video or photos taken',
+      'Partner cuts the cord',
+      'One arm released to hold baby right away',
+      'Breastfeed as soon as possible in recovery room',
+      'Prefer epidural anesthesia (vs. general)',
+      'Prefer spinal anesthesia (vs. general)'
+    ]},
+    {id:'circumcision',title:'✂️ Circumcision (if applicable)',type:'single',opts:[
+      'Yes — prefer circumcision',
+      'No — do not want circumcision',
+      'Not applicable'
+    ]},
+  ];
+
+  let h=`<p style="font-size:12px;color:#8875B0;margin-bottom:4px;line-height:1.6">Build your birth plan by selecting your preferences. Share with your care team, labor nurse, and provider.</p>`;
+  h+=`<div class="info-box" style="margin-bottom:12px">💡 Birth plans are a guide — be flexible. Hospital policy or complications may mean adjustments. The goal is a healthy you and a healthy baby.</div>`;
+
+  // Progress
+  const filled=SECTIONS.filter(s=>S.birthPlan[s.id]&&(Array.isArray(S.birthPlan[s.id])?S.birthPlan[s.id].length>0:true)).length;
+  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:11px;color:#8875B0">${filled}/${SECTIONS.length} sections completed</div><div style="height:4px;flex:1;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin:0 10px"><div style="height:100%;width:${Math.round((filled/SECTIONS.length)*100)}%;background:linear-gradient(90deg,#7C3AED,#A855F7);border-radius:2px"></div></div></div>`;
+
+  SECTIONS.forEach(sec=>{
+    const val=S.birthPlan[sec.id];
+    const hasVal=Array.isArray(val)?val.length>0:!!val;
+    const k=`bp-${sec.id}`;const o=S.exp===k;
+    h+=`<div class="acc-wrap" style="${hasVal?'border-color:rgba(160,102,255,.3)':''}"><div class="acc-head${o?' open':''}" data-acc="${k}" style="${hasVal?'background:rgba(160,102,255,.07)':''}">
+      <div><div style="font-size:13px;color:#EDE8FA;font-weight:500">${sec.title}</div>
+      ${hasVal?`<div style="font-size:10px;color:#A066FF;margin-top:2px">${Array.isArray(val)?val.join(' · '):val}</div>`:'<div style="font-size:10px;color:#3D2E58;margin-top:2px">Not set</div>'}
+      </div><span class="chev${o?' open':''}">▾</span></div>
+      <div class="acc-body${o?' open':''}">`;
+    if(sec.type==='single'){
+      sec.opts.forEach(opt=>{const sel=(S.birthPlan[sec.id]===opt);h+=`<div style="display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer" data-bp-single="${sec.id}" data-bp-val="${opt}"><div style="width:16px;height:16px;border-radius:50%;border:2px solid ${sel?'#A066FF':'rgba(255,255,255,.2)'};background:${sel?'#A066FF':'transparent'};flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center">${sel?'<div style="width:6px;height:6px;border-radius:50%;background:#fff"></div>':''}</div><div style="font-size:12px;color:${sel?'#EDE8FA':'#9B87BF'}">${opt}</div></div>`;});
+    } else {
+      const selected=S.birthPlan[sec.id]||[];
+      sec.opts.forEach(opt=>{const sel=selected.includes(opt);h+=`<div style="display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer" data-bp-multi="${sec.id}" data-bp-val="${opt}"><div style="width:16px;height:16px;border-radius:4px;border:2px solid ${sel?'#A066FF':'rgba(255,255,255,.2)'};background:${sel?'#A066FF':'transparent'};flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">${sel?'✓':''}</div><div style="font-size:12px;color:${sel?'#EDE8FA':'#9B87BF'}">${opt}</div></div>`;});
+    }
+    h+=`</div></div>`;
+  });
+
+  // Notes
+  h+=`<div style="margin-top:12px"><div style="font-size:10px;color:#8875B0;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:5px">📝 Additional Notes / Requests</div><textarea id="bp-notes" style="width:100%;padding:10px 12px;border-radius:11px;font-size:12px;min-height:70px;resize:vertical;color:#EDE8FA;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)" placeholder="Anything else you want your care team to know...">${S.birthPlan.notes||''}</textarea></div>`;
+  h+=`<button id="bp-print" class="primary-btn" style="margin-top:10px;background:rgba(160,102,255,.18);color:#D4C0F5;border:1px solid rgba(160,102,255,.3)">📋 Copy Summary to Clipboard</button>`;
+
   el.innerHTML=h;
-  el.querySelectorAll('.bp-opt').forEach(btn=>btn.addEventListener('click',function(){S.birthPlan[this.dataset.q]=this.dataset.opt;sv();rBirthPlan();}));
+  el.querySelectorAll('[data-acc]').forEach(btn=>btn.addEventListener('click',function(){tog(this.dataset.acc);}));
+  el.querySelectorAll('[data-bp-single]').forEach(btn=>btn.addEventListener('click',function(){S.birthPlan[this.dataset.bpSingle]=this.dataset.bpVal;sv();rBirthPlan();}));
+  el.querySelectorAll('[data-bp-multi]').forEach(btn=>btn.addEventListener('click',function(){const id=this.dataset.bpMulti;const val=this.dataset.bpVal;if(!S.birthPlan[id])S.birthPlan[id]=[];if(S.birthPlan[id].includes(val))S.birthPlan[id]=S.birthPlan[id].filter(v=>v!==val);else S.birthPlan[id].push(val);sv();rBirthPlan();}));
+  document.getElementById('bp-notes')?.addEventListener('change',function(){S.birthPlan.notes=this.value;sv();});
+  document.getElementById('bp-print')?.addEventListener('click',()=>{
+    let summary=`BIRTH PLAN — ${S.pregName||'My'} Birth Plan\nDue: ${S.pregDue||'Not set'}\n\n`;
+    SECTIONS.forEach(sec=>{const val=S.birthPlan[sec.id];if(val&&(Array.isArray(val)?val.length>0:true)){summary+=`${sec.title.replace(/[^\w\s]/g,'').trim()}\n`;if(Array.isArray(val))val.forEach(v=>summary+=`  • ${v}\n`);else summary+=`  • ${val}\n`;summary+='\n';}});
+    if(S.birthPlan.notes)summary+=`Additional Notes:\n${S.birthPlan.notes}`;
+    navigator.clipboard?.writeText(summary).then(()=>alert('Birth plan copied to clipboard! Paste into Notes or email to your provider.')).catch(()=>alert('Copy failed — try selecting and copying the text manually.'));
+  });
+
 }
 
 // Baby
@@ -725,14 +897,171 @@ async function sendChat(){
   if(btn)btn.disabled=false;
 }
 
-// MODAL
+function rNursery(){
+  const el=document.getElementById('p-nursery');if(!el)return;
+  if(!S.nurseryCheck)S.nurseryCheck={};
+  const HOSPITAL=[
+    {id:'h-id',cat:'Documents',t:'ID + insurance card'},
+    {id:'h-bp',cat:'Documents',t:'Printed birth plan (3 copies)'},
+    {id:'h-cord',cat:'Documents',t:'Cord blood kit (if banking)'},
+    {id:'h-snacks',cat:'For You',t:'Snacks & drinks for labor'},
+    {id:'h-pillow',cat:'For You',t:'Comfort pillow from home'},
+    {id:'h-charger',cat:'For You',t:'Phone charger + portable battery'},
+    {id:'h-toiletries',cat:'For You',t:'Toiletries — toothbrush, shampoo, lip balm'},
+    {id:'h-robe',cat:'For You',t:'Robe or cozy layers for labor'},
+    {id:'h-gown',cat:'For You',t:'Loose going-home outfit (elastic waist!)'},
+    {id:'h-nursing',cat:'For You',t:'Nursing bra + nursing pads'},
+    {id:'h-pads',cat:'For You',t:'Extra-long pads (hospital ones run out)'},
+    {id:'h-slippers',cat:'For You',t:'Slippers + flip flops for shower'},
+    {id:'h-entertainment',cat:'For You',t:'Headphones, playlist, show downloads'},
+    {id:'h-carseat',cat:'Baby',t:'Car seat — installed + inspected'},
+    {id:'h-bodysuit',cat:'Baby',t:'2–3 newborn + 0–3mo onesies/sleepers'},
+    {id:'h-blanket',cat:'Baby',t:'Swaddle blanket'},
+    {id:'h-outfit',cat:'Baby',t:'Going-home outfit (newborn + 0–3mo sizes)'},
+    {id:'h-hat',cat:'Baby',t:'Newborn hat'},
+    {id:'h-partner',cat:'Partner',t:'Change of clothes + snacks'},
+    {id:'h-pcharger',cat:'Partner',t:'Phone charger + camera'},
+    {id:'h-pillow2',cat:'Partner',t:'Pillow + blanket (hospital chairs are rough)'},
+  ];
+  const NURSERY=[
+    {id:'n-crib',cat:'Sleep',t:'Crib or bassinet — assembled and tested'},
+    {id:'n-mattress',cat:'Sleep',t:'Firm crib mattress + 2 waterproof covers'},
+    {id:'n-sheets',cat:'Sleep',t:'3–4 fitted crib sheets'},
+    {id:'n-swaddles',cat:'Sleep',t:'4–6 swaddle blankets'},
+    {id:'n-sleepsacks',cat:'Sleep',t:'2–3 sleep sacks (newborn size)'},
+    {id:'n-monitor',cat:'Sleep',t:'Baby monitor set up and charged'},
+    {id:'n-noise',cat:'Sleep',t:'White noise machine placed and tested'},
+    {id:'n-blackout',cat:'Sleep',t:'Blackout curtains installed'},
+    {id:'n-dresser',cat:'Clothing',t:'Dresser or closet organizer ready'},
+    {id:'n-washed',cat:'Clothing',t:'All baby clothes washed in fragrance-free detergent'},
+    {id:'n-newborn',cat:'Clothing',t:'Newborn + 0–3mo outfits stocked'},
+    {id:'n-diapers',cat:'Diapering',t:'Diapers stocked — newborn + size 1'},
+    {id:'n-wipes',cat:'Diapering',t:'Wipes stocked (fragrance-free)'},
+    {id:'n-table',cat:'Diapering',t:'Changing table or pad set up'},
+    {id:'n-cream',cat:'Diapering',t:'Diaper cream (zinc oxide)'},
+    {id:'n-pail',cat:'Diapering',t:'Diaper pail + bags'},
+    {id:'n-tub',cat:'Bath',t:'Baby tub + infant insert'},
+    {id:'n-wash',cat:'Bath',t:'Baby wash + shampoo (fragrance-free)'},
+    {id:'n-towels',cat:'Bath',t:'Hooded baby towels + washcloths'},
+    {id:'n-nails',cat:'Bath',t:'Nail file or baby nail scissors'},
+    {id:'n-bottles',cat:'Feeding',t:'4–6 bottles (even if breastfeeding — backup)'},
+    {id:'n-formula',cat:'Feeding',t:'Formula on hand (even if planning to breastfeed)'},
+    {id:'n-pump',cat:'Feeding',t:'Breast pump + parts cleaned and ready'},
+    {id:'n-nursing-pillow',cat:'Feeding',t:'Nursing pillow (Boppy or similar)'},
+    {id:'n-burp',cat:'Feeding',t:'8–10 burp cloths'},
+    {id:'n-thermometer',cat:'Health',t:'Rectal thermometer'},
+    {id:'n-bulb',cat:'Health',t:'Nasal aspirator (Frida NoseFrida recommended)'},
+    {id:'n-kit',cat:'Health',t:'Baby healthcare kit (nail clippers, brush, etc.)'},
+    {id:'n-vitd',cat:'Health',t:'Vitamin D drops (for breastfed babies)'},
+    {id:'n-carseat2',cat:'On the Go',t:'Car seat base installed in car'},
+    {id:'n-stroller',cat:'On the Go',t:'Stroller assembled and tested'},
+    {id:'n-carrier',cat:'On the Go',t:'Baby carrier or wrap'},
+    {id:'n-bag',cat:'On the Go',t:'Diaper bag packed with essentials'},
+  ];
+  // Render
+  let curCat='';
+  const hdone=Object.keys(S.nurseryCheck).filter(k=>k.startsWith('h-')&&S.nurseryCheck[k]).length;
+  const ndone=Object.keys(S.nurseryCheck).filter(k=>k.startsWith('n-')&&S.nurseryCheck[k]).length;
+  let h=`<div class="tab-bar"><button class="tab-opt${(S.nurseryTab||'hospital')==='hospital'?' active':''}" data-ntab="hospital">🧳 Hospital Bag</button><button class="tab-opt${S.nurseryTab==='nursery'?' active':''}" data-ntab="nursery">🛏️ Nursery Prep</button></div>`;
+  if((S.nurseryTab||'hospital')==='hospital'){
+    h+=`<div class="info-box" style="margin-bottom:10px">${hdone}/${HOSPITAL.length} packed · Aim to have this ready by <strong style="color:#C4B5FD">36 weeks</strong></div>`;
+    curCat='';
+    HOSPITAL.forEach(item=>{
+      if(item.cat!==curCat){h+=`<div style="font-size:10px;color:#A066FF;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin:12px 0 5px">${item.cat}</div>`;curCat=item.cat;}
+      const d2=!!S.nurseryCheck[item.id];
+      h+=`<div class="cl-row"><div class="cl-check${d2?' done':''}" data-ncheck="${item.id}">${d2?'✓':''}</div><div style="font-size:12px;color:${d2?'#5A4878':'#EDE8FA'};${d2?'text-decoration:line-through':''}">${item.t}</div></div>`;
+    });
+  } else {
+    h+=`<div class="info-box" style="margin-bottom:10px">${ndone}/${NURSERY.length} ready · Aim to have this done by <strong style="color:#C4B5FD">35 weeks</strong></div>`;
+    curCat='';
+    NURSERY.forEach(item=>{
+      if(item.cat!==curCat){h+=`<div style="font-size:10px;color:#A066FF;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin:12px 0 5px">${item.cat}</div>`;curCat=item.cat;}
+      const d2=!!S.nurseryCheck[item.id];
+      h+=`<div class="cl-row"><div class="cl-check${d2?' done':''}" data-ncheck="${item.id}">${d2?'✓':''}</div><div style="font-size:12px;color:${d2?'#5A4878':'#EDE8FA'};${d2?'text-decoration:line-through':''}">${item.t}</div></div>`;
+    });
+  }
+  el.innerHTML=h;
+  el.querySelectorAll('.tab-opt').forEach(btn=>btn.addEventListener('click',function(){S.nurseryTab=this.dataset.ntab;rNursery();}));
+  el.querySelectorAll('[data-ncheck]').forEach(btn=>btn.addEventListener('click',function(){if(!S.nurseryCheck)S.nurseryCheck={};S.nurseryCheck[this.dataset.ncheck]=!S.nurseryCheck[this.dataset.ncheck];sv();rNursery();}));
+}
+
+function rPostpartum(){
+  const el=document.getElementById('p-postpartum');if(!el)return;
+  let h=`<p style="font-size:12px;color:#8875B0;margin-bottom:10px;line-height:1.6">Your recovery matters just as much as baby's care. Be patient and kind with yourself.</p>`;
+
+  h+=`<div class="tab-bar"><button class="tab-opt${(S.ppTab||'recovery')==='recovery'?' active':''}" data-pptab="recovery">💙 Recovery</button><button class="tab-opt${S.ppTab==='exercise'?' active':''}" data-pptab="exercise">🏃 Exercise</button><button class="tab-opt${S.ppTab==='mental'?' active':''}" data-pptab="mental">🧠 Mental Health</button></div>`;
+
+  if((S.ppTab||'recovery')==='recovery'){
+    h+=`<div class="warn-box">🩸 Heavy bleeding, fever over 100.4°F, severe pain, or redness/warmth at incision site → call your provider immediately.</div>`;
+    const topics=[
+      {i:'🩸',t:'Vaginal Bleeding (Lochia)',d:'Normal for 4–6 weeks. Starts bright red, gradually becomes pink then yellow/white. Heavy soaking (more than 1 pad/hour for 2+ hours) → call provider. No tampons until cleared at 6-week checkup.',k:'pp-bleed'},
+      {i:'🪡',t:'Perineal Care (Vaginal Birth)',d:'Use peri bottle with warm water after every bathroom trip. Witch hazel pads reduce swelling. Ice packs first 24 hrs. Sitz bath 2–3× daily for comfort. Kegels when cleared — start gentle. Stitches dissolve in 2–4 weeks.',k:'pp-peri'},
+      {i:'🔪',t:'C-Section Incision Care',d:'Keep incision clean and dry. Pat — never rub. No lifting more than baby for 6 weeks. Watch for redness, swelling, discharge, or separation. Support incision when coughing or laughing (pillow pressed against stomach). Numbness around scar is normal and may last months.',k:'pp-csec'},
+      {i:'💊',t:'Pain Management',d:'Ibuprofen (600mg every 6–8 hrs with food) is most effective for uterine cramping. Acetaminophen for breakthrough pain. Both are safe while breastfeeding. Stool softeners (Colace) — start the day you get home. Constipation post-birth is real and painful.',k:'pp-pain'},
+      {i:'🍽️',t:'Nutrition & Hydration',d:'If breastfeeding: eat 300–500 extra calories/day. Iron-rich foods help replenish blood loss. Oatmeal, leafy greens, lean meats. Hydration is critical — aim for 80–100oz water/day. Keep taking prenatal vitamins.',k:'pp-nutrition'},
+      {i:'😴',t:'Sleep & Rest',d:'Sleep when baby sleeps is real advice. Sleep deprivation is cumulative — even 20-min naps matter. Accept every offer of help. Lower your standards for housework. The house can wait. Your healing cannot.',k:'pp-sleep'},
+      {i:'🤱',t:'Breastfeeding Recovery',d:'Nipple soreness is normal first 2 weeks — lanolin cream after every feed. Engorgement peaks at 3–5 days — cold cabbage leaves or cold compresses between feeds. Mastitis signs (flu-like symptoms + red hard breast) → call provider same day.',k:'pp-bf'},
+      {i:'⏰',t:'6-Week Checkup',d:'Non-negotiable appointment. Provider checks incision or perineum, uterine involution, blood pressure, mood screening, contraception, and clears you for exercise and sex. Bring your questions written down.',k:'pp-6wk'},
+    ];
+    topics.forEach((t,i)=>{const k=t.k,o=S.exp===k;h+=`<div class="acc-wrap"><div class="acc-head${o?' open':''}" data-acc="${k}"><div style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">${t.i}</span><div style="font-size:13px;color:#EDE8FA;font-weight:500">${t.t}</div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-body${o?' open':''}">${t.d}</div></div>`;});
+  }
+
+  if(S.ppTab==='exercise'){
+    h+=`<div class="info-box"><strong style="color:#EDE8FA">Do not start any exercise program before your 6-week clearance</strong> — regardless of how good you feel. Your pelvic floor and core need time to heal even if you had an easy birth.</div>`;
+    const phases=[
+      {phase:'Weeks 1–2',title:'Rest & Breathe',color:'#6C8EBF',exercises:[
+        {n:'Diaphragmatic Breathing',d:'Lie on back, knees bent. Inhale deeply into belly — let it rise. Exhale slowly. 10 reps, 3× daily. Reconnects breath to pelvic floor.',sets:'10 reps, 3× daily'},
+        {n:'Gentle Kegels',d:'Only if no perineal tearing or if pain-free. Contract pelvic floor for 3–5 seconds, release fully. The RELEASE is as important as the squeeze.',sets:'5–10 reps, 2× daily'},
+        {n:'Ankle pumps & circles',d:'While lying in bed. Promotes circulation and prevents blood clots.',sets:'20 reps each direction, every hour'},
+      ]},
+      {phase:'Weeks 2–6',title:'Gentle Movement',color:'#81C784',exercises:[
+        {n:'Short walks',d:'Start with 5–10 min flat walks. Increase by 5 min per week as tolerated. Fresh air helps mood significantly.',sets:'5–10 min, increase weekly'},
+        {n:'Pelvic tilts',d:'Lie on back, knees bent. Gently flatten lower back into floor. Hold 5 sec, release. Activates deep core safely.',sets:'10 reps, 2× daily'},
+        {n:'Glute bridges (modified)',d:'Lie on back, knees bent, feet flat. Gently lift hips 2–3 inches only — not full bridge. Focus on pelvic floor engagement.',sets:'8–10 reps, 1× daily'},
+        {n:'Cat-cow stretches',d:'On hands and knees. Inhale — arch back (cow). Exhale — round spine (cat). Gentle spinal mobility.',sets:'8–10 reps, 1× daily'},
+      ]},
+      {phase:'6 Weeks+ (post-clearance)',title:'Building Back',color:'#A066FF',exercises:[
+        {n:'Walking program',d:'Build to 30 min daily walks. Low impact, effective for mood, weight, and cardiovascular fitness.',sets:'30 min daily'},
+        {n:'Full Kegel program',d:'Progress to 10-second holds, 10 reps, 3× daily. Also practice "reverse Kegels" — bearing down — to ensure full release.',sets:'10×10s, 3× daily'},
+        {n:'Bodyweight squats',d:'Feet hip-width, toes slightly out. Lower to comfortable depth. Essential functional movement for carrying baby.',sets:'3×10, progress to 3×15'},
+        {n:'Bird-dog',d:'On hands and knees. Extend opposite arm and leg. Hold 3 sec. Rebuilds core stability without loading linea alba.',sets:'3×8 each side'},
+        {n:'Pelvic floor-focused Pilates',d:'Look for postpartum-specific classes. Mutu System and Every Mother are evidence-based programs.',sets:'2–3× per week'},
+        {n:'Swimming or cycling',d:'Low-impact options once cleared. Swimming especially good for c-section recovery.',sets:'As tolerated'},
+      ]},
+    ];
+    h+=`<div class="warn-box">🚨 Stop immediately if you experience: pelvic pressure or heaviness, leaking urine/stool, pain at incision or perineum, or feeling "something falling out." These are signs to see a pelvic floor PT.</div>`;
+    h+=`<div class="good-box">💡 <strong style="color:#86EFAC">Pelvic floor physical therapy</strong> is the gold standard for postpartum recovery. Ask your OB for a referral at your 6-week visit. Covered by most insurance. Every postpartum person benefits.</div>`;
+    phases.forEach((phase,pi)=>{
+      h+=`<div style="margin-bottom:14px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:50%;background:${phase.color};flex-shrink:0"></div><div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:${phase.color}">${phase.phase} — ${phase.title}</div></div>`;
+      phase.exercises.forEach((ex,ei)=>{const k=`pp-ex-${pi}-${ei}`,o=S.exp===k;h+=`<div class="acc-wrap"><div class="acc-head${o?' open':''}" data-acc="${k}"><div><div style="font-size:13px;color:#EDE8FA;font-weight:500">${ex.n}</div><div style="font-size:10px;color:#7A6AAA;margin-top:1px">${ex.sets}</div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-body${o?' open':''}">${ex.d}</div></div>`;});
+      h+=`</div>`;
+    });
+  }
+
+  if(S.ppTab==='mental'){
+    h+=`<div class="warn-box">If you are having thoughts of harming yourself or your baby, call <strong>988</strong> (Suicide & Crisis Lifeline) or go to your nearest emergency room immediately.</div>`;
+    const topics=[
+      {i:'😢',t:'Baby Blues vs. Postpartum Depression',d:'<strong style="color:#EDE8FA">Baby Blues</strong> (up to 80% of new moms): mood swings, crying, irritability, anxiety starting 2–3 days after birth. Peaks around day 5. Resolves on its own within 2 weeks.<br><br><strong style="color:#EDE8FA">Postpartum Depression (PPD)</strong>: persistent sadness, inability to bond with baby, feeling like a bad mom, withdrawing from family, thoughts of harming yourself or baby. Starts anytime in first year. Very common (1 in 5 moms). Very treatable. Not your fault.',k:'pp-blues'},
+      {i:'😰',t:'Postpartum Anxiety',d:'Often overlooked but extremely common. Racing thoughts, inability to sleep even when exhausted, constant worry about baby\'s breathing/health, catastrophic thinking. Often responds well to therapy and/or medication. Tell your provider.',k:'pp-anxiety'},
+      {i:'😡',t:'Postpartum Rage',d:'Anger, irritability, and rage are common PPD symptoms that rarely get talked about. If you\'re snapping at your partner constantly or feeling intense anger — this is a symptom, not a character flaw. Worth discussing with your provider.',k:'pp-rage'},
+      {i:'🧠',t:'Postpartum OCD',d:'Intrusive thoughts about harm coming to your baby are very common and very distressing — and are NOT the same as wanting to harm your baby. If you\'re experiencing these, tell your provider. Highly treatable with the right therapy.',k:'pp-ocd'},
+      {i:'💬',t:'Therapy & Support',d:'Therapy (especially CBT and IPT) is first-line treatment for PPD/PPA, with or without medication. Medication is safe and effective — many are compatible with breastfeeding.<br><br><strong style="color:#EDE8FA">Resources:</strong><br>• Postpartum Support International: <strong>postpartum.net</strong><br>• PSI Helpline: <strong>1-800-944-4773</strong><br>• Text "HELP" to <strong>741741</strong> (Crisis Text Line)',k:'pp-therapy'},
+      {i:'🤝',t:'Helping Your Partner Understand',d:'PPD doesn\'t always look like sadness. Signs to watch for: withdrawing from baby, not sleeping when given the chance, extreme irritability, expressing feeling like a terrible mother, losing interest in things she loved.<br><br>The most helpful things partners can do: take baby without being asked, handle one overnight per week, say "you\'re a great mom" often, and ask "how are YOU doing" — not just about the baby.',k:'pp-partner'},
+    ];
+    topics.forEach((t,i)=>{const k=t.k,o=S.exp===k;h+=`<div class="acc-wrap"><div class="acc-head${o?' open':''}" data-acc="${k}"><div style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">${t.i}</span><div style="font-size:13px;color:#EDE8FA;font-weight:500">${t.t}</div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-body${o?' open':''}">${t.d}</div></div>`;});
+  }
+
+  el.innerHTML=h;
+  el.querySelectorAll('.tab-opt').forEach(btn=>btn.addEventListener('click',function(){S.ppTab=this.dataset.pptab;S.exp=null;rPostpartum();}));
+  el.querySelectorAll('[data-acc]').forEach(btn=>btn.addEventListener('click',function(){tog(this.dataset.acc);}));
+}
 function openM(type){
   S.mType=type;
   const tv=new Date().toTimeString().slice(0,5);
   const ttls={feed:'Log Feed 🍼',sleep:'Log Sleep 😴',diaper:'Log Diaper 👶',pump:'Log Pump 🍶',temp:'Temperature 🌡️',med:'Medication 💊',visit:'Doctor Visit 🩺',solids:'Log Solids 🥣',settings:'Settings ⚙️',period:'Log Period 🔴',bbt:'Log BBT 🌡️',lh:'LH Test ⭐','sym-ttc':'Symptoms 📝',appt:'Appointment 📅'};
   document.getElementById('modal-title').textContent=ttls[type]||'Log';
   let f='';
-  if(type==='settings'){f=`<div class="field"><label>Name</label><input type="text" id="m-name" value="${S.mode==='baby'?S.babyName:S.mode==='preg'?S.pregName:S.ttcName}" placeholder="Name"></div>${S.mode==='preg'?`<div class="field"><label>Due Date</label><input type="date" id="m-due" value="${S.pregDue}"></div>`:''}${S.mode==='baby'?`<div class="field"><label>Baby Age</label><select id="m-age">${Object.keys(ALF).map(a=>`<option value="${a}"${+a===S.babyAge?' selected':''}>${ALF[a]}</option>`).join('')}</select></div>`:''}${S.mode==='baby'?`<div class="field"><label>Units</label><div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,.1)"><button id="u-oz" style="padding:7px 13px;border:none;background:${S.unit==='oz'?'rgba(160,102,255,.25)':'transparent'};color:${S.unit==='oz'?'#EDE8FA':'#7A6AAA'};font-size:12px;cursor:pointer">oz</button><button id="u-ml" style="padding:7px 13px;border:none;background:${S.unit==='ml'?'rgba(160,102,255,.25)':'transparent'};color:${S.unit==='ml'?'#EDE8FA':'#7A6AAA'};font-size:12px;cursor:pointer">ml</button></div></div>`:''}`;
+  if(type==='settings'){f=`<div class="field"><label>Name</label><input type="text" id="m-name" value="${S.mode==='baby'?S.babyName:S.mode==='preg'?S.pregName:S.ttcName}" placeholder="Name"></div>${S.mode==='preg'?`<div class="field"><label>Due Date</label><input type="date" id="m-due" value="${S.pregDue}"></div>`:''}${S.mode==='baby'?`<div class="field"><label>Baby's Birthday</label><input type="date" id="m-bday" value="${S.babyBirthday||''}"></div><div class="field"><label>Manual Age Override (if no birthday)</label><select id="m-age">${Object.keys(ALF).map(a=>`<option value="${a}"${+a===S.babyAge?' selected':''}>${ALF[a]}</option>`).join('')}</select></div>`:''}${S.mode==='baby'?`<div class="field"><label>Units</label><div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,.1)"><button id="u-oz" style="padding:7px 13px;border:none;background:${S.unit==='oz'?'rgba(160,102,255,.25)':'transparent'};color:${S.unit==='oz'?'#EDE8FA':'#7A6AAA'};font-size:12px;cursor:pointer">oz</button><button id="u-ml" style="padding:7px 13px;border:none;background:${S.unit==='ml'?'rgba(160,102,255,.25)':'transparent'};color:${S.unit==='ml'?'#EDE8FA':'#7A6AAA'};font-size:12px;cursor:pointer">ml</button></div></div>`:''}`;
   }else if(type==='feed'){f=`<div class="field"><label>Amount (${S.unit})</label><input type="number" id="m-vol" placeholder="${S.unit==='oz'?'4':'120'}" step="${S.unit==='oz'?'.5':'5'}"></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div><div class="field"><label>Notes</label><textarea id="m-note" placeholder="fussy, spit up..."></textarea></div>`;}
   else if(type==='pump'){f=`<div class="field"><label>Amount (${S.unit})</label><input type="number" id="m-vol" placeholder="${S.unit==='oz'?'3':'90'}"></div><div class="field"><label>Duration (min)</label><input type="number" id="m-dur" placeholder="15"></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div>`;}
   else if(type==='sleep'){f=`<div class="field"><label>Duration (minutes)</label><input type="number" id="m-dur" placeholder="60"></div><div class="field"><label>Time put down</label><input type="time" id="m-time" value="${tv}"></div><div class="field"><label>Settling</label><select id="m-sq"><option value="">Select...</option><option value="great">😴 Great</option><option value="ok">😐 OK</option><option value="rough">😩 Rough</option></select></div>`;}
@@ -757,7 +1086,14 @@ function openM(type){
 function closeM(){document.getElementById('modal-overlay').classList.remove('open');S.mType=null;}
 function saveM(){
   const type=S.mType;if(!type)return;
-  if(type==='settings'){const n=document.getElementById('m-name')?.value.trim();if(n){if(S.mode==='baby')S.babyName=n;else if(S.mode==='preg')S.pregName=n;else S.ttcName=n;}const due=document.getElementById('m-due')?.value;if(due)S.pregDue=due;const age=document.getElementById('m-age')?.value;if(age)S.babyAge=+age;sv();closeM();ra();return;}
+  if(type==='settings'){
+    const n=document.getElementById('m-name')?.value.trim();
+    if(n){if(S.mode==='baby')S.babyName=n;else if(S.mode==='preg')S.pregName=n;else S.ttcName=n;}
+    const due=document.getElementById('m-due')?.value;if(due)S.pregDue=due;
+    const bday=document.getElementById('m-bday')?.value;if(bday){S.babyBirthday=bday;S.babyAge=calcBabyAge();}
+    const age=document.getElementById('m-age')?.value;if(age&&!S.babyBirthday)S.babyAge=+age;
+    sv();closeM();ra();return;
+  }
   const tv=document.getElementById('m-time')?.value;const e={id:uid(),type,time:tv||nw(),date:tod()};
   if(type==='feed'||type==='pump'){const v=+document.getElementById('m-vol')?.value;if(v){e.ml=S.unit==='oz'?ozToMl(v):Math.round(v);e.vd=S.unit==='oz'?v+'oz':v+'ml';}}
   const dEl=document.getElementById('m-dur');if(dEl?.value)e.dur=+dEl.value;
@@ -777,7 +1113,202 @@ function saveM(){
   sv();closeM();ra();
 }
 
-// INIT
+function rNewborn(){
+  const el=document.getElementById('p-newborn');if(!el)return;
+  if(!S.newbornCheck)S.newbornCheck={};
+
+  const TASKS=[
+    {id:'nb-bc',cat:'📄 Legal & Documents',t:'Order birth certificate',s:'Request through hospital or vital records office — usually within 1–2 weeks of birth',urgent:true},
+    {id:'nb-ssn',cat:'📄 Legal & Documents',t:'Apply for Social Security Number',s:'Can do at hospital with birth certificate application or at SSA office',urgent:true},
+    {id:'nb-passport',cat:'📄 Legal & Documents',t:'Apply for baby\'s passport (if needed)',s:'Requires birth certificate + both parents present'},
+    {id:'nb-will',cat:'📄 Legal & Documents',t:'Update your will and designate guardian',s:'Critical now that you have a dependent'},
+    {id:'nb-ins',cat:'🏥 Insurance & Healthcare',t:'Add baby to health insurance',s:'Must be done within 30 days of birth — don\'t miss this window',urgent:true},
+    {id:'nb-ped',cat:'🏥 Insurance & Healthcare',t:'First pediatrician visit (2–5 days)',s:'Weight check, jaundice check, feeding assessment. Bring insurance card',urgent:true},
+    {id:'nb-ped2',cat:'🏥 Insurance & Healthcare',t:'2-week pediatrician visit',s:'Weight should be back to birth weight by now',urgent:true},
+    {id:'nb-vitd',cat:'🏥 Insurance & Healthcare',t:'Start Vitamin D drops',s:'All breastfed babies need 400 IU/day — ask pediatrician at first visit'},
+    {id:'nb-life',cat:'💰 Financial',t:'Add baby to life insurance policy',s:'Check your existing policy and update beneficiaries'},
+    {id:'nb-529',cat:'💰 Financial',t:'Open a 529 college savings account',s:'Even $25/month started now makes a huge difference'},
+    {id:'nb-fmla',cat:'💰 Financial',t:'File for FMLA / parental leave paperwork',s:'If not already done — some employers have tight timelines'},
+    {id:'nb-tax',cat:'💰 Financial',t:'Note baby\'s SSN for tax dependent claim',s:'Save it — you\'ll need it for taxes this year'},
+    {id:'nb-announce',cat:'🎉 Family & Social',t:'Send birth announcement',s:'No pressure on timing — do it when you\'re ready'},
+    {id:'nb-freeze',cat:'🎉 Family & Social',t:'Freeze meals / stock up on help',s:'Accept every offer. Set up a Meal Train if helpful'},
+    {id:'nb-photog',cat:'🎉 Family & Social',t:'Newborn photos (within first 2 weeks)',s:'Baby changes so fast — schedule early if you want professional photos'},
+    {id:'nb-wills',cat:'🏠 Home',t:'Install smoke + CO detectors on every floor',s:'Check batteries in existing ones'},
+    {id:'nb-carseat',cat:'🏠 Home',t:'Car seat inspected by certified tech',s:'Many fire stations offer free inspections'},
+    {id:'nb-babyproof',cat:'🏠 Home',t:'Begin baby-proofing planning (for 4–6 months)',s:'Outlet covers, cabinet locks, stairs — start planning now'},
+    {id:'nb-6wk',cat:'👩 Mom\'s Health',t:'Schedule 6-week postpartum checkup',s:'Book it now — gets busy. Non-negotiable appointment'},
+    {id:'nb-lactation',cat:'👩 Mom\'s Health',t:'Connect with lactation consultant if breastfeeding',s:'Most hospitals have one — ask before you leave. Insurance often covers it'},
+    {id:'nb-support',cat:'👩 Mom\'s Health',t:'Identify your postpartum support network',s:'Who can you call at 2am? Who will bring food? Who will hold baby so you sleep?'},
+  ];
+
+  // Meds & supplements section
+  const SUPPS=[
+    {stage:'Newborn (0–3 months)',items:[
+      {n:'Vitamin D Drops (400 IU)',for:'Baby',why:'Breastmilk doesn\'t contain enough Vitamin D. All breastfed babies need this from day 1. Formula-fed babies getting <32oz/day also need it.',brand:'Carlson Baby D Drops, Nordic Naturals Baby\'s Vitamin D3',rx:false},
+      {n:'Probiotic drops (Lactobacillus reuteri)',for:'Baby',why:'Evidence supports reducing colic, crying time, and constipation. Ask your pediatrician.',brand:'BioGaia Protectis, Gerber Soothe',rx:false},
+      {n:'Prenatal vitamins (continue)',for:'Mom',why:'If breastfeeding, continue prenatal vitamins — you\'re still the baby\'s nutritional source.',brand:'Any quality prenatal with DHA',rx:false},
+      {n:'DHA / Omega-3 supplement',for:'Mom',why:'Critical for baby\'s brain development through breast milk. If not in your prenatal, add separately.',brand:'Nordic Naturals Postnatal Omega-3',rx:false},
+      {n:'Iron supplement',for:'Mom',why:'Postpartum blood loss depletes iron. Fatigue, brain fog, and mood issues can all be low iron. Get levels checked at 6-week visit.',brand:'Slow Fe, Ferrochel — take with Vitamin C',rx:false},
+      {n:'Stool softener (Colace)',for:'Mom',why:'First postpartum bowel movement can be very painful. Take from day 1 home.',brand:'Colace, generic docusate sodium',rx:false},
+    ]},
+    {stage:'1–4 months',items:[
+      {n:'Vitamin D Drops (continue)',for:'Baby',why:'Continue through at least 12 months for breastfed babies.',brand:'Same as above',rx:false},
+      {n:'Gripe water or gas drops',for:'Baby',why:'Gas and colic peak around 6 weeks. Simethicone drops (Mylicon) or gripe water can help.',brand:'Mylicon, Mommy\'s Bliss Gripe Water',rx:false},
+      {n:'Postnatal multivitamin',for:'Mom',why:'Specific postnatal formulas include higher iron, iodine, and choline vs standard prenatals.',brand:'Ritual Postnatal, Needed Postnatal',rx:false},
+    ]},
+    {stage:'4–6 months',items:[
+      {n:'Iron drops if introducing solids late',for:'Baby',why:'Breast milk iron decreases. If solids haven\'t started, ask pediatrician about iron supplementation at 4-month visit.',brand:'Pediatric iron drops — prescription or pediatrician-recommended',rx:true},
+      {n:'Fluoride drops (if water not fluoridated)',for:'Baby',why:'Dentist and AAP recommend fluoride supplementation if your water isn\'t fluoridated.',brand:'Prescription fluoride drops',rx:true},
+    ]},
+    {stage:'6–12 months',items:[
+      {n:'Iron-rich foods + possibly iron drops',for:'Baby',why:'Iron from food (meat, lentils, fortified cereals) should be primary source once solids start. Drops if intake is low.',brand:'Discuss with pediatrician',rx:false},
+      {n:'Vitamin D (continue)',for:'Baby',why:'Continue even as solids increase — unlikely to get enough from food alone.',brand:'Same drops',rx:false},
+      {n:'Probiotic (optional)',for:'Baby',why:'Supports gut health during solids introduction — especially useful if on antibiotics.',brand:'BioGaia, Culturelle Baby',rx:false},
+    ]},
+  ];
+
+  const tab=S.newbornTab||'checklist';
+  let h=`<div class="tab-bar"><button class="tab-opt${tab==='checklist'?' active':''}" data-nbtab="checklist">✅ After Birth</button><button class="tab-opt${tab==='supps'?' active':''}" data-nbtab="supps">💊 Supplements</button></div>`;
+
+  if(tab==='checklist'){
+    const done=Object.values(S.newbornCheck).filter(Boolean).length;
+    h+=`<div class="info-box" style="margin-bottom:10px">${done}/${TASKS.length} complete · Tackle these in the first few weeks — don't try to do everything at once.</div>`;
+    let curCat='';
+    TASKS.forEach(item=>{
+      if(item.cat!==curCat){h+=`<div style="font-size:10px;color:#A066FF;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin:12px 0 5px">${item.cat}</div>`;curCat=item.cat;}
+      const d2=!!S.newbornCheck[item.id];
+      h+=`<div class="cl-row"><div class="cl-check${d2?' done':''}" data-nbcheck="${item.id}">${d2?'✓':''}</div><div><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:${d2?'#5A4878':'#EDE8FA'};${d2?'text-decoration:line-through':''}">${item.t}</span>${item.urgent&&!d2?'<span style="font-size:9px;padding:2px 6px;border-radius:5px;background:rgba(248,113,113,.12);color:#FCA5A5;font-weight:600">Urgent</span>':''}</div><div style="font-size:10px;color:#7A6AAA;margin-top:1px">${item.s}</div></div></div>`;
+    });
+  }
+
+  if(tab==='supps'){
+    h+=`<div class="info-box">Always confirm supplement use with your pediatrician. These are general evidence-based recommendations — dosing and brands may vary.</div>`;
+    SUPPS.forEach((stage,si)=>{
+      h+=`<div style="margin-bottom:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:#A066FF;margin-bottom:8px">📅 ${stage.stage}</div>`;
+      stage.items.forEach((item,ii)=>{
+        const k=`supp-${si}-${ii}`;const o=S.exp===k;
+        h+=`<div class="acc-wrap"><div class="acc-head${o?' open':''}" data-acc="${k}">
+          <div style="flex:1"><div style="display:flex;align-items:center;gap:7px"><div style="font-size:13px;color:#EDE8FA;font-weight:500">${item.n}</div><span style="font-size:9px;padding:2px 7px;border-radius:5px;font-weight:600;background:${item.for==='Baby'?'rgba(129,199,132,.12)':'rgba(167,139,250,.12)'};color:${item.for==='Baby'?'#86EFAC':'#C4B5FD'}">${item.for}</span>${item.rx?'<span style="font-size:9px;padding:2px 6px;border-radius:5px;background:rgba(251,146,60,.12);color:#FDB97D;font-weight:600">Rx</span>':''}</div></div>
+          <span class="chev${o?' open':''}">▾</span></div>
+          <div class="acc-body${o?' open':''}">
+            <p style="margin-bottom:6px"><strong style="color:#6C8EBF">Why:</strong> ${item.why}</p>
+            <p><strong style="color:#C8D8F0">Brands:</strong> ${item.brand}</p>
+          </div></div>`;
+      });
+      h+=`</div>`;
+    });
+  }
+
+  el.innerHTML=h;
+  el.querySelectorAll('.tab-opt').forEach(btn=>btn.addEventListener('click',function(){S.newbornTab=this.dataset.nbtab;S.exp=null;rNewborn();}));
+  el.querySelectorAll('[data-nbcheck]').forEach(btn=>btn.addEventListener('click',function(){if(!S.newbornCheck)S.newbornCheck={};S.newbornCheck[this.dataset.nbcheck]=!S.newbornCheck[this.dataset.nbcheck];sv();rNewborn();}));
+  el.querySelectorAll('[data-acc]').forEach(btn=>btn.addEventListener('click',function(){tog(this.dataset.acc);}));
+}
+
+function rPhotos(){
+  const el=document.getElementById('p-photos');if(!el)return;
+  if(!S.photos)S.photos={};
+
+  const MONTHS=[
+    {m:0,l:'Newborn',prompt:'First hours or days — all curled up and tiny 💕'},
+    {m:1,l:'1 Month',prompt:'Starting to unfurl — those tiny fingers and toes'},
+    {m:2,l:'2 Months',prompt:'First smiles are here — catch one if you can!'},
+    {m:3,l:'3 Months',prompt:'More alert, holding head up, noticing the world'},
+    {m:4,l:'4 Months',prompt:'Laughing out loud — the best sound in the world'},
+    {m:5,l:'5 Months',prompt:'Grabbing everything in sight'},
+    {m:6,l:'6 Months',prompt:'Halfway through the first year 🎉'},
+    {m:7,l:'7 Months',prompt:'Starting to sit up — proud little human'},
+    {m:8,l:'8 Months',prompt:'Getting mobile — watch out world!'},
+    {m:9,l:'9 Months',prompt:'9 months in, 9 months out'},
+    {m:10,l:'10 Months',prompt:'Cruising furniture and getting into everything'},
+    {m:11,l:'11 Months',prompt:'Almost one — slow down time!'},
+    {m:12,l:'1 Year 🎂',prompt:'Happy first birthday! Look how far you\'ve come'},
+  ];
+
+  const currentAge=S.babyBirthday?calcBabyAge():S.babyAge;
+  const hasAny=Object.keys(S.photos).some(k=>S.photos[k]);
+
+  let h=`<p style="font-size:12px;color:#8875B0;margin-bottom:12px;line-height:1.6">Monthly milestone photos — watch your baby grow month by month.</p>`;
+
+  // Photo note
+  h+=`<div class="info-box">📱 Photos are stored locally on this device. To save permanently, screenshot the photo after adding it, or back up to your camera roll.</div>`;
+
+  // Grid view for completed months
+  if(hasAny){
+    h+=`<div style="font-size:10px;color:#A066FF;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:8px">📸 Your Journey So Far</div>`;
+    h+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">`;
+    MONTHS.forEach(mo=>{
+      const photo=S.photos[mo.m];
+      if(photo){
+        h+=`<div style="position:relative;cursor:pointer" data-view="${mo.m}">
+          <div style="aspect-ratio:1;border-radius:12px;overflow:hidden;border:2px solid rgba(160,102,255,.3);background:rgba(255,255,255,.03)">
+            <img src="${photo}" style="width:100%;height:100%;object-fit:cover" alt="${mo.l}">
+          </div>
+          <div style="font-size:9px;color:#C4B5FD;text-align:center;margin-top:4px;font-weight:600">${mo.l}</div>
+        </div>`;
+      }else if(mo.m<=currentAge+1){
+        h+=`<div style="aspect-ratio:1;border-radius:12px;border:2px dashed rgba(255,255,255,.1);background:rgba(255,255,255,.02);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer" data-add="${mo.m}">
+          <div style="font-size:20px;color:#3D2E58">+</div>
+          <div style="font-size:9px;color:#3D2E58;margin-top:3px">${mo.l}</div>
+        </div>`;
+      }else{
+        h+=`<div style="aspect-ratio:1;border-radius:12px;border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.01);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.3">
+          <div style="font-size:16px">🔒</div>
+          <div style="font-size:9px;color:#5A4878;margin-top:3px">${mo.l}</div>
+        </div>`;
+      }
+    });
+    h+=`</div>`;
+  }
+
+  // Month list with prompts
+  h+=`<div style="font-size:10px;color:#A066FF;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:8px">${hasAny?'All Months':'Add Your First Photo'}</div>`;
+  MONTHS.forEach(mo=>{
+    const photo=S.photos[mo.m];const unlocked=mo.m<=currentAge+1;
+    h+=`<div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:13px;background:rgba(255,255,255,.03);border:1px solid ${photo?'rgba(160,102,255,.25)':'rgba(255,255,255,.07)'};margin-bottom:6px;${!unlocked?'opacity:.4':''}">
+      <div style="width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center">
+        ${photo?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:22px">${mo.m===0?'🌱':mo.m===6?'🌿':mo.m===12?'🎂':'📷'}</span>`}
+      </div>
+      <div style="flex:1"><div style="font-size:13px;color:#EDE8FA;font-weight:500">${mo.l}</div><div style="font-size:10px;color:#7A6AAA;margin-top:2px;line-height:1.4">${photo?'Photo added ✓':mo.prompt}</div></div>
+      ${unlocked?`<div style="display:flex;flex-direction:column;gap:5px">
+        <label style="padding:6px 10px;border-radius:8px;border:1px solid rgba(160,102,255,.25);background:rgba(160,102,255,.1);color:#C4B5FD;font-size:11px;cursor:pointer;text-align:center;white-space:nowrap">${photo?'Change':'+ Add'}
+          <input type="file" accept="image/*" data-month="${mo.m}" style="display:none" capture="environment">
+        </label>
+        ${photo?`<button data-del-photo="${mo.m}" style="padding:5px 8px;border-radius:7px;border:none;background:rgba(239,83,80,.1);color:#F87171;font-size:10px;cursor:pointer">Remove</button>`:''}
+      </div>`:'<div style="font-size:10px;color:#3D2E58">Not yet</div>'}
+    </div>`;
+  });
+
+  el.innerHTML=h;
+
+  // File input handlers — read as base64 and store
+  el.querySelectorAll('input[type=file]').forEach(input=>{
+    input.addEventListener('change',function(){
+      const month=+this.dataset.month;const file=this.files[0];if(!file)return;
+      const reader=new FileReader();
+      reader.onload=function(e){
+        if(!S.photos)S.photos={};
+        S.photos[month]=e.target.result;
+        sv();rPhotos();
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  el.querySelectorAll('[data-del-photo]').forEach(btn=>btn.addEventListener('click',function(){delete S.photos[+this.dataset.delPhoto];sv();rPhotos();}));
+
+  // View full screen on tap
+  el.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',function(){
+    const month=+this.dataset.view;const photo=S.photos[month];const mo=MONTHS.find(m=>m.m===month);
+    if(!photo)return;
+    const overlay=document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px';
+    overlay.innerHTML=`<img src="${photo}" style="max-width:100%;max-height:80vh;border-radius:16px;object-fit:contain"><div style="font-size:16px;font-weight:600;color:#F5EEFF;margin-top:14px">${mo?.l||''}</div><button style="margin-top:16px;padding:10px 24px;border-radius:12px;border:none;background:rgba(255,255,255,.1);color:#EDE8FA;font-size:14px;cursor:pointer">Close</button>`;
+    overlay.querySelector('button').addEventListener('click',()=>overlay.remove());
+    overlay.addEventListener('click',function(e){if(e.target===this)this.remove();});
+    document.body.appendChild(overlay);
+  }));
+}
 ld();
 if(S.mode){
   document.getElementById('screen-landing').style.display='none';
