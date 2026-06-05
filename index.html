@@ -432,17 +432,8 @@ function rNav(){
   nav.querySelectorAll('.bnav-btn').forEach(btn=>btn.addEventListener('click',function(){S.tab=this.dataset.tab;S.exp=null;ra();}));
   const content=document.getElementById('content');
   content.innerHTML=tabs.map(t=>`<div id="p-${t}" class="page${S.tab===t?' active':''}"></div>`).join('');
-}
-function rContent(){
-  const fn={
-    home:()=>S.mode==='ttc'?rTtcHome():S.mode==='preg'?rPregHome():rBabyHome(),
-    track:()=>S.mode==='ttc'?rTtcTrack():S.mode==='preg'?rPregTrack():rBabyTrack(),
-    insights:rInsights,checklist:rChecklist,ask:rAsk,
-    appts:rAppts,birthplan:rBirthPlan,nursery:rNursery,
-    feeds:rFeeds,sleep:rSleep,develop:rDevelop,health:rHealth,
-    newborn:rNewborn,postpartum:rPostpartum,photos:rPhotos,
-  };
-  if(fn[S.tab])fn[S.tab]();
+  // Render content AFTER DOM is built
+  rContent();
 }
 
 // ── TTC HOME ──
