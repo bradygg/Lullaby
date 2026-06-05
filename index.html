@@ -4,210 +4,201 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>LittleBug</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Lullaby</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{background:#FAF8F4;color:#3B3B3B;min-height:100vh;font-family:'Inter',sans-serif;overflow-x:hidden}
-button{cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s}
-input,textarea,select{font-family:'Inter',sans-serif;color:#3B3B3B;background:#fff;border:1.5px solid #E8E0D8;outline:none}
-input:focus,textarea:focus,select:focus{border-color:#A8C5A1}
-input::placeholder,textarea::placeholder{color:#B8AFA8}
-select option{background:#fff;color:#3B3B3B}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0E0B1A;color:#EDE8FA;min-height:100vh;font-family:system-ui,sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(124,58,237,.12),transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(236,72,153,.07),transparent 50%);pointer-events:none;z-index:0}
+
+/* SCREENS */
+.screen{min-height:100vh;width:100%;position:relative;z-index:1}
+#screen-landing{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center}
+#screen-app{display:none;flex-direction:column}
 
 /* LANDING */
-#landing{position:fixed;inset:0;z-index:500;background:#FAF8F4;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;text-align:center;overflow-y:auto}
-#landing.hidden{display:none}
-.land-logo{margin:0 auto 16px;animation:fl 4s ease-in-out infinite}
-@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.land-title{font-family:'Nunito',sans-serif;font-size:38px;font-weight:800;letter-spacing:-.5px;margin-bottom:5px}
-.land-sub{font-size:12px;color:#E79A7D;margin-bottom:28px;font-style:italic;font-family:'Nunito',sans-serif}
-.land-cards{display:flex;flex-direction:column;gap:11px;width:100%;max-width:320px}
-.mc{padding:16px 18px;border-radius:18px;border:2px solid #E8E0D8;background:#fff;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;width:100%;box-shadow:0 2px 8px rgba(0,0,0,.06);touch-action:manipulation;font-family:'Inter',sans-serif}
-.mc:active{opacity:.8;transform:scale(.98)}
-.mc.ttc{border-color:#F4C7C2}.mc.preg{border-color:#D9C6E6}.mc.baby{border-color:#A8C5A1}
-.mc-icon{font-size:30px;flex-shrink:0}
-.mc-title{font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:#3B3B3B;margin-bottom:2px}
-.mc-sub{font-size:10px;color:#8E8A86;line-height:1.4}
+.logo{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,#6D28D9,#A855F7,#EC4899);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 16px;box-shadow:0 8px 32px rgba(124,58,237,.4)}
+h1{font-size:36px;font-weight:700;color:#F5EEFF;letter-spacing:-.02em;margin-bottom:6px}
+.sub{font-size:12px;color:#8875B0;margin-bottom:28px;line-height:1.6;max-width:260px}
+.cards{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px}
+.card-btn{padding:18px;border-radius:18px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;width:100%;font-family:system-ui,sans-serif;-webkit-appearance:none;appearance:none}
+.card-btn:active{opacity:.7;transform:scale(.97)}
+.card-icon{font-size:32px;flex-shrink:0}
+.card-title{font-size:15px;font-weight:600;color:#F5EEFF;display:block;margin-bottom:2px}
+.card-desc{font-size:10px;color:#8875B0;display:block;line-height:1.4}
 
-/* APP */
-#app{display:none;position:relative;z-index:1;padding-bottom:80px}
-#app.on{display:block}
-
-/* HEADER */
-#hdr{padding:14px 16px 10px;background:#fff;border-bottom:1.5px solid #F0EBE3;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.hdr-logo{display:flex;align-items:center;gap:8px;cursor:pointer}
-.hdr-brand{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800}
-.mbadge{padding:4px 10px;border-radius:18px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:'Nunito',sans-serif}
-.mbadge.ttc{background:#FFF0EE;color:#E79A7D;border:1.5px solid #F4C7C2}
-.mbadge.preg{background:#F5F0FF;color:#9B72CF;border:1.5px solid #D9C6E6}
-.mbadge.baby{background:#F0F7EF;color:#5A7A55;border:1.5px solid #A8C5A1}
-.icon-btn{width:34px;height:34px;border-radius:11px;border:1.5px solid #E8E0D8;background:#FAF8F4;color:#8E8A86;font-size:14px;display:flex;align-items:center;justify-content:center}
-#stats-bar{display:flex;overflow-x:auto;scrollbar-width:none}
-#stats-bar::-webkit-scrollbar{display:none}
-.stat{flex-shrink:0;text-align:center;padding:3px 11px;border-right:1px solid #F0EBE3}
+/* APP HEADER */
+#hdr{padding:16px 18px 12px;background:rgba(14,11,26,.98);border-bottom:1px solid rgba(255,255,255,.06)}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mode-pill{padding:5px 11px;border-radius:18px;font-size:11px;font-weight:600;border:none;cursor:pointer}
+.mode-pill.baby{background:rgba(129,199,132,.15);color:#86EFAC}
+.mode-pill.ttc{background:rgba(244,114,182,.15);color:#F472B6}
+.mode-pill.preg{background:rgba(167,139,250,.15);color:#C4B5FD}
+.settings-btn{width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#9070C0;font-size:14px;cursor:pointer}
+.brand-center{text-align:center;margin-bottom:10px}
+.brand-name{font-size:26px;font-weight:700;color:#F5EEFF}
+.brand-sub{font-size:10px;color:#9070C0;cursor:pointer}
+#stats-bar{display:flex;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center;padding:3px 10px;border-right:1px solid rgba(255,255,255,.07)}
 .stat:last-child{border-right:none}
-.sv{font-size:12px;font-weight:600;color:#3B3B3B;font-family:'Nunito',sans-serif}
-.sl{font-size:8px;color:#8E8A86;letter-spacing:.06em;text-transform:uppercase;margin-top:1px}
+.sv{font-size:12px;font-weight:500;color:#D4C0F5}
+.sl{font-size:8px;color:#7A6AAA;text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
 
 /* NAV */
-#nav{display:flex;overflow-x:auto;border-bottom:1.5px solid #F0EBE3;background:#fff;position:sticky;top:0;z-index:99;scrollbar-width:none}
+#nav{display:flex;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(14,11,26,.97);position:sticky;top:0;z-index:100;scrollbar-width:none}
 #nav::-webkit-scrollbar{display:none}
-.nb{flex-shrink:0;padding:11px 13px;border:none;background:transparent;color:#8E8A86;font-size:11px;border-bottom:2.5px solid transparent;white-space:nowrap;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;touch-action:manipulation}
-.nb.active{color:#5A7A55;border-bottom-color:#A8C5A1}
+.nav-btn{flex-shrink:0;padding:11px 13px;border:none;background:transparent;color:#7A6AAA;font-size:11px;border-bottom:2px solid transparent;white-space:nowrap;font-weight:500;cursor:pointer;font-family:system-ui,sans-serif}
+.nav-btn.active{color:#E0C8FF;border-bottom-color:#A066FF}
 
 /* CONTENT */
-#content{padding:14px 16px}
-.tp{display:none}.tp.active{display:block}
+#content{padding:14px 16px;position:relative;z-index:1;padding-bottom:80px}
+.page{display:none}
+.page.active{display:block}
 
-/* COMMON */
-.shd{font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#8E8A86;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 7px;display:flex;align-items:center;gap:6px}
-.shd::after{content:'';flex:1;height:1.5px;background:#F0EBE3;border-radius:2px}
-.intro{font-size:13px;color:#8E8A86;margin-bottom:10px;line-height:1.6}
-.card{padding:13px 15px;border-radius:15px;background:#fff;border:1.5px solid #F0EBE3;margin-bottom:9px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.info-b{padding:11px 13px;border-radius:13px;background:#F0F7EF;border:1.5px solid #C8DEC5;font-size:12px;color:#4A6844;line-height:1.7;margin-bottom:9px}
-.warn-b{padding:11px 13px;border-radius:13px;background:#FFF5F0;border:1.5px solid #F4C7C2;font-size:12px;color:#C4614A;line-height:1.7;margin-bottom:9px}
-.good-b{padding:11px 13px;border-radius:13px;background:#F5F0FF;border:1.5px solid #D9C6E6;font-size:12px;color:#7A5CA8;line-height:1.7;margin-bottom:9px}
-.tip-b{padding:11px 13px;border-radius:13px;background:#FFF8F4;border:1.5px solid #F4D4C2;font-size:12px;color:#B5622A;line-height:1.7;margin-bottom:9px}
-.log-row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:12px;background:#fff;border:1.5px solid #F0EBE3;margin-bottom:5px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
-.x-btn{background:none;border:none;color:#D0C8C0;font-size:18px;padding:2px 5px;cursor:pointer}
-.tab-bar{display:flex;border-radius:12px;overflow:hidden;border:1.5px solid #E8E0D8;margin-bottom:11px;background:#FAF8F4}
-.tbtn{flex:1;padding:9px 4px;border:none;background:transparent;color:#8E8A86;font-size:11px;cursor:pointer;font-weight:600;font-family:'Nunito',sans-serif}
-.tbtn.active{background:#fff;color:#3B3B3B;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.log-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
-.log-card{padding:13px 6px;border-radius:14px;border:1.5px solid #F0EBE3;background:#fff;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-family:'Nunito',sans-serif;color:#5C3D2E;font-size:12px;font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.04);touch-action:manipulation}
-.log-card:active{transform:scale(.96);background:#FAF8F4}
-.log-card .ei{font-size:24px}
+/* COMMON UI */
+.section-hd{font-size:10px;color:#9070C0;text-transform:uppercase;letter-spacing:.09em;margin:14px 0 7px;font-weight:600;display:flex;align-items:center;gap:6px}
+.section-hd::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(160,102,255,.3),transparent)}
+.info-box{padding:10px 13px;border-radius:11px;background:rgba(160,102,255,.05);border:1px solid rgba(160,102,255,.12);font-size:11px;color:#9B87BF;line-height:1.7;margin-bottom:8px}
+.warn-box{padding:10px 13px;border-radius:11px;background:rgba(251,146,60,.09);border:1px solid rgba(251,146,60,.22);font-size:11px;color:#FDBA74;line-height:1.7;margin-bottom:8px}
+.good-box{padding:10px 13px;border-radius:11px;background:rgba(134,239,172,.08);border:1px solid rgba(134,239,172,.2);font-size:11px;color:#86EFAC;line-height:1.7;margin-bottom:8px}
+.panel{padding:12px 14px;border-radius:13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.log-row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);margin-bottom:4px}
+.x-btn{background:none;border:none;color:#3D2E58;font-size:18px;padding:2px 4px;cursor:pointer;font-family:system-ui}
+.tab-bar{display:flex;border-radius:11px;overflow:hidden;border:1px solid rgba(255,255,255,.08);margin-bottom:10px;background:rgba(255,255,255,.03)}
+.tab-opt{flex:1;padding:9px 4px;border:none;background:transparent;color:#7A6AAA;font-size:11px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:500}
+.tab-opt.active{background:rgba(160,102,255,.18);color:#EDE8FA}
+.log-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.log-card{padding:13px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.04);display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-family:system-ui,sans-serif;color:#A090C8;font-size:12px}
+.log-card:active{transform:scale(.96);background:rgba(255,255,255,.08)}
+.log-card .ei{font-size:22px}
 .rings{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:9px 0 11px}
-.ring{text-align:center;padding:9px 2px;border-radius:13px;background:#fff;border:1.5px solid #F0EBE3;box-shadow:0 1px 3px rgba(0,0,0,.03)}
-.rv{font-size:17px;font-weight:700;color:#3B3B3B;font-family:'Nunito',sans-serif}
-.rl{font-size:8px;color:#8E8A86;text-transform:uppercase;margin-top:2px;font-weight:600}
-.prim-btn{padding:13px;border-radius:13px;border:none;background:linear-gradient(135deg,#A8C5A1,#7DAE76);color:#fff;font-size:14px;font-weight:700;width:100%;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:0 3px 10px rgba(125,174,118,.25);touch-action:manipulation}
-.prim-btn:active{opacity:.9}
-.acc{border-radius:13px;border:1.5px solid #F0EBE3;overflow:hidden;margin-bottom:7px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.03)}
-.acc-h{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:#fff;touch-action:manipulation}
-.acc-h.open{background:#FAF8F4}
-.acc-b{padding:0 14px 12px;display:none;font-size:12px;color:#6B6560;line-height:1.7;background:#FAF8F4}
-.acc-b.open{display:block}
-.chev{color:#B8AFA8;font-size:11px;transition:transform .2s}
-.chev.open{transform:rotate(180deg)}
-.cl-row{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1.5px solid #F5F1EC}
-.cl-row:last-child{border-bottom:none}
-.cl-box{width:19px;height:19px;border-radius:6px;border:2px solid #D0C8C0;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:#fff;margin-top:1px;touch-action:manipulation}
-.cl-box.done{background:#A8C5A1;border-color:#A8C5A1}
-.chip{display:inline-flex;padding:4px 10px;border-radius:18px;font-size:11px;margin:2px;border:1.5px solid #E8E0D8;background:#FAF8F4;color:#6B6560;cursor:pointer;font-weight:500;touch-action:manipulation}
-.chip.on{background:#F0F7EF;border-color:#A8C5A1;color:#4A6844;font-weight:600}
-.chip.done{background:#F0F7EF;border-color:#A8C5A1;color:#4A6844}
-.ww-hero{padding:14px;border-radius:16px;background:linear-gradient(135deg,#F0F7EF,#E8F4E7);border:1.5px solid #C8DEC5;margin-bottom:11px}
+.ring{text-align:center;padding:9px 2px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.rv{font-size:17px;font-weight:500;color:#EDE8FA}
+.rl{font-size:8px;color:#7A6AAA;text-transform:uppercase;margin-top:1px}
+.ww-box{padding:14px;border-radius:15px;background:linear-gradient(135deg,rgba(109,40,217,.15),rgba(168,85,247,.08));border:1px solid rgba(160,102,255,.22);margin-bottom:11px}
 .since-row{display:flex;gap:6px;margin-bottom:10px}
-.since-chip{display:flex;flex-direction:column;align-items:center;padding:10px 5px;border-radius:13px;background:#fff;border:1.5px solid #F0EBE3;flex:1;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.04);touch-action:manipulation}
-.since-chip.urgent{border-color:#F4C7C2;background:#FFF5F3}
-.since-chip.late{border-color:#F4D4A8;background:#FFFAF3}
-.since-chip.ok{border-color:#C8DEC5;background:#F0F7EF}
+.since-chip{display:flex;flex-direction:column;align-items:center;padding:10px 5px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);flex:1;cursor:pointer}
+.since-chip.urgent{border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.07)}
+.since-chip.late{border-color:rgba(251,146,60,.28);background:rgba(251,146,60,.07)}
+.since-chip.ok{border-color:rgba(134,239,172,.22);background:rgba(134,239,172,.05)}
 .tl{position:relative}
-.tl-line{position:absolute;left:19px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#A8C5A1,#F4C7C2)}
+.tl-line{position:absolute;left:19px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,rgba(160,102,255,.3),transparent)}
 .tl-row{display:flex;align-items:flex-start;margin-bottom:5px}
-.tl-dw{width:38px;flex-shrink:0;display:flex;justify-content:center}
-.tl-dot{width:12px;height:12px;border-radius:50%;margin-top:12px;z-index:1;flex-shrink:0;box-shadow:0 0 0 3px #FAF8F4}
-.tl-card{flex:1;padding:10px 12px;border-radius:12px;cursor:pointer;border:1.5px solid #F0EBE3;border-left-width:3px;background:#fff;touch-action:manipulation}
-.tl-label{font-family:'Nunito',sans-serif;font-size:13px;color:#3B3B3B;font-weight:700}
-.tl-time{font-size:10px;color:#8E8A86;margin-top:1px}
-.tl-det{font-size:11px;color:#6B6560;line-height:1.6;display:none;margin-top:6px}
-.tl-det.open{display:block}
-.wk-hero{padding:17px;border-radius:16px;background:linear-gradient(135deg,#F5F0FF,#EDE4FA);border:1.5px solid #D9C6E6;margin-bottom:11px}
-.size-big{font-size:54px;text-align:center;margin:8px 0;line-height:1}
-.prog-bar{height:6px;border-radius:3px;background:#E8E0D8;overflow:hidden;margin:10px 0 4px}
-.prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#D9C6E6,#E79A7D)}
-.cy-hero{padding:15px;border-radius:16px;background:linear-gradient(135deg,#FFF5F3,#FFF8F0);border:1.5px solid #F4C7C2;margin-bottom:11px}
-.cy-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:7px}
-.cy-day{aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;background:#FAF8F4;color:#B8AFA8;border:1px solid #F0EBE3;font-family:'Nunito',sans-serif}
-.cy-day.today{border-color:#A8C5A1;color:#4A6844;background:#F0F7EF}
-.cy-day.period{background:#FFF0EE;border-color:#F4C7C2;color:#C4614A}
-.cy-day.fertile{background:#F0F7EF;border-color:#A8C5A1;color:#4A6844}
-.cy-day.ov{background:#FFF8E8;border-color:#E8C878;color:#A07820}
-.sf-card{border-radius:13px;border:1.5px solid #F0EBE3;overflow:hidden;margin-bottom:7px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.sf-head{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:#fff;touch-action:manipulation}
-.sf-head.open{background:#F4FAF3}
-.sf-body{padding:0 14px 12px;display:none;font-size:11px;color:#6B6560;line-height:1.7;background:#F4FAF3}
+.tl-dot-wrap{width:38px;flex-shrink:0;display:flex;justify-content:center}
+.tl-dot{width:12px;height:12px;border-radius:50%;margin-top:12px;z-index:1;flex-shrink:0}
+.tl-card{flex:1;padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.06);border-left-width:3px;background:rgba(255,255,255,.03)}
+.tl-label{font-size:12px;color:#EDE8FA;font-weight:500}
+.tl-time{font-size:10px;color:#7A6AAA;margin-top:1px}
+.tl-detail{font-size:11px;color:#9B87BF;line-height:1.6;display:none;margin-top:6px}
+.tl-detail.open{display:block}
+.chev{color:#7A6AAA;font-size:11px;transition:transform .2s;display:inline-block}
+.chev.open{transform:rotate(180deg)}
+.acc-wrap{border-radius:12px;border:1px solid rgba(255,255,255,.08);overflow:hidden;margin-bottom:6px}
+.acc-head{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:rgba(255,255,255,.03)}
+.acc-head.open{background:rgba(160,102,255,.09)}
+.acc-body{padding:0 14px 12px;display:none;font-size:11px;color:#9B87BF;line-height:1.7;background:rgba(160,102,255,.04)}
+.acc-body.open{display:block}
+.cl-row{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.cl-row:last-child{border-bottom:none}
+.cl-check{width:19px;height:19px;border-radius:5px;border:1px solid rgba(160,102,255,.3);background:rgba(160,102,255,.07);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:#A066FF;margin-top:1px}
+.cl-check.done{background:rgba(160,102,255,.35);border-color:rgba(160,102,255,.6)}
+.chip-tag{display:inline-flex;padding:4px 9px;border-radius:7px;font-size:11px;margin:2px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#8875B0;cursor:pointer}
+.chip-tag.on{background:rgba(160,102,255,.18);border-color:rgba(160,102,255,.35);color:#D4C0F5}
+.chip-tag.done{background:rgba(134,239,172,.09);border-color:rgba(134,239,172,.25);color:#86EFAC}
+.primary-btn{padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;font-size:14px;font-weight:500;width:100%;cursor:pointer;font-family:system-ui,sans-serif}
+.primary-btn:active{opacity:.85}
+.cycle-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:8px}
+.cy-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;background:rgba(255,255,255,.04);color:#7A6AAA;border:1px solid rgba(255,255,255,.05)}
+.cy-day.today{border-color:rgba(160,102,255,.5);color:#C4B5FD}
+.cy-day.period{background:rgba(244,114,182,.25);border-color:rgba(244,114,182,.4);color:#F9A8D4}
+.cy-day.fertile{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.3);color:#86EFAC}
+.cy-day.ov{background:rgba(251,191,36,.25);border-color:rgba(251,191,36,.4);color:#FDE68A}
+.wk-hero{padding:18px;border-radius:16px;background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(236,72,153,.07));border:1px solid rgba(167,139,250,.2);margin-bottom:11px}
+.size-big{font-size:52px;text-align:center;margin:8px 0;line-height:1}
+.prog-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden;margin:9px 0 3px}
+.prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#7C3AED,#A855F7,#EC4899)}
+.sf-card{border-radius:13px;border:1px solid rgba(255,255,255,.08);overflow:hidden;margin-bottom:6px}
+.sf-head{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:rgba(255,255,255,.03)}
+.sf-head.open{background:rgba(129,199,132,.07)}
+.sf-body{padding:0 14px 12px;display:none;font-size:11px;color:#9B87BF;line-height:1.7;background:rgba(129,199,132,.03)}
 .sf-body.open{display:block}
-.prep-row{display:flex;gap:7px;padding:5px 0;border-bottom:1px solid #EFF5EE}
+.prep-row{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .prep-row:last-child{border-bottom:none}
-.prep-num{width:18px;height:18px;border-radius:5px;background:#A8C5A1;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.dose-box{padding:14px 15px;border-radius:15px;background:#F5F0FF;border:1.5px solid #D9C6E6;margin-bottom:11px}
-.dose-res{padding:11px 13px;border-radius:12px;background:#fff;border:1.5px solid #D9C6E6;margin-top:9px}
-.dose-big{font-size:25px;font-weight:800;color:#7A5CA8;font-family:'Nunito',sans-serif}
-.bp-sec{background:#fff;border-radius:13px;border:1.5px solid #F0EBE3;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
-.bp-q{font-family:'Nunito',sans-serif;font-size:13px;color:#3B3B3B;font-weight:700;margin-bottom:7px}
-.bp-opts{display:flex;flex-wrap:wrap;gap:5px}
-.bp-opt{padding:5px 11px;border-radius:18px;font-size:11px;border:1.5px solid #E8E0D8;background:#FAF8F4;color:#6B6560;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600;touch-action:manipulation}
-.bp-opt.sel{background:#F0F7EF;border-color:#A8C5A1;color:#4A6844}
-.mini-prog{height:5px;border-radius:3px;background:#F0EBE3;overflow:hidden;margin-top:5px}
-.mini-prog-fill{height:100%;border-radius:3px;background:#A8C5A1}
-.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.prep-num{width:18px;height:18px;border-radius:5px;background:rgba(129,199,132,.15);color:#86EFAC;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.dose-box{padding:14px;border-radius:14px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);margin-bottom:11px}
+.dose-result{padding:12px 14px;border-radius:12px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.25);margin-top:9px}
+.dose-amount{font-size:26px;font-weight:600;color:#A5B4FC}
+
 /* MODAL */
-#modal{position:fixed;inset:0;background:rgba(59,42,28,.45);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
-#modal.open{display:flex}
-#modal-box{background:#fff;border-radius:22px 22px 0 0;padding:20px 20px 46px;width:100%;max-width:480px;border-top:1.5px solid #F0EBE3;max-height:88vh;overflow-y:auto;box-shadow:0 -4px 24px rgba(0,0,0,.1)}
-#modal-title{font-family:'Nunito',sans-serif;font-size:19px;font-weight:800;color:#3B3B3B;margin-bottom:14px}
+#modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
+#modal-overlay.open{display:flex}
+#modal-box{background:#1A1430;border-radius:20px 20px 0 0;padding:20px 20px 44px;width:100%;max-width:480px;border-top:1px solid rgba(255,255,255,.08);max-height:88vh;overflow-y:auto}
+#modal-title{font-size:18px;font-weight:700;color:#F5EEFF;margin-bottom:14px}
 .field{margin-bottom:10px}
-.field label{font-size:10px;color:#8E8A86;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
-.field input,.field select,.field textarea{width:100%;padding:9px 12px;border-radius:11px;font-size:13px;background:#FAF8F4;border:1.5px solid #E8E0D8;color:#3B3B3B}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:#A8C5A1;background:#fff}
+.field label{font-size:10px;color:#8875B0;display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.field input,.field select,.field textarea{width:100%;padding:9px 12px;border-radius:10px;font-size:13px;color:#EDE8FA;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-family:system-ui,sans-serif}
 .field textarea{resize:vertical;min-height:50px}
-.mbtns{display:flex;gap:7px;margin-top:14px}
-.bprim{flex:1;padding:12px;border-radius:13px;border:none;background:linear-gradient(135deg,#A8C5A1,#7DAE76);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif}
-.bsec{padding:12px 16px;border-radius:13px;border:1.5px solid #E8E0D8;background:#FAF8F4;color:#8E8A86;font-size:14px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600}
+.modal-btns{display:flex;gap:7px;margin-top:14px}
+.btn-primary{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:system-ui,sans-serif}
+.btn-cancel{padding:12px 15px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#8875B0;font-size:14px;cursor:pointer;font-family:system-ui,sans-serif}
+
 /* CHAT */
-.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 190px);min-height:340px}
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:340px}
 .chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:8px;scrollbar-width:none}
 .chat-msgs::-webkit-scrollbar{display:none}
-.chat-msg{max-width:86%;padding:10px 13px;border-radius:16px;font-size:12px;line-height:1.7}
-.chat-msg.user{align-self:flex-end;background:linear-gradient(135deg,#A8C5A1,#7DAE76);color:#fff;border-radius:16px 16px 4px 16px}
-.chat-msg.bot{align-self:flex-start;background:#fff;border:1.5px solid #F0EBE3;color:#3B3B3B;border-radius:16px 16px 16px 4px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.chat-msg.bot strong{color:#3B3B3B}
-.typing span{display:inline-block;animation:blink 1.4s infinite;color:#B8AFA8}
+.chat-msg{max-width:86%;padding:10px 13px;border-radius:15px;font-size:12px;line-height:1.7}
+.chat-msg.user{align-self:flex-end;background:linear-gradient(135deg,#6D28D9,#A855F7);color:#fff;border-radius:15px 15px 4px 15px}
+.chat-msg.bot{align-self:flex-start;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#C8B8E8;border-radius:15px 15px 15px 4px}
+.chat-msg.bot strong{color:#EDE8FA}
+.typing span{display:inline-block;animation:blink 1.4s infinite;color:#5A4878}
 .typing span:nth-child(2){animation-delay:.2s}
 .typing span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
 .sq-list{display:flex;flex-wrap:wrap;gap:5px;padding:5px 0;flex-shrink:0}
-.sq-btn{padding:6px 11px;border-radius:18px;border:1.5px solid #C8DEC5;background:#F0F7EF;color:#4A6844;font-size:11px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:600;touch-action:manipulation}
-.chat-row{display:flex;gap:7px;align-items:flex-end;padding-top:8px;border-top:1.5px solid #F0EBE3;flex-shrink:0}
-.chat-in{flex:1;padding:9px 12px;border-radius:13px;font-size:12px;resize:none;min-height:40px;max-height:90px;line-height:1.4;background:#FAF8F4;border:1.5px solid #E8E0D8;color:#3B3B3B;font-family:'Inter',sans-serif}
-.chat-in:focus{border-color:#A8C5A1;background:#fff}
-.chat-go{width:40px;height:40px;border-radius:13px;border:none;background:linear-gradient(135deg,#A8C5A1,#7DAE76);color:#fff;font-size:16px;flex-shrink:0;cursor:pointer;touch-action:manipulation}
+.sq-btn{padding:6px 11px;border-radius:16px;border:1px solid rgba(160,102,255,.25);background:rgba(160,102,255,.07);color:#C4A8FF;font-size:11px;cursor:pointer;font-family:system-ui,sans-serif;text-align:left}
+.chat-input-row{display:flex;gap:7px;align-items:flex-end;padding-top:8px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.chat-input{flex:1;padding:9px 12px;border-radius:12px;font-size:12px;resize:none;min-height:40px;max-height:90px;line-height:1.4;background:rgba(255,255,255,.05);border:1px solid rgba(160,102,255,.25);color:#EDE8FA;font-family:system-ui,sans-serif}
+.chat-go{width:40px;height:40px;border-radius:12px;border:none;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;font-size:16px;flex-shrink:0;cursor:pointer}
 .chat-go:disabled{opacity:.4}
+.bp-section{background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.08);padding:12px;margin-bottom:8px}
+.bp-q{font-size:12px;color:#EDE8FA;font-weight:500;margin-bottom:7px}
+.bp-opts{display:flex;flex-wrap:wrap;gap:5px}
+.bp-opt{padding:5px 11px;border-radius:8px;font-size:11px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#8875B0;cursor:pointer;font-family:system-ui,sans-serif}
+.bp-opt.sel{background:rgba(160,102,255,.2);border-color:rgba(160,102,255,.4);color:#D4C0F5}
 </style>
 </head>
 <body>
 
-<div id="landing">
-  <div class="land-logo">
-    <img src="logo.png" alt="LittleBug" style="width:130px;height:auto;display:block"
-      onerror="this.style.display='none'">
+<!-- LANDING -->
+<div id="screen-landing" class="screen">
+  <div class="logo">🌙</div>
+  <h1>Lullaby</h1>
+  <p class="sub">Your complete companion from trying to conceive through baby's first year.</p>
+  <div class="cards">
+    <button class="card-btn" id="btn-ttc">
+      <span class="card-icon">🌸</span>
+      <span><span class="card-title">Trying to Conceive</span><span class="card-desc">Cycle tracking, fertile window, ovulation, pre-conception guidance</span></span>
+    </button>
+    <button class="card-btn" id="btn-preg">
+      <span class="card-icon">🤰</span>
+      <span><span class="card-title">Pregnant</span><span class="card-desc">Week-by-week, kick counter, contraction timer, birth plan</span></span>
+    </button>
+    <button class="card-btn" id="btn-baby">
+      <span class="card-icon">🌙</span>
+      <span><span class="card-title">We Have a Baby</span><span class="card-desc">Schedule, feeding, sleep, solids guide, medicine dosing</span></span>
+    </button>
   </div>
-  <div class="land-title"><span style="color:#5C3D2E">Little</span><span style="color:#A8C5A1">Bug</span></div>
-  <div class="land-sub">From first hopes to first steps.</div>
-  <div class="land-cards">
-    <button class="mc ttc" onclick="setMode('ttc')"><span class="mc-icon">🌱</span><div><div class="mc-title">Trying to Conceive</div><div class="mc-sub">Cycle tracking, fertile window, ovulation, pre-conception guidance</div></div></button>
-    <button class="mc preg" onclick="setMode('preg')"><span class="mc-icon">🌿</span><div><div class="mc-title">Pregnant</div><div class="mc-sub">Week-by-week, kick counter, contraction timer, birth plan</div></div></button>
-    <button class="mc baby" onclick="setMode('baby')"><span class="mc-icon">🐞</span><div><div class="mc-title">We Have a Baby</div><div class="mc-sub">Schedule, feeding, sleep, solids guide, medicine dosing</div></div></button>
-  </div>
-  <p style="font-size:11px;color:#B8AFA8;margin-top:20px">Your journey. Our care. 🐞</p>
 </div>
 
-<div id="app">
+<!-- APP -->
+<div id="screen-app" class="screen">
   <div id="hdr">
     <div class="hdr-top">
-      <div class="hdr-logo" onclick="switchMode()">
-        <img src="logo.png" alt="LittleBug" style="width:28px;height:28px;object-fit:contain" onerror="this.style.display='none'">
-        <div class="hdr-brand"><span style="color:#5C3D2E">Little</span><span style="color:#A8C5A1">Bug</span></div>
-      </div>
-      <div style="display:flex;gap:7px;align-items:center">
-        <div class="mbadge" id="mbadge" onclick="switchMode()">🐞 Baby</div>
-        <button class="icon-btn" onclick="openM('settings')">⚙️</button>
-      </div>
+      <button class="mode-pill" id="mode-pill">🌙 Baby</button>
+      <button class="settings-btn" id="settings-btn">⚙️</button>
+    </div>
+    <div class="brand-center">
+      <div class="brand-name">Lullaby</div>
+      <div class="brand-sub" id="brand-sub">tap to personalize</div>
     </div>
     <div id="stats-bar"></div>
   </div>
@@ -215,13 +206,14 @@ select option{background:#fff;color:#3B3B3B}
   <div id="content"></div>
 </div>
 
-<div id="modal">
+<!-- MODAL -->
+<div id="modal-overlay">
   <div id="modal-box">
     <div id="modal-title">Log</div>
     <div id="modal-fields"></div>
-    <div class="mbtns">
-      <button class="bsec" onclick="closeM()">Cancel</button>
-      <button class="bprim" onclick="saveM()">Save</button>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="modal-cancel">Cancel</button>
+      <button class="btn-primary" id="modal-save">Save</button>
     </div>
   </div>
 </div>
@@ -229,43 +221,45 @@ select option{background:#fff;color:#3B3B3B}
 <script>
 // ── DATA ──
 const AD={
-  0:{ww:'45–60m',naps:'5–6',fpd:10,mlpf:50,tml:450,bt:'Flexible',nf:3,sol:false,ms:['Focuses 8–12 inches','Responds to loud sounds','Grasps finger reflexively','Recognizes your voice'],sch:[{t:'On demand',l:'Feed on demand',ml:55,mn:'Every 2–3 hrs',i:'🍼',c:'#E79A7D'},{t:'8:30 PM',l:'Bedtime swaddled',mn:'Swaddle · white noise · on back',i:'🌙',c:'#A8C5A1'},{t:'~11 PM',l:'Dream Feed',ml:55,mn:'Dim · no eye contact',i:'🍼',c:'#D9C6E6'}],act:[{i:'🤱',n:'Skin-to-Skin',dur:'15–30 min',ms:'Bonding',w:'Regulates heart rate.',h:'Baby on bare chest.'},{i:'🐢',n:'Tummy Time on Chest',dur:'3–5 min',ms:'Head & neck',w:'Builds muscles for rolling.',h:'On chest or firm surface.'}],gen:[{i:'🚴',n:'Leg Bicycle',sets:'3×5 reps after feeds',d:'Slow bicycle motion. Gas relief.',tip:'20 min after feeds.',dur:20}],tort:[{i:'↔️',n:'Lateral Neck Tilt',sets:'3×10, 10s hold',d:'Tilt ear to opposite shoulder.',tip:'Every diaper change.',dur:10}]},
-  2:{ww:'45–60m',naps:4,fpd:8,mlpf:115,tml:800,bt:'7:30 PM',nf:2,sol:false,ms:['First social smiles','Tracks objects with eyes','Holds head up on tummy','Coos and makes sounds'],sch:[{t:'7:00 AM',l:'Wake & Feed',ml:120,mn:'First feed',i:'🌅',c:'#E79A7D'},{t:'8:30 AM',l:'Nap 1',mn:'45–60 min',i:'😴',c:'#A8C5A1'},{t:'9:30 AM',l:'Feed',ml:110,i:'🍼',c:'#E79A7D'},{t:'10:45 AM',l:'Nap 2',mn:'45–60 min',i:'😴',c:'#A8C5A1'},{t:'12:00 PM',l:'Feed',ml:115,i:'🍼',c:'#E79A7D'},{t:'1:15 PM',l:'Nap 3',mn:'60–90 min',i:'😴',c:'#A8C5A1'},{t:'2:45 PM',l:'Feed',ml:115,i:'🍼',c:'#E79A7D'},{t:'4:00 PM',l:'Nap 4',mn:'30–45 min',i:'😴',c:'#A8C5A1'},{t:'7:00 PM',l:'Bedtime Feed',ml:120,mn:'Biggest feed',i:'🍼',c:'#E79A7D'},{t:'7:30 PM',l:'Bedtime',mn:'Swaddle · drowsy but awake',i:'🌙',c:'#A8C5A1'},{t:'10:30 PM',l:'Dream Feed',ml:100,mn:'Dim, calm',i:'🍼',c:'#D9C6E6'}],act:[{i:'🐢',n:'Tummy Time',dur:'5–10 min',ms:'Head & neck',w:'Aim 30 min/day.',h:'Firm surface. Eye level.'},{i:'😊',n:'Face-to-Face Talking',dur:'5 min',ms:'Social smile',w:'Your face is the most interesting thing.',h:'8–12 inches. Exaggerate expressions.'},{i:'⬛',n:'High-Contrast Cards',dur:'5–8 min',ms:'Visual tracking',w:'Babies see high-contrast most clearly.',h:'Move slowly side to side.'}],gen:[{i:'🐢',n:'Tummy Time',sets:'3–5× daily',d:'Firm surface. Eye level.',tip:'Rolled towel under chest.',dur:300},{i:'🚴',n:'Leg Bicycle',sets:'3×10 reps',d:'Slow circles.',tip:'20 min after feeds.',dur:30}],tort:[{i:'↔️',n:'Lateral Neck Tilt',sets:'3×10, 10s hold',d:'Tilt ear to opposite shoulder.',tip:'Every diaper change — 3× daily.',dur:10},{i:'↩️',n:'Chin-to-Shoulder',sets:'3×10, 10s hold',d:'Turn chin toward avoided side.',tip:'Gentle resistance only.',dur:10}]},
-  4:{ww:'1.5–2h',naps:3,fpd:5,mlpf:165,tml:900,bt:'7:00 PM',nf:0,sol:false,ms:['Rolling tummy to back','Laughs out loud','Grabs and holds objects','Recognizes own name'],sch:[{t:'7:00 AM',l:'Wake & Feed',ml:180,i:'🌅',c:'#E79A7D'},{t:'9:00 AM',l:'Nap 1',mn:'1–1.5 hrs',i:'😴',c:'#A8C5A1'},{t:'10:30 AM',l:'Feed',ml:165,i:'🍼',c:'#E79A7D'},{t:'12:30 PM',l:'Nap 2',mn:'1–1.5 hrs',i:'😴',c:'#A8C5A1'},{t:'2:00 PM',l:'Feed',ml:165,i:'🍼',c:'#E79A7D'},{t:'4:00 PM',l:'Nap 3',mn:'30–45 min',i:'😴',c:'#A8C5A1'},{t:'4:45 PM',l:'Feed',ml:155,i:'🍼',c:'#E79A7D'},{t:'7:00 PM',l:'Bedtime',mn:'Sleep sack · drowsy but awake',i:'🌙',c:'#A8C5A1'}],act:[{i:'🔄',n:'Rolling Practice',dur:'10–15 min',ms:'Rolling',w:'4 months is prime rolling time.',h:'Toy to side. Guide hip roll.'},{i:'🪑',n:'Supported Sitting',dur:'5 min',ms:'Core strength',w:'Builds core for independent sitting.',h:'Lap or Boppy. Stop if slumping.'}],gen:[{i:'🔄',n:'Assisted Rolling',sets:'5 reps each side',d:'Help rock from back to tummy.',tip:'Toy as motivation.',dur:60}],tort:[{i:'↔️',n:'Lateral Neck Tilt',sets:'3×10, 10s hold',d:'Tilt ear to opposite shoulder.',tip:'Critical window.',dur:10}]},
-  6:{ww:'2–2.5h',naps:2,fpd:4,mlpf:195,tml:950,bt:'7:00 PM',nf:0,sol:true,ms:['Sits with support','Rolls both ways','Babbles (ba, da)','Solid food starts'],sch:[{t:'7:00 AM',l:'Wake & Milk',ml:210,i:'🌅',c:'#E79A7D'},{t:'9:00 AM',l:'Nap 1',mn:'1–1.5 hrs',i:'😴',c:'#A8C5A1'},{t:'11:00 AM',l:'Breakfast Solids',mn:'1–2 tsp puree',i:'🥣',c:'#A8C5A1'},{t:'1:00 PM',l:'Nap 2',mn:'1–1.5 hrs',i:'😴',c:'#A8C5A1'},{t:'2:30 PM',l:'Milk Feed',ml:180,i:'🍼',c:'#E79A7D'},{t:'5:00 PM',l:'Dinner Solids',mn:'2–4 tsp',i:'🥣',c:'#A8C5A1'},{t:'7:00 PM',l:'Bedtime',mn:'Sleep sack · white noise',i:'🌙',c:'#A8C5A1'}],act:[{i:'🪑',n:'Supported Sitting',dur:'10–15 min',ms:'Sitting',w:'#1 priority at 6 months.',h:'Boppy or hands.'},{i:'🎭',n:'Peek-a-Boo',dur:'5 min',ms:'Object permanence',w:'Literally builds object permanence.',h:'PEEK-A-BOO!'}],gen:[{i:'🧗',n:'Crawling Prep',sets:'5×2 min',d:'On hands and knees. Rock forward.',tip:'Toy just out of reach.',dur:120}],tort:[]},
-  9:{ww:'3h',naps:2,fpd:3,mlpf:190,tml:720,bt:'7:00 PM',nf:0,sol:true,ms:['Crawling confidently','Stands holding furniture','First words may appear','Pincer grip'],sch:[{t:'7:00 AM',l:'Morning Milk',ml:210,i:'🌅',c:'#E79A7D'},{t:'7:30 AM',l:'Breakfast',mn:'Finger foods · 3–4 tbsp',i:'🥣',c:'#A8C5A1'},{t:'10:00 AM',l:'Nap 1',mn:'1–1.5 hrs',i:'😴',c:'#A8C5A1'},{t:'11:30 AM',l:'Lunch',mn:'4–6 tbsp',i:'🥣',c:'#A8C5A1'},{t:'2:00 PM',l:'Nap 2',mn:'1–1.5 hrs',i:'😴',c:'#A8C5A1'},{t:'5:30 PM',l:'Dinner',mn:'4–6 tbsp',i:'🥣',c:'#A8C5A1'},{t:'7:00 PM',l:'Bedtime',mn:'Sleep sack · white noise',i:'🌙',c:'#A8C5A1'}],act:[{i:'🚶',n:'Furniture Cruising',dur:'15 min',ms:'Pre-walking',w:'Cruising is the step before walking.',h:'Low furniture circuit.'},{i:'🫴',n:'Self-Feeding',dur:'Mealtimes',ms:'Pincer grip',w:'Pincer grip and self-feeding develop together.',h:'Puffs, soft banana.'}],gen:[{i:'🚶',n:'Furniture Cruising',sets:'All awake',d:'Walk along furniture.',tip:'Sofa + coffee table circuit.',dur:0}],tort:[]},
-  12:{ww:'3.5–4h',naps:1,fpd:0,mlpf:0,tml:420,bt:'7:00 PM',nf:0,sol:true,ms:['First independent steps','2–5 words with meaning','Points to body parts','Waves goodbye'],sch:[{t:'7:00 AM',l:'Wake — Whole Milk',mn:'Whole cow\'s milk in open cup',i:'🌅',c:'#A8C5A1'},{t:'7:30 AM',l:'Breakfast',mn:'Finger foods',i:'🥣',c:'#A8C5A1'},{t:'12:00 PM',l:'Lunch',mn:'Family lunch',i:'🥣',c:'#A8C5A1'},{t:'12:30 PM',l:'Single Nap',mn:'1.5–2 hrs',i:'😴',c:'#A8C5A1'},{t:'5:30 PM',l:'Dinner',mn:'Family dinner',i:'🥣',c:'#A8C5A1'},{t:'7:00 PM',l:'Bedtime',mn:'Sleep sack · white noise',i:'🌙',c:'#A8C5A1'}],act:[{i:'🚀',n:'Walking & Climbing',dur:'All awake',ms:'Walking',w:'Movement IS the learning.',h:'Chase games.'},{i:'🗣️',n:'Two-Word Combos',dur:'All day',ms:'Language',w:'Language explosion is near.',h:'\'More milk?\' \'Big ball!\''}],gen:[{i:'👣',n:'Walking Practice',sets:'All day',d:'Encourage walking over crawling.',tip:'Chase games.',dur:0}],tort:[]}
+  0:{ww:'45–60m',naps:'5–6',fpd:10,mlpf:50,tml:450,bt:'Flexible',nf:3,sol:false,ms:['Focuses 8–12 inches','Responds to loud sounds','Grasps finger reflexively','Recognizes your voice'],sch:[{t:'On demand',l:'Feed on demand',ml:55,mn:'Every 2–3 hrs',i:'🍼',c:'#EF9348'},{t:'8:30 PM',l:'Bedtime swaddled',mn:'Swaddle · white noise · on back',i:'🌙',c:'#3949AB'},{t:'~11 PM',l:'Dream Feed',ml:55,mn:'Dim · no eye contact',i:'🍼',c:'#5C6BC0'}],act:[{i:'🤱',n:'Skin-to-Skin',dur:'15–30 min',ms:'Bonding',w:'Regulates heart rate.',h:'Baby on bare chest.'},{i:'🐢',n:'Tummy Time on Chest',dur:'3–5 min',ms:'Head & neck',w:'Builds muscles for rolling.',h:'On chest or firm surface.'}],gen:[{i:'🚴',n:'Leg Bicycle',sets:'3×5 reps',d:'Slow bicycle motion. Gas relief.',tip:'20 min after feeds.',dur:20}],tort:[{i:'↔️',n:'Lateral Neck Tilt',sets:'3×10, 10s hold',d:'Tilt ear to opposite shoulder.',tip:'Every diaper change.',dur:10}]},
+  2:{ww:'45–60m',naps:4,fpd:8,mlpf:115,tml:800,bt:'7:30 PM',nf:2,sol:false,ms:['First social smiles','Tracks objects with eyes','Holds head up on tummy','Coos and makes sounds'],sch:[{t:'7:00 AM',l:'Wake & Feed',ml:120,mn:'First feed',i:'🌅',c:'#EF9348'},{t:'8:30 AM',l:'Nap 1',mn:'45–60 min',i:'😴',c:'#6C8EBF'},{t:'9:30 AM',l:'Feed',ml:110,i:'🍼',c:'#EF9348'},{t:'10:45 AM',l:'Nap 2',mn:'45–60 min',i:'😴',c:'#6C8EBF'},{t:'12:00 PM',l:'Feed',ml:115,i:'🍼',c:'#EF9348'},{t:'1:15 PM',l:'Nap 3',mn:'60–90 min',i:'😴',c:'#6C8EBF'},{t:'2:45 PM',l:'Feed',ml:115,i:'🍼',c:'#EF9348'},{t:'4:00 PM',l:'Nap 4',mn:'30–45 min',i:'😴',c:'#6C8EBF'},{t:'7:00 PM',l:'Bedtime Feed',ml:120,mn:'Biggest feed',i:'🍼',c:'#EF9348'},{t:'7:30 PM',l:'Bedtime',mn:'Swaddle · drowsy but awake',i:'🌙',c:'#3949AB'},{t:'10:30 PM',l:'Dream Feed',ml:100,mn:'Dim, calm',i:'🍼',c:'#5C6BC0'}],act:[{i:'🐢',n:'Tummy Time',dur:'5–10 min',ms:'Head & neck',w:'Aim 30 min/day in short bursts.',h:'Firm surface. Eye level.'},{i:'😊',n:'Face-to-Face Talking',dur:'5 min',ms:'Social smile',w:'Your face is the most interesting thing.',h:'8–12 inches. Exaggerate expressions.'},{i:'⬛',n:'High-Contrast Cards',dur:'5–8 min',ms:'Visual tracking',w:'Babies see high-contrast patterns most clearly.',h:'Move slowly side to side.'}],gen:[{i:'🐢',n:'Tummy Time',sets:'3–5× daily',d:'Firm surface. Eye level.',tip:'Rolled towel under chest.',dur:300},{i:'🚴',n:'Leg Bicycle',sets:'3×10 reps',d:'Slow circles. Promotes digestion.',tip:'20 min after feeds.',dur:30}],tort:[{i:'↔️',n:'Lateral Neck Tilt',sets:'3×10, 10s hold',d:'Tilt ear to opposite shoulder.',tip:'Every diaper change — 3× daily.',dur:10},{i:'↩️',n:'Chin-to-Shoulder',sets:'3×10, 10s hold',d:'Turn chin toward avoided side.',tip:'Gentle resistance only.',dur:10}]},
+  4:{ww:'1.5–2h',naps:3,fpd:5,mlpf:165,tml:900,bt:'7:00 PM',nf:0,sol:false,ms:['Rolling tummy to back','Laughs out loud','Grabs and holds objects','Recognizes own name'],sch:[{t:'7:00 AM',l:'Wake & Feed',ml:180,i:'🌅',c:'#EF9348'},{t:'9:00 AM',l:'Nap 1',mn:'1–1.5 hrs',i:'😴',c:'#6C8EBF'},{t:'10:30 AM',l:'Feed',ml:165,i:'🍼',c:'#EF9348'},{t:'12:30 PM',l:'Nap 2',mn:'1–1.5 hrs',i:'😴',c:'#6C8EBF'},{t:'2:00 PM',l:'Feed',ml:165,i:'🍼',c:'#EF9348'},{t:'4:00 PM',l:'Nap 3',mn:'30–45 min',i:'😴',c:'#6C8EBF'},{t:'4:45 PM',l:'Feed',ml:155,i:'🍼',c:'#EF9348'},{t:'7:00 PM',l:'Bedtime',mn:'Sleep sack · drowsy but awake',i:'🌙',c:'#3949AB'}],act:[{i:'🔄',n:'Rolling Practice',dur:'10–15 min',ms:'Rolling',w:'4 months is prime rolling time.',h:'Tummy with toy to side.'},{i:'🪑',n:'Supported Sitting',dur:'5 min',ms:'Core strength',w:'Builds core for independent sitting.',h:'Lap or Boppy. Stop if slumping.'}],gen:[{i:'🔄',n:'Assisted Rolling',sets:'5 reps each side',d:'Help rock from back to tummy.',tip:'Toy to side as motivation.',dur:60}],tort:[{i:'↔️',n:'Lateral Neck Tilt',sets:'3×10, 10s hold',d:'Tilt ear to opposite shoulder.',tip:'Critical window — stay consistent.',dur:10}]},
+  6:{ww:'2–2.5h',naps:2,fpd:4,mlpf:195,tml:950,bt:'7:00 PM',nf:0,sol:true,ms:['Sits with support','Rolls both ways','Babbles (ba, da)','Solid food starts'],sch:[{t:'7:00 AM',l:'Wake & Milk',ml:210,i:'🌅',c:'#EF9348'},{t:'9:00 AM',l:'Nap 1',mn:'1–1.5 hrs',i:'😴',c:'#6C8EBF'},{t:'11:00 AM',l:'Breakfast Solids',mn:'1–2 tsp puree',i:'🥣',c:'#81C784'},{t:'1:00 PM',l:'Nap 2',mn:'1–1.5 hrs',i:'😴',c:'#6C8EBF'},{t:'2:30 PM',l:'Milk Feed',ml:180,i:'🍼',c:'#EF9348'},{t:'5:00 PM',l:'Dinner Solids',mn:'2–4 tsp',i:'🥣',c:'#81C784'},{t:'7:00 PM',l:'Bedtime',mn:'Sleep sack · white noise',i:'🌙',c:'#3949AB'}],act:[{i:'🪑',n:'Supported Sitting',dur:'10–15 min',ms:'Sitting',w:'The #1 priority at 6 months.',h:'Boppy or hands. Ring of toys.'},{i:'🎭',n:'Peek-a-Boo',dur:'5 min',ms:'Object permanence',w:'Literally builds object permanence.',h:'PEEK-A-BOO!'}],gen:[{i:'🧗',n:'Crawling Prep',sets:'5×2 min',d:'On hands and knees. Rock forward.',tip:'Toy just out of reach.',dur:120}],tort:[]},
+  9:{ww:'3h',naps:2,fpd:3,mlpf:190,tml:720,bt:'7:00 PM',nf:0,sol:true,ms:['Crawling confidently','Stands holding furniture','First words may appear','Pincer grip'],sch:[{t:'7:00 AM',l:'Morning Milk',ml:210,i:'🌅',c:'#EF9348'},{t:'7:30 AM',l:'Breakfast',mn:'Finger foods · 3–4 tbsp',i:'🥣',c:'#81C784'},{t:'10:00 AM',l:'Nap 1',mn:'1–1.5 hrs',i:'😴',c:'#6C8EBF'},{t:'11:30 AM',l:'Lunch',mn:'4–6 tbsp',i:'🥣',c:'#81C784'},{t:'2:00 PM',l:'Nap 2',mn:'1–1.5 hrs',i:'😴',c:'#6C8EBF'},{t:'5:30 PM',l:'Dinner',mn:'4–6 tbsp',i:'🥣',c:'#81C784'},{t:'7:00 PM',l:'Bedtime',mn:'Sleep sack · white noise',i:'🌙',c:'#3949AB'}],act:[{i:'🚶',n:'Furniture Cruising',dur:'15 min',ms:'Pre-walking',w:'Cruising is the step before walking.',h:'Low furniture in a safe circuit.'},{i:'🫴',n:'Self-Feeding',dur:'Mealtimes',ms:'Pincer grip',w:'Pincer grip and self-feeding develop together.',h:'Puffs, soft banana.'}],gen:[{i:'🚶',n:'Furniture Cruising',sets:'All awake',d:'Walk along furniture.',tip:'Sofa + coffee table in a safe circuit.',dur:0}],tort:[]},
+  12:{ww:'3.5–4h',naps:1,fpd:0,mlpf:0,tml:420,bt:'7:00 PM',nf:0,sol:true,ms:['First independent steps','2–5 words with meaning','Points to body parts','Waves goodbye'],sch:[{t:'7:00 AM',l:'Wake — Whole Milk',mn:'Whole cow\'s milk in open cup',i:'🌅',c:'#81C784'},{t:'7:30 AM',l:'Breakfast',mn:'Finger foods',i:'🥣',c:'#81C784'},{t:'12:00 PM',l:'Lunch',mn:'Family lunch',i:'🥣',c:'#81C784'},{t:'12:30 PM',l:'Single Nap',mn:'1.5–2 hrs',i:'😴',c:'#6C8EBF'},{t:'5:30 PM',l:'Dinner',mn:'Family dinner',i:'🥣',c:'#81C784'},{t:'7:00 PM',l:'Bedtime',mn:'Sleep sack · white noise',i:'🌙',c:'#3949AB'}],act:[{i:'🚀',n:'Walking & Climbing',dur:'All awake',ms:'Walking',w:'Movement IS the learning.',h:'Chase games. Clear safe space.'},{i:'🗣️',n:'Two-Word Combos',dur:'All day',ms:'Language',w:'Language explosion is near.',h:'\'More milk?\' \'Big ball!\' Always 2 words.'}],gen:[{i:'👣',n:'Walking Practice',sets:'All day',d:'Encourage walking over crawling.',tip:'Chase games.',dur:0}],tort:[]}
 };
 function getAD(a){const ks=Object.keys(AD).map(Number).sort((a,b)=>a-b);return AD[ks.reduce((p,c)=>c<=a?c:p,ks[0])];}
 const ALF={0:'Newborn',1:'1 Month',2:'2 Months',3:'3 Months',4:'4 Months',5:'5 Months',6:'6 Months',7:'7 Months',8:'8 Months',9:'9 Months',10:'10 Months',11:'11 Months',12:'12 Months'};
-const WKD={4:{s:'🌱',n:'Poppy seed',d:'Implantation happening. Neural tube forming.',tip:'Start prenatal vitamins now.'},5:{s:'🫘',n:'Sesame seed',d:'Heart begins beating.',tip:'Folic acid is critical right now.'},6:{s:'🫑',n:'Pea',d:'Nose, ears and eyes starting to form.',tip:'First OB appointment soon.'},7:{s:'🫐',n:'Blueberry',d:'Hands and feet forming. Brain growing fast.',tip:'Morning sickness peaks. Ginger helps.'},8:{s:'🍒',n:'Raspberry',d:'All major organs forming.',tip:'Small frequent meals help nausea.'},9:{s:'🍇',n:'Grape',d:'Tail disappears. Baby can move.',tip:'Stay hydrated.'},10:{s:'🍓',n:'Strawberry',d:'Officially a fetus! Fingerprints forming.',tip:'First trimester screening opens.'},11:{s:'🫒',n:'Fig',d:'Bones hardening. Baby can hiccup.',tip:'Energy may start returning.'},12:{s:'🍋',n:'Lime',d:'Sucking reflex. Miscarriage risk drops.',tip:'Most people share the news now!'},13:{s:'🥚',n:'Egg',d:'Fingerprints fully formed.',tip:'Second trimester starts!'},14:{s:'🍑',n:'Peach',d:'Making facial expressions.',tip:'Best trimester for many.'},15:{s:'🍎',n:'Apple',d:'Can sense light.',tip:'You may start feeling flutters soon.'},16:{s:'🥑',n:'Avocado',d:'Can make facial expressions.',tip:'First movements coming soon.'},17:{s:'🍐',n:'Pear',d:'Fat forming under skin.',tip:'Round ligament pain is normal!'},18:{s:'🫑',n:'Bell pepper',d:'Can hear you.',tip:'Talk and sing to baby!'},19:{s:'🥭',n:'Mango',d:'Vernix coating forming.',tip:'Sleep on your left side.'},20:{s:'🍌',n:'Banana',d:'Can hear sounds. Halfway there!',tip:'Anatomy scan this week!'},21:{s:'🥕',n:'Carrot',d:'Eyebrows and eyelids fully formed.',tip:'Iron needs increase.'},22:{s:'🌽',n:'Corn cob',d:'Grip reflex developing.',tip:'Start thinking about childbirth classes.'},23:{s:'🍆',n:'Large eggplant',d:'Sense of movement developing.',tip:'Glucose test coming at 24–28 weeks.'},24:{s:'🌽',n:'Ear of corn',d:'Face fully formed. Taste buds work.',tip:'Glucose challenge test window.'},25:{s:'🥦',n:'Head of broccoli',d:'Nostrils begin to open.',tip:'Heartburn — eat smaller meals.'},26:{s:'🥬',n:'Bunch of kale',d:'Eyes beginning to open.',tip:'Consider a hospital tour.'},27:{s:'🥒',n:'Cucumber',d:'Brain tissue developing rapidly.',tip:'Third trimester starts next week!'},28:{s:'🍆',n:'Eggplant',d:'Eyes can open. Regular sleep/wake cycles.',tip:'Tdap vaccine recommended.'},29:{s:'🎃',n:'Small butternut squash',d:'Muscle tone developing.',tip:'Kick counts — 10 kicks in 2 hours.'},30:{s:'🥥',n:'Large coconut',d:'Lanugo starting to disappear.',tip:'Pack hospital bag soon!'},31:{s:'🍈',n:'Honeydew melon',d:'All five senses working.',tip:'Pillow between knees helps sleep.'},32:{s:'🥥',n:'Coconut',d:'Practice breathing. Gaining ~0.5lb/week.',tip:'Pack hospital bag!'},33:{s:'🍍',n:'Pineapple',d:'Immune system developing.',tip:'Braxton Hicks are normal now.'},34:{s:'🎾',n:'Large cantaloupe',d:'Fingernails fully grown.',tip:'Group B Strep test at 35–37 weeks.'},35:{s:'🥬',n:'Romaine lettuce',d:'Kidneys fully developed.',tip:'Hospital bag packed?'},36:{s:'🥬',n:'Head of lettuce',d:'Lungs nearly ready.',tip:'Group B Strep test. Weekly appointments.'},37:{s:'🌿',n:'Bunch of chard',d:'Full term! Grasp firm enough.',tip:'Still developing — not quite done!'},38:{s:'🎃',n:'Small pumpkin',d:'Vocal cords complete.',tip:'Any day now could be the day!'},39:{s:'🍉',n:'Mini watermelon',d:'Billions of neurons connected.',tip:'Know your labor signs. Bag packed?'},40:{s:'🍉',n:'Small watermelon',d:'Fully developed and ready!',tip:'Any day now!'},41:{s:'🎃',n:'Large pumpkin',d:'Post-term monitoring begins.',tip:'Talk to provider about induction.'},42:{s:'🎃',n:'Very large pumpkin',d:'Post-term. Provider will discuss next steps.',tip:'Follow provider guidance closely.'}};
-function getWD(w){return WKD[w]||WKD[40];}
+const WKD={4:{s:'🫐',n:'Poppy seed',d:'Implantation happening. Neural tube forming.',tip:'Start prenatal vitamins now.'},6:{s:'🫑',n:'Pea',d:'Heart beating ~100 bpm.',tip:'First OB appointment soon.'},8:{s:'🍒',n:'Raspberry',d:'All major organs forming.',tip:'Morning sickness peaks. Ginger helps.'},10:{s:'🍓',n:'Strawberry',d:'Officially a fetus! Fingerprints forming.',tip:'First trimester screening opens.'},12:{s:'🍋',n:'Lime',d:'Sucking reflex. Miscarriage risk drops.',tip:'Most people share the news now!'},16:{s:'🥑',n:'Avocado',d:'Can make facial expressions.',tip:'You might feel first movements soon.'},20:{s:'🍌',n:'Banana',d:'Can hear sounds. Halfway there!',tip:'Anatomy scan this week!'},24:{s:'🌽',n:'Ear of corn',d:'Face fully formed. Taste buds work.',tip:'Glucose challenge test window.'},28:{s:'🍆',n:'Eggplant',d:'Eyes can open. Regular sleep cycles.',tip:'Tdap vaccine recommended.'},32:{s:'🥥',n:'Coconut',d:'Practice breathing. Gaining ~0.5lb/week.',tip:'Pack hospital bag!'},36:{s:'🥬',n:'Head of lettuce',d:'Lungs nearly ready.',tip:'Group B Strep test.'},40:{s:'🍉',n:'Small watermelon',d:'Fully developed and ready!',tip:'Any day now!'}};
+function getWD(w){const ks=Object.keys(WKD).map(Number).sort((a,b)=>a-b);return WKD[ks.reduce((p,c)=>c<=w?c:p,ks[0])];}
 const SOLIDS=[
-  {name:'Avocado',e:'🥑',al:false,nut:['Healthy fats','Folate'],prep6:['Halve, remove pit, scoop flesh','Mash with fork until smooth','Thin with breastmilk if needed','Serve 1–2 tsp'],prep8:['Mash with some texture','Small soft 1cm pieces OK'],prep10:['Baton strips — must squish between fingers'],tex6:'Smooth puree',tex8:'Soft mash',tex10:'Soft strips'},
+  {name:'Avocado',e:'🥑',al:false,nut:['Healthy fats','Folate'],prep6:['Halve, remove pit, scoop flesh','Mash with fork until smooth','Thin with breastmilk if needed','Serve 1–2 tsp'],prep8:['Mash with fork — leave some texture','Small soft 1cm pieces OK'],prep10:['Baton strips — must squish between fingers'],tex6:'Smooth puree',tex8:'Soft mash',tex10:'Soft strips'},
   {name:'Sweet Potato',e:'🍠',al:false,nut:['Vitamin A','Vitamin C','Fiber'],prep6:['Peel and cube','Steam 15 min until very soft','Blend until completely smooth'],prep8:['Steam soft, mash with fork'],prep10:['1cm cubes — must squish between fingers'],tex6:'Smooth puree',tex8:'Mashed',tex10:'Soft cubes'},
-  {name:'Egg',e:'🥚',al:true,alNote:'Top allergen. Start with YOLK ONLY first. Watch 2+ hrs.',nut:['Protein','Iron','Choline'],prep6:['Hard boil 12 min','YOLK ONLY — mash with water','Serve 1/4 tsp, wait 2 hrs'],prep8:['Scramble until just set, very soft'],prep10:['Well-scrambled bites'],tex6:'Smooth yolk mash',tex8:'Soft scrambled',tex10:'Scrambled bites'},
-  {name:'Peanut Butter',e:'🥜',al:true,alNote:'Top allergen but early intro reduces risk. SMOOTH only — never chunky.',nut:['Protein','Healthy fats'],prep6:['SMOOTH PB only','Thin: 1 tsp PB + 3 tsp warm water','Never thick PB — choking risk','1/4 tsp, wait 2+ hrs'],prep8:['Thin layer on toast finger'],prep10:['Thin spread on toast strip'],tex6:'Very thinned paste',tex8:'Thin spread',tex10:'Thin spread'},
+  {name:'Egg',e:'🥚',al:true,alNote:'Top allergen. Start with YOLK ONLY first. Watch 2+ hrs.',nut:['Protein','Iron','Choline'],prep6:['Hard boil 12 min','YOLK ONLY — mash with water until smooth','Serve 1/4 tsp, wait 2 hrs'],prep8:['Scramble until just set, very soft'],prep10:['Well-scrambled bites'],tex6:'Smooth yolk mash',tex8:'Soft scrambled',tex10:'Scrambled bites'},
+  {name:'Peanut Butter',e:'🥜',al:true,alNote:'Top allergen but early intro reduces risk. SMOOTH only — never chunky (choking hazard). Thin it significantly.',nut:['Protein','Healthy fats'],prep6:['SMOOTH PB only','Thin: 1 tsp PB + 3 tsp warm water','Never give thick PB — choking risk','1/4 tsp, wait 2+ hrs'],prep8:['Thin layer on toast finger'],prep10:['Thin spread on toast strip'],tex6:'Very thinned paste',tex8:'Thin spread',tex10:'Thin spread'},
   {name:'Salmon',e:'🐟',al:true,alNote:'Top allergen. Introduce alone. Remove ALL bones — check twice.',nut:['Omega-3 DHA','Protein','Vitamin D'],prep6:['Bake at 400°F 12–15 min','Remove ALL bones — check twice','Blend with water until smooth'],prep8:['Flake into tiny pieces, check for bones'],prep10:['Bake, flake, check for bones'],tex6:'Smooth puree',tex8:'Flaked soft',tex10:'Flaked'},
   {name:'Banana',e:'🍌',al:false,nut:['Potassium','Vitamin B6'],prep6:['Mash very ripe banana','Thin with breastmilk if needed'],prep8:['Slice into rounds then quarter'],prep10:['1cm pieces'],tex6:'Smooth mash',tex8:'Soft pieces',tex10:'Pieces'},
-  {name:'Broccoli',e:'🥦',al:false,nut:['Vitamin C','Vitamin K','Folate'],prep6:['Steam florets 12 min until very soft','Blend with cooking water'],prep8:['Steam well, mash or small soft pieces'],prep10:['Steam very soft — whole small floret is built-in handle!'],tex6:'Smooth puree',tex8:'Mashed',tex10:'Soft whole floret'},
+  {name:'Broccoli',e:'🥦',al:false,nut:['Vitamin C','Vitamin K','Folate'],prep6:['Steam florets 12 min until very soft','Blend with cooking water'],prep8:['Steam well, mash or small soft pieces'],prep10:['Steam very soft — offer whole small floret (built-in handle!)'],tex6:'Smooth puree',tex8:'Mashed',tex10:'Soft whole floret'},
   {name:'Lentils',e:'🫘',al:false,nut:['Iron','Protein','Fiber'],prep6:['Rinse red lentils, simmer 15 min','Blend with broth — pair with Vitamin C food'],prep8:['Mash well-cooked lentils'],prep10:['Whole well-cooked lentils'],tex6:'Smooth puree',tex8:'Mashed',tex10:'Soft whole'},
   {name:'Plain Yogurt',e:'🥛',al:true,alNote:'Top allergen. PLAIN whole-milk only — never flavored. No honey under 12 months.',nut:['Calcium','Protein','Probiotics'],prep6:['Plain whole-milk yogurt only','1–2 tsp to start, wait 2+ hrs'],prep8:['As-is or mix with fruit puree'],prep10:['Yogurt + soft fruit pieces'],tex6:'Smooth yogurt',tex8:'Yogurt+fruit',tex10:'Yogurt+pieces'},
 ];
-const MEDS={'Acetaminophen (Tylenol)':{note:'Every 4–6 hrs max. Under 3 months: call pediatrician first.',interval:'4–6 hrs',calc(kg){const mg=Math.round(kg*15);return`${mg}mg · ${(mg/32).toFixed(1)}ml of 160mg/5ml liquid`;}},
-'Ibuprofen (Motrin/Advil)':{note:'6 months+ ONLY. Give with food. Every 6–8 hrs max.',interval:'6–8 hrs',calc(kg){const mg=Math.round(kg*10);return`${mg}mg · ${(mg/20).toFixed(1)}ml of 100mg/5ml liquid`;}},
-'Vitamin D Drops':{note:'All breastfed babies need 400 IU/day from birth.',interval:'Daily',calc(){return'400 IU daily — use product dropper';}}};
+const MEDS={
+  'Acetaminophen (Tylenol)':{note:'Every 4–6 hrs max. Under 3 months: call pediatrician first.',interval:'4–6 hrs',calc(kg){const mg=Math.round(kg*15);return`${mg}mg · ${(mg/32).toFixed(1)}ml of 160mg/5ml liquid`;}},
+  'Ibuprofen (Motrin/Advil)':{note:'6 months+ ONLY. Give with food. Every 6–8 hrs max.',interval:'6–8 hrs',calc(kg){const mg=Math.round(kg*10);return`${mg}mg · ${(mg/20).toFixed(1)}ml of 100mg/5ml liquid`;}},
+  'Vitamin D Drops':{note:'All breastfed babies need 400 IU/day from birth.',interval:'Daily',calc(){return'400 IU daily — use product dropper';}}
+};
 const PREC=[{id:'pv',t:'Start prenatal vitamins (folic acid)',s:'400–800mcg minimum'},{id:'ob',t:'Preconception OB/GYN visit',s:'Health history, medications, vaccines'},{id:'teeth',t:'Dental checkup',s:'Gum disease linked to preterm birth'},{id:'alcohol',t:'Cut alcohol and smoking',s:'Both significantly reduce fertility'},{id:'caffeine',t:'Limit caffeine <200mg/day',s:'~1–2 cups coffee'},{id:'exercise',t:'Regular moderate exercise',s:'30 min/day'},{id:'partner',t:'Partner health check',s:'Sperm analysis if needed after 6 months'},{id:'vaccines',t:'Check vaccine status',s:'MMR, varicella, flu, Tdap'}];
-const TRIMC=[{id:'t1ob',t:'First OB appointment (8–10 weeks)',s:'Confirm pregnancy, due date, blood work'},{id:'t1nt',t:'Nuchal translucency scan (11–14 weeks)',s:'Optional first trimester screening'},{id:'t2anatomy',t:'Anatomy scan (18–22 weeks)',s:'Detailed fetal anatomy'},{id:'t2gd',t:'Glucose challenge test (24–28 weeks)',s:'Screens for gestational diabetes'},{id:'t2tdap',t:'Tdap vaccine (27–36 weeks)',s:'Protects newborn from whooping cough'},{id:'t2class',t:'Sign up for childbirth class',s:'Before 32 weeks'},{id:'t3hbag',t:'Pack hospital bag (35 weeks)',s:''},{id:'t3plan',t:'Complete birth plan',s:'Share with provider and partner'},{id:'t3strep',t:'Group B Strep test (35–37 weeks)',s:''},{id:'t3car',t:'Install and check car seat',s:''},{id:'t3ped',t:'Choose a pediatrician',s:'Before baby arrives'}];
+const TRIMC=[{id:'t1ob',t:'First OB appointment (8–10 weeks)',s:'Confirm pregnancy, due date, blood work'},{id:'t1nt',t:'Nuchal translucency scan (11–14 weeks)',s:'Optional first trimester screening'},{id:'t2anatomy',t:'Anatomy scan (18–22 weeks)',s:'Detailed fetal anatomy'},{id:'t2gd',t:'Glucose challenge test (24–28 weeks)',s:'Screens for gestational diabetes'},{id:'t2tdap',t:'Tdap vaccine (27–36 weeks)',s:'Protects newborn from whooping cough'},{id:'t2class',t:'Sign up for childbirth class',s:'Before 32 weeks'},{id:'t3hbag',t:'Pack hospital bag (35 weeks)',s:''},{id:'t3plan',t:'Complete birth plan',s:'Share with provider and partner'},{id:'t3strep',t:'Group B Strep test (35–37 weeks)',s:''},{id:'t3car',t:'Install and check car seat',s:''},{id:'t3ped',t:'Choose a pediatrician',s:'Do this before baby arrives'}];
 const BPQ=[{id:'pain',q:'Pain Management',opts:['Unmedicated','Epidural if needed','Definitely epidural','Open to options']},{id:'cord',q:'Cord Clamping',opts:['Delayed (1–3 min)','Immediate','Partner cuts cord']},{id:'skin',q:'Skin-to-Skin',opts:['Immediate','After assessments','As soon as possible']},{id:'feed',q:'Feeding',opts:['Breastfeeding','Formula','Combination','Undecided']},{id:'room',q:'Who\'s in the Room',opts:['Partner only','Partner + doula','Partner + parents']}];
 const VACCS={0:['Hepatitis B (1st)'],2:['DTaP','Hib','IPV','PCV15','RV','Hep B (2nd)'],4:['DTaP (2nd)','Hib (2nd)','IPV (2nd)','PCV15 (2nd)','RV (2nd)'],6:['DTaP (3rd)','Hib (3rd)','PCV15 (3rd)','Flu','Hep B (3rd)'],12:['MMR','Varicella','Hep A','PCV15 (4th)','Hib (4th)']};
 const PSYM=['Nausea','Fatigue','Heartburn','Back pain','Swelling','Headache','Insomnia','Braxton Hicks'];
-const MODE_TABS={ttc:['cycle','log','insights','checklist','ask'],preg:['week','track','appts','birthplan','checklist','nursery','ask'],baby:['schedule','track','feeds','sleep','develop','health','newborn','postpartum','photos','ask']};
-const TLBLS={cycle:'🌸 Cycle',log:'📝 Log',insights:'💡 Insights',checklist:'✅ Checklist',ask:'✨ Ask',week:'🤰 Week',track:'📝 Track',appts:'📅 Appts',birthplan:'📋 Birth Plan',nursery:'🛏️ Nursery',schedule:'📋 Schedule',feeds:'🍼 Feeds',sleep:'💤 Sleep',develop:'👶 Develop',health:'🩺 Health',newborn:'📋 Newborn',postpartum:'💙 Postpartum',photos:'📸 Photos'};
+const MODE_TABS={ttc:['cycle','log','insights','checklist','ask'],preg:['week','track','appts','birthplan','checklist','ask'],baby:['schedule','track','feeds','sleep','develop','health','ask']};
+const TAB_LABELS={cycle:'🌸 Cycle',log:'📝 Log',insights:'📊 Insights',checklist:'✅ Checklist',ask:'✨ Ask',week:'🤰 Week',track:'📝 Track',appts:'📅 Appts',birthplan:'📋 Birth Plan',schedule:'📋 Schedule',feeds:'🍼 Feeds',sleep:'💤 Sleep',develop:'👶 Develop',health:'🩺 Health'};
 
 // ── STATE ──
-let S={mode:'',tab:'',babyName:'',babyAge:2,unit:'oz',logs:[],foods:[],health:{temps:[],meds:[],vaccs:[],visits:[],moods:[]},ms:{},growth:[],wtKg:null,ttMins:0,wtSets:{L:0,R:0},ttcName:'',pregName:'',pregDue:'',pregWeek:20,cycleLen:28,periodLen:5,periods:[],bbt:[],lh:[],symptoms:[],preconCheck:{},trimCheck:{},pregSymptoms:[],pregWeight:[],appts:[],kicks:[],contractions:[],birthPlan:{},hospitalBag:{},nurseryCheck:{},newbornCheck:{},photos:{},exp:null,mType:null,devTab:'activities',fsTab:'milk',solidIdx:null,newbornTab:'checklist',nurseryTab:'hospital',ppTab:'recovery',babyBirthday:null};
-function sv(){try{localStorage.setItem('lb8',JSON.stringify(S));}catch(e){}}
-function ld(){try{const d=JSON.parse(localStorage.getItem('lb8')||localStorage.getItem('littlebug1')||localStorage.getItem('lb7')||'{}');Object.keys(d).forEach(k=>{if(k in S)S[k]=d[k];});['temps','meds','vaccs','visits','moods'].forEach(k=>{if(!Array.isArray(S.health[k]))S.health[k]=[];});}catch(e){}}
+let S={mode:'',tab:'',babyName:'',babyAge:2,unit:'oz',logs:[],foods:[],health:{temps:[],meds:[],vaccs:[],visits:[],moods:[]},ms:{},growth:[],wtKg:null,ttMins:0,wtSets:{L:0,R:0},ttcName:'',pregName:'',pregDue:'',pregWeek:20,cycleLen:28,periodLen:5,periods:[],bbt:[],lh:[],symptoms:[],preconCheck:{},trimCheck:{},pregSymptoms:[],pregWeight:[],appts:[],kicks:[],contractions:[],birthPlan:{},hospitalBag:{},exp:null,mType:null,devTab:'activities',fsTab:'milk',solidIdx:null};
+function sv(){try{localStorage.setItem('lby6',JSON.stringify(S));}catch(e){}}
+function ld(){try{const d=JSON.parse(localStorage.getItem('lby6')||'{}');Object.keys(d).forEach(k=>{if(k in S)S[k]=d[k];});['temps','meds','vaccs','visits','moods'].forEach(k=>{if(!Array.isArray(S.health[k]))S.health[k]=[];});}catch(e){}}
 function uid(){return Math.random().toString(36).slice(2,8)}
 function nw(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
 function tod(){return new Date().toLocaleDateString([],{month:'short',day:'numeric'})}
@@ -277,138 +271,141 @@ function fwt(kg){if(!kg)return'—';const{lb,oz}=kgLb(kg);return`${lb}lb ${oz}oz
 function since(t){if(!t)return null;const now=Date.now();const p=t.split(':');let d=new Date();d.setHours(+p[0],+p[1],0);if(d>now)d.setDate(d.getDate()-1);const m=Math.floor((now-d)/60000);return{total:m,s:m<60?m+'m ago':Math.floor(m/60)+'h '+(m%60)+'m ago'}}
 function lastOf(t){return(S.logs.find(l=>l.type===t)||{}).time||null}
 function tog(k){S.exp=S.exp===k?null:k;ra()}
-function shd(t){return`<div class="shd">${t}</div>`}
-function calcBabyAge(){if(!S.babyBirthday)return S.babyAge||0;const birth=new Date(S.babyBirthday);const now=new Date();let m=(now.getFullYear()-birth.getFullYear())*12+(now.getMonth()-birth.getMonth());if(now.getDate()<birth.getDate())m--;return Math.max(0,Math.min(12,m));}
-function getBabyAgeDisplay(){if(!S.babyBirthday)return ALF[S.babyAge]||'?';const birth=new Date(S.babyBirthday);const days=Math.floor((Date.now()-birth)/86400000);if(days===0)return'Born today! 🎉';if(days<7)return days+' day'+(days===1?'':'s')+' old';if(days<30){const w=Math.floor(days/7);return w+' week'+(w===1?'':'s')+' old';}return ALF[calcBabyAge()]||'?';}
-function cycleDay(){if(!S.periods.length)return null;const d=new Date(S.periods[S.periods.length-1].iso||new Date());const diff=Math.floor((Date.now()-d)/86400000)+1;return diff>0&&diff<=60?diff:null;}
-function ovDay(){return Math.round(S.cycleLen-14)}
-function nextP(){if(!S.periods.length)return'—';const d=new Date((S.periods[S.periods.length-1].iso||new Date()));return new Date(d.getTime()+S.cycleLen*86400000).toLocaleDateString([],{month:'short',day:'numeric'});}
-function calcW(){if(!S.pregDue)return S.pregWeek||20;const due=new Date(S.pregDue);const w=Math.floor((Date.now()-new Date(due.getTime()-280*86400000))/604800000);return Math.max(1,Math.min(42,w));}
-function trimOf(w){return w<=13?'1st Tri':w<=26?'2nd Tri':'3rd Tri'}
-function daysL(){if(!S.pregDue)return'—';const d=Math.ceil((new Date(S.pregDue)-Date.now())/86400000);return d>0?d+'d':d===0?'Today!':'Born!';}
-function hour(){return new Date().getHours();}
+function shd(t){return`<div class="section-hd">${t}</div>`}
 
-// ── MODE ── exactly as working version
+// ── MODE ──
 function setMode(m){
-  S.mode=m;S.tab=MODE_TABS[m][0];
-  if(m==='baby'&&!S.babyBirthday){S.babyBirthday=new Date().toISOString().slice(0,10);S.babyAge=0;}
-  document.getElementById('landing').classList.add('hidden');
-  document.getElementById('app').classList.add('on');
+  S.mode=m;
+  S.tab=MODE_TABS[m][0];
+  document.getElementById('screen-landing').style.display='none';
+  document.getElementById('screen-app').style.display='flex';
   sv();ra();
 }
 function switchMode(){
-  document.getElementById('landing').classList.remove('hidden');
-  document.getElementById('app').classList.remove('on');
+  document.getElementById('screen-landing').style.display='flex';
+  document.getElementById('screen-app').style.display='none';
 }
 
-// ── RENDER — exactly as working version ──
-function ra(){rHdr();rNav();rContent();}
-
+// ── RENDER ──
+function ra(){rHdr();rNav();rPage();}
 function rHdr(){
-  const mb=document.getElementById('mbadge');
-  if(mb){mb.textContent={ttc:'🌱 TTC',preg:'🌿 Pregnant',baby:'🐞 Baby'}[S.mode]||'🐞 Baby';mb.className='mbadge '+(S.mode||'baby');}
+  const pp=document.getElementById('mode-pill');
+  if(pp){pp.textContent={ttc:'🌸 TTC',preg:'🤰 Pregnant',baby:'🌙 Baby'}[S.mode]||'🌙 Baby';pp.className='mode-pill '+(S.mode||'baby');}
+  const bs=document.getElementById('brand-sub');
+  if(bs)bs.textContent=S.mode==='baby'?(S.babyName?`${S.babyName}'s Guide ✏️`:'Tap to personalize ✏️'):S.mode==='preg'?(S.pregName||'Set your name ✏️'):( S.ttcName||'Set your name ✏️');
   const sb=document.getElementById('stats-bar');if(!sb)return;
   let stats=[];
-  if(S.mode==='ttc')stats=[{l:'Cycle Day',v:cycleDay()||'—'},{l:'Cycle',v:S.cycleLen+'d'},{l:'Ovulation',v:'Day '+ovDay()},{l:'Next Period',v:nextP()}];
+  if(S.mode==='ttc')stats=[{l:'Cycle Day',v:cycDay()||'—'},{l:'Cycle',v:S.cycleLen+'d'},{l:'Ovulation',v:'Day '+ovDay()},{l:'Next Period',v:nextP()}];
   else if(S.mode==='preg'){const w=calcW();stats=[{l:'Week',v:w},{l:'Trimester',v:trimOf(w)},{l:'Days Left',v:daysL()},{l:'Due',v:S.pregDue||'Not set'}];}
-  else{if(S.babyBirthday)S.babyAge=calcBabyAge();const d=getAD(S.babyAge);stats=[{l:'Age',v:getBabyAgeDisplay()},{l:'Wake Win',v:d.ww},{l:'Naps',v:d.naps},{l:'Bedtime',v:d.bt}];}
+  else{const d=getAD(S.babyAge);stats=[{l:'Age',v:ALF[S.babyAge]||'?'},{l:'Wake Win',v:d.ww},{l:'Naps',v:d.naps},{l:'Bedtime',v:d.bt}];}
   sb.innerHTML=stats.map((s,i)=>`<div class="stat"${i===stats.length-1?' style="border-right:none"':''}><div class="sv">${s.v}</div><div class="sl">${s.l}</div></div>`).join('');
 }
-
 function rNav(){
   const tabs=MODE_TABS[S.mode]||[];
-  document.getElementById('nav').innerHTML=tabs.map(t=>`<button class="nb${S.tab===t?' active':''}" onclick="S.tab='${t}';S.exp=null;ra()">${TLBLS[t]||t}</button>`).join('');
-  document.getElementById('content').innerHTML=tabs.map(t=>`<div id="p-${t}" class="tp${S.tab===t?' active':''}"></div>`).join('');
+  const nav=document.getElementById('nav');
+  nav.innerHTML=tabs.map(t=>`<button class="nav-btn${S.tab===t?' active':''}" data-tab="${t}">${TAB_LABELS[t]||t}</button>`).join('');
+  nav.querySelectorAll('.nav-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){S.tab=this.dataset.tab;S.exp=null;ra();});
+  });
+  const content=document.getElementById('content');
+  content.innerHTML=tabs.map(t=>`<div id="p-${t}" class="page${S.tab===t?' active':''}"></div>`).join('');
 }
-
-function rContent(){
-  const fn={
-    cycle:rCycle,log:rTtcLog,insights:rInsights,checklist:rChecklist,ask:rAsk,
-    week:rWeek,track:()=>S.mode==='preg'?rPregTrack():rBabyTrack(),
-    appts:rAppts,birthplan:rBirthPlan,nursery:rNursery,
-    schedule:rSchedule,feeds:rFeeds,sleep:rSleep,develop:rDevelop,health:rHealth,
-    newborn:rNewborn,postpartum:rPostpartum,photos:rPhotos,
-  };
+function rPage(){
+  const fn={cycle:rCycle,log:rTtcLog,insights:rInsights,checklist:rChecklist,ask:rAsk,week:rWeek,track:()=>S.mode==='preg'?rPregTrack():rBabyTrack(),appts:rAppts,birthplan:rBirthPlan,schedule:rSchedule,feeds:rFeeds,sleep:rSleep,develop:rDevelop,health:rHealth};
   if(fn[S.tab])fn[S.tab]();
 }
 
-// ── TTC ──
+// TTC helpers
+function cycDay(){if(!S.periods.length)return null;const last=S.periods[S.periods.length-1];const d=new Date(last.iso||new Date());const diff=Math.floor((Date.now()-d)/86400000)+1;return diff>0&&diff<=60?diff:null;}
+function ovDay(){return Math.round(S.cycleLen-14)}
+function nextP(){if(!S.periods.length)return'—';const d=new Date((S.periods[S.periods.length-1].iso||new Date()));return new Date(d.getTime()+S.cycleLen*86400000).toLocaleDateString([],{month:'short',day:'numeric'});}
+
 function rCycle(){
   const el=document.getElementById('p-cycle');if(!el)return;
-  const cd=cycleDay();const ov=ovDay();const fs=ov-4;const inF=cd&&cd>=fs&&cd<=ov+1;
-  let h=`<div class="cy-hero"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#E79A7D;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Current Cycle</div><div style="font-family:'Nunito',sans-serif;font-size:34px;font-weight:800;color:#3B3B3B;line-height:1">Day ${cd||'—'}</div><div style="font-size:11px;color:#8E8A86;margin-top:3px">${inF?'🟢 Fertile window open!':(cd&&cd<fs?`Fertile in ~${fs-cd} days`:'Outside fertile window')}</div></div><div style="text-align:right"><div style="font-size:10px;color:#8E8A86;margin-bottom:2px">Ovulation Est.</div><div style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:#E79A7D">Day ${ov}</div></div></div><div class="cy-grid">`;
+  const cd=cycDay();const ov=ovDay();const fs=ov-4;const inF=cd&&cd>=fs&&cd<=ov+1;
+  let h=`<div style="padding:16px;border-radius:16px;background:linear-gradient(135deg,rgba(244,114,182,.1),rgba(167,139,250,.07));border:1px solid rgba(244,114,182,.2);margin-bottom:11px">`;
+  h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-size:9px;color:#F472B6;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:3px">Current Cycle</div><div style="font-size:32px;font-weight:700;color:#F5EEFF;line-height:1">Day ${cd||'—'}</div><div style="font-size:11px;color:#BE88A8;margin-top:3px">${inF?'🟢 Fertile window open!':(cd&&cd<fs?`Fertile in ~${fs-cd} days`:'Outside fertile window')}</div></div><div style="text-align:right"><div style="font-size:9px;color:#7A6AAA;margin-bottom:2px">Ovulation Est.</div><div style="font-size:15px;color:#FDE68A;font-weight:600">Day ${ov}</div></div></div>`;
+  h+=`<div class="cycle-grid">`;
   for(let i=1;i<=35;i++){let cls='cy-day';if(i===cd)cls+=' today';if(i<=S.periodLen)cls+=' period';else if(i>=fs&&i<ov)cls+=' fertile';else if(i===ov)cls+=' ov';h+=`<div class="${cls}">${i}</div>`;}
-  h+=`</div><div style="display:flex;gap:10px;font-size:10px;font-weight:600"><span style="color:#C4614A">🔴 Period</span><span style="color:#4A6844">🟢 Fertile</span><span style="color:#A07820">⭐ Ovulation</span></div></div>`;
-  h+=`<div class="log-grid"><button class="log-card" onclick="openM('period')"><span class="ei">🔴</span><span>Log Period</span></button><button class="log-card" onclick="openM('bbt')"><span class="ei">🌡️</span><span>Log BBT</span></button><button class="log-card" onclick="openM('lh')"><span class="ei">⭐</span><span>LH Test</span></button><button class="log-card" onclick="openM('sym-ttc')"><span class="ei">📝</span><span>Symptoms</span></button></div>`;
+  h+=`</div><div style="display:flex;gap:10px;font-size:9px"><span style="color:#F9A8D4">🔴 Period</span><span style="color:#86EFAC">🟢 Fertile</span><span style="color:#FDE68A">⭐ Ovulation</span></div></div>`;
+  h+=`<div class="log-grid"><button class="log-card" id="lc-period"><span class="ei">🔴</span><span>Log Period</span></button><button class="log-card" id="lc-bbt"><span class="ei">🌡️</span><span>Log BBT</span></button><button class="log-card" id="lc-lh"><span class="ei">⭐</span><span>LH Test</span></button><button class="log-card" id="lc-sym"><span class="ei">📝</span><span>Symptoms</span></button></div>`;
   const recent=[...S.periods,...S.bbt,...S.lh,...S.symptoms].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
-  if(recent.length){h+=shd('Recent');recent.forEach(item=>{h+=`<div class="log-row"><div><div style="font-size:13px;font-weight:600;color:#3B3B3B">${item.label||''}</div><div style="font-size:11px;color:#8E8A86">${item.date||''}</div></div><button class="x-btn" onclick="delTtc('${item.id}')">×</button></div>`;});}
-  h+=`<button class="prim-btn" style="margin-top:10px;background:linear-gradient(135deg,#D9C6E6,#C4A8E0)" onclick="if(confirm('Switch to Pregnancy mode?'))setMode('preg')">🌿 I\'m Pregnant! →</button>`;
+  if(recent.length){h+=shd('Recent');recent.forEach(item=>{h+=`<div class="log-row"><div><div style="font-size:12px;color:#C8D8F0">${item.label||''}</div><div style="font-size:10px;color:#7A6AAA">${item.date||''}</div></div><button class="x-btn" data-del="${item.id}" data-type="ttc">×</button></div>`;});}
+  h+=`<button class="primary-btn" id="btn-go-preg" style="margin-top:10px;background:linear-gradient(135deg,#9333EA,#EC4899)">🤰 I\'m Pregnant! →</button>`;
   el.innerHTML=h;
+  el.querySelector('#lc-period')?.addEventListener('click',()=>openM('period'));
+  el.querySelector('#lc-bbt')?.addEventListener('click',()=>openM('bbt'));
+  el.querySelector('#lc-lh')?.addEventListener('click',()=>openM('lh'));
+  el.querySelector('#lc-sym')?.addEventListener('click',()=>openM('sym-ttc'));
+  el.querySelector('#btn-go-preg')?.addEventListener('click',()=>{if(confirm('Switch to Pregnancy mode?'))setMode('preg');});
+  el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){delTtc(this.dataset.del);}));
 }
 function delTtc(id){['periods','bbt','lh','symptoms'].forEach(k=>{S[k]=(S[k]||[]).filter(x=>x.id!==id);});sv();ra();}
 
 function rTtcLog(){
   const el=document.getElementById('p-log');if(!el)return;
   let h=shd('BBT Chart');
-  if(S.bbt.length<2)h+=`<div class="info-b">Log at least 2 BBT readings to see your chart. Take temperature at the same time every morning before getting up.</div>`;
-  else{const temps=S.bbt.slice(-14);const mn=Math.min(...temps.map(t=>t.temp));const mx=Math.max(...temps.map(t=>t.temp));h+=`<div class="card"><div style="display:flex;align-items:flex-end;gap:2px;height:55px">${temps.map(t=>{const pct=mx>mn?Math.round(((t.temp-mn)/(mx-mn))*80)+20:50;return`<div style="flex:1;background:linear-gradient(180deg,#E79A7D,rgba(231,154,125,.3));border-radius:3px 3px 0 0;height:${pct}%;min-height:4px"></div>`;}).join('')}</div></div>`;}
+  if(S.bbt.length<2){h+=`<div class="info-box">Log at least 2 BBT readings to see your chart. Take temperature at the same time every morning before getting up.</div>`;}
+  else{const temps=S.bbt.slice(-14);const mn=Math.min(...temps.map(t=>t.temp));const mx=Math.max(...temps.map(t=>t.temp));h+=`<div class="panel"><div style="display:flex;align-items:flex-end;gap:2px;height:55px">${temps.map(t=>{const pct=mx>mn?Math.round(((t.temp-mn)/(mx-mn))*80)+20:50;return`<div style="flex:1;background:linear-gradient(180deg,#F472B6,rgba(244,114,182,.3));border-radius:2px 2px 0 0;height:${pct}%;min-height:4px"></div>`;}).join('')}</div></div>`;}
   h+=shd('LH Tests');
-  if(!S.lh.length)h+=`<div style="font-size:12px;color:#B8AFA8;padding:6px 0">No LH tests logged yet.</div>`;
-  else S.lh.slice(-5).forEach(l=>{h+=`<div class="log-row"><div><div style="font-size:13px;font-weight:600;color:#3B3B3B">${l.result||'LH Test'}</div><div style="font-size:11px;color:#8E8A86">${l.date}</div></div><button class="x-btn" onclick="delTtc('${l.id}')">×</button></div>`;});
+  if(!S.lh.length)h+=`<div style="font-size:11px;color:#3D2E58;padding:6px 0">No LH tests logged yet.</div>`;
+  else S.lh.slice(-5).forEach(l=>{h+=`<div class="log-row"><div><div style="font-size:12px;color:#C8D8F0">${l.result||'LH Test'}</div><div style="font-size:10px;color:#7A6AAA">${l.date}</div></div><button class="x-btn" data-del="${l.id}">×</button></div>`;});
   h+=shd('Symptoms');
-  if(!S.symptoms.length)h+=`<div style="font-size:12px;color:#B8AFA8;padding:6px 0">No symptoms logged yet.</div>`;
-  else S.symptoms.slice(-5).forEach(s=>{h+=`<div class="log-row"><div><div style="font-size:13px;font-weight:600;color:#3B3B3B">${s.syms?.join(', ')||'Symptom'}</div><div style="font-size:11px;color:#8E8A86">Day ${s.day||'?'} · ${s.date||''}</div></div><button class="x-btn" onclick="delTtc('${s.id}')">×</button></div>`;});
+  if(!S.symptoms.length)h+=`<div style="font-size:11px;color:#3D2E58;padding:6px 0">No symptoms logged yet.</div>`;
+  else S.symptoms.slice(-6).forEach(s=>{h+=`<div class="log-row"><div><div style="font-size:12px;color:#C8D8F0">${s.syms?.join(', ')||'Symptom'}</div><div style="font-size:10px;color:#7A6AAA">Day ${s.day||'?'} · ${s.date||''}</div></div><button class="x-btn" data-del="${s.id}">×</button></div>`;});
   el.innerHTML=h;
+  el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){delTtc(this.dataset.del);}));
 }
 
 function rInsights(){
   const el=document.getElementById('p-insights');if(!el)return;
-  let h=`<p class="intro">Fertility patterns and evidence-based guidance.</p>`;
-  [{i:'🛌',t:'Time intercourse around ovulation',d:'Best time is 2 days before ovulation and the day of. Fertile window is roughly 5 days.'},{i:'🌡️',t:'Track BBT daily',d:'Temperature rises ~0.4°F after ovulation. Over time you\'ll see your pattern clearly.'},{i:'💊',t:'Start prenatal vitamins now',d:'Folic acid (400–800mcg) before conception reduces neural tube defects.'},{i:'👨',t:'Partner health matters too',d:'Sperm quality improves with: avoiding heat, supplements (CoQ10, zinc), no smoking.'},{i:'🚫',t:'Limit alcohol, smoking, excess caffeine',d:'Limit caffeine to <200mg/day. Both alcohol and smoking reduce fertility.'}].forEach((t,i)=>{const k=`ti${i}`,o=S.exp===k;h+=`<div class="acc"><div class="acc-h${o?' open':''}" onclick="tog('${k}')"><div style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">${t.i}</span><div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#3B3B3B">${t.t}</div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-b${o?' open':''}">${t.d}</div></div>`;});
-  h+=`<div class="warn-b" style="margin-top:10px"><strong>When to seek help:</strong> Under 35 → after 12 months. 35+ → after 6 months. Any age → irregular periods, PCOS, endometriosis, or previous miscarriages.</div>`;
+  let h=`<p style="font-size:12px;color:#8875B0;margin-bottom:10px;line-height:1.6">Patterns and guidance based on your data.</p>`;
+  [{i:'🛌',t:'Time intercourse around ovulation',d:'Best time is 2 days before ovulation and the day of. Fertile window is roughly 5 days.'},{i:'🌡️',t:'Track BBT daily',d:'Temperature rises ~0.4°F after ovulation. Over time you\'ll see your pattern clearly.'},{i:'💊',t:'Start prenatal vitamins now',d:'Folic acid (400–800mcg) before conception reduces neural tube defects significantly.'},{i:'👨',t:'Partner health matters too',d:'Sperm quality improves with: avoiding heat, supplements (CoQ10, zinc), and no smoking.'},{i:'🚫',t:'Limit alcohol, smoking, excess caffeine',d:'Limit caffeine to <200mg/day. Alcohol and smoking reduce fertility for both partners.'}].forEach((t,i)=>{
+    const k=`ti${i}`,o=S.exp===k;
+    h+=`<div class="acc-wrap"><div class="acc-head${o?' open':''}" data-acc="${k}"><div style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">${t.i}</span><div style="font-size:13px;color:#EDE8FA;font-weight:500">${t.t}</div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-body${o?' open':''}">${t.d}</div></div>`;
+  });
+  h+=`<div class="warn-box" style="margin-top:10px"><strong>When to seek help:</strong> Under 35 → after 12 months. 35+ → after 6 months. Any age → if irregular periods, PCOS, endometriosis, or previous miscarriages.</div>`;
   el.innerHTML=h;
+  el.querySelectorAll('[data-acc]').forEach(btn=>btn.addEventListener('click',function(){tog(this.dataset.acc);}));
 }
 
 function rChecklist(){
   const el=document.getElementById('p-checklist');if(!el)return;
   const list=S.mode==='ttc'?PREC:TRIMC;const chk=S.mode==='ttc'?S.preconCheck:S.trimCheck;
   const done=Object.values(chk).filter(Boolean).length;
-  let h=`<div class="info-b" style="margin-bottom:10px">${done}/${list.length} complete</div><div class="card">`;
-  list.forEach(item=>{const d2=!!chk[item.id];h+=`<div class="cl-row"><div class="cl-box${d2?' done':''}" onclick="togCL('${item.id}')">${d2?'✓':''}</div><div><div style="font-size:13px;color:${d2?'#B8AFA8':'#3B3B3B'};font-weight:600;${d2?'text-decoration:line-through':''}">${item.t}</div>${item.s?`<div style="font-size:11px;color:#8E8A86;margin-top:1px">${item.s}</div>`:''}</div></div>`;});
+  let h=`<div class="info-box" style="margin-bottom:10px">${done}/${list.length} complete</div><div class="panel">`;
+  list.forEach(item=>{const d2=!!chk[item.id];h+=`<div class="cl-row"><div class="cl-check${d2?' done':''}" data-cl="${item.id}">${d2?'✓':''}</div><div><div style="font-size:12px;color:${d2?'#5A4878':'#EDE8FA'};${d2?'text-decoration:line-through':''}">${item.t}</div>${item.s?`<div style="font-size:10px;color:#7A6AAA;margin-top:1px">${item.s}</div>`:''}</div></div>`;});
   h+=`</div>`;
   if(S.mode==='preg'){
-    h+=shd('🧳 Hospital Bag');h+=`<div class="card">`;
-    [{id:'id',t:'ID + insurance card'},{id:'bp',t:'Printed birth plan (3 copies)'},{id:'snacks',t:'Snacks & drinks for labor'},{id:'charger',t:'Phone charger + battery'},{id:'toiletries',t:'Toiletries'},{id:'hgown',t:'Loose going-home outfit'},{id:'nursing',t:'Nursing bra + pads'},{id:'carseat',t:'Car seat installed + checked'},{id:'bclothes',t:'2–3 newborn + 0–3mo sleepers'},{id:'bswaddle',t:'Swaddle blanket'},{id:'partner',t:'Partner: snacks, clothes, charger'}].forEach(item=>{const d2=!!S.hospitalBag[item.id];h+=`<div class="cl-row"><div class="cl-box${d2?' done':''}" onclick="togBag('${item.id}')">${d2?'✓':''}</div><div style="font-size:13px;color:${d2?'#B8AFA8':'#3B3B3B'};font-weight:600;${d2?'text-decoration:line-through':''}">${item.t}</div></div>`;});
-    h+=`</div><button class="prim-btn" id="btn-go-baby" style="margin-top:10px" onclick="if(confirm('Switch to Baby mode?'))setMode('baby')">🐞 Baby Has Arrived! →</button>`;
+    h+=shd('🧳 Hospital Bag');
+    h+=`<div class="panel">`;
+    [{id:'id',t:'ID + insurance card'},{id:'bp',t:'Printed birth plan (3 copies)'},{id:'snacks',t:'Snacks & drinks for labor'},{id:'charger',t:'Phone charger + battery'},{id:'toiletries',t:'Toiletries'},{id:'hgown',t:'Loose going-home outfit'},{id:'nursing',t:'Nursing bra + pads'},{id:'carseat',t:'Car seat installed + checked'},{id:'bclothes',t:'2–3 newborn + 0–3mo sleepers'},{id:'bswaddle',t:'Swaddle blanket'},{id:'partner',t:'Partner: snacks, clothes, charger'}].forEach(item=>{const d2=!!S.hospitalBag[item.id];h+=`<div class="cl-row"><div class="cl-check${d2?' done':''}" data-bag="${item.id}">${d2?'✓':''}</div><div style="font-size:12px;color:${d2?'#5A4878':'#EDE8FA'};${d2?'text-decoration:line-through':''}">${item.t}</div></div>`;});
+    h+=`</div>`;
+    h+=`<button class="primary-btn" id="btn-go-baby" style="margin-top:10px;background:linear-gradient(135deg,#059669,#10B981)">🌙 Baby Has Arrived! →</button>`;
   }
   el.innerHTML=h;
+  el.querySelectorAll('[data-cl]').forEach(btn=>btn.addEventListener('click',function(){const chk=S.mode==='ttc'?S.preconCheck:S.trimCheck;chk[this.dataset.cl]=!chk[this.dataset.cl];sv();ra();}));
+  el.querySelectorAll('[data-bag]').forEach(btn=>btn.addEventListener('click',function(){S.hospitalBag[this.dataset.bag]=!S.hospitalBag[this.dataset.bag];sv();ra();}));
+  el.querySelector('#btn-go-baby')?.addEventListener('click',()=>{if(confirm('Switch to Baby mode?'))setMode('baby');});
 }
-function togCL(id){const chk=S.mode==='ttc'?S.preconCheck:S.trimCheck;chk[id]=!chk[id];sv();ra();}
-function togBag(id){S.hospitalBag[id]=!S.hospitalBag[id];sv();ra();}
 
-// ── PREGNANCY ──
+// Preg helpers
+function calcW(){if(!S.pregDue)return S.pregWeek||20;const due=new Date(S.pregDue);const w=Math.floor((Date.now()-new Date(due.getTime()-280*86400000))/604800000);return Math.max(1,Math.min(42,w));}
+function trimOf(w){return w<=13?'1st Tri':w<=26?'2nd Tri':'3rd Tri'}
+function daysL(){if(!S.pregDue)return'—';const d=Math.ceil((new Date(S.pregDue)-Date.now())/86400000);return d>0?d+'d':d===0?'Today!':'Born!';}
+
 function rWeek(){
   const el=document.getElementById('p-week');if(!el)return;
   const w=calcW();const wd=getWD(w);const pct=Math.round((w/40)*100);
-  let h=`<div class="wk-hero"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div><div style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#9B72CF;text-transform:uppercase;letter-spacing:.06em">Week ${w} of 40</div><div style="font-size:11px;color:#8E8A86;margin-top:1px">${trimOf(w)}</div></div><div style="text-align:right"><div style="font-size:10px;color:#8E8A86">Due</div><div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#9B72CF">${S.pregDue||'Not set'}</div></div></div><div class="size-big">${wd.s}</div><div style="text-align:center;margin-bottom:8px"><div id="wk-size-name" style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:#3B3B3B">Size of a ${wd.n}</div><div style="font-size:12px;color:#8E8A86;margin-top:2px">${daysL()} to go</div></div><div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:${pct}%"></div></div><div style="display:flex;justify-content:space-between;font-size:9px;color:#8E8A86;font-weight:600"><span>Week 1</span><span id="wk-pct">${pct}%</span><span>Week 40</span></div></div>`;
-  h+=`<div class="card"><div style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#3B3B3B;margin-bottom:5px">🍼 Baby this week</div><div id="wk-dev" style="font-size:12px;color:#6B6560;line-height:1.7">${wd.d}</div></div>`;
-  h+=`<div class="tip-b" id="wk-tip">💡 ${wd.tip}</div>`;
+  let h=`<div class="wk-hero"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div><div style="font-size:9px;color:#C4B5FD;text-transform:uppercase;font-weight:600">Week ${w} of 40</div><div style="font-size:10px;color:#A78BFA;margin-top:1px">${trimOf(w)}</div></div><div style="text-align:right"><div style="font-size:9px;color:#7A6AAA">Due Date</div><div style="font-size:13px;color:#C4B5FD;font-weight:500">${S.pregDue||'Not set'}</div></div></div><div class="size-big">${wd.s}</div><div style="text-align:center;margin-bottom:8px"><div style="font-size:18px;font-weight:700;color:#F5EEFF">Size of a ${wd.n}</div><div style="font-size:11px;color:#8875B0;margin-top:1px">${daysL()} to go</div></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><div style="display:flex;justify-content:space-between;font-size:8px;color:#7A6AAA"><span>Week 1</span><span>${pct}%</span><span>Week 40</span></div></div>`;
+  h+=`<div class="panel"><div style="font-size:13px;color:#EDE8FA;font-weight:500;margin-bottom:5px">🍼 Baby this week</div><div style="font-size:11px;color:#9B87BF;line-height:1.7">${wd.d}</div></div>`;
+  h+=`<div class="good-box">💡 ${wd.tip}</div>`;
   h+=shd('Week Selector');
-  h+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><input type="range" min="4" max="42" value="${w}" id="week-slider" style="flex:1;accent-color:#9B72CF"><span style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#9B72CF;min-width:28px" id="week-lbl">W${w}</span></div>`;
+  h+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><input type="range" min="4" max="42" value="${w}" id="week-slider" style="flex:1;accent-color:#A066FF"><span style="font-size:13px;color:#D4C0F5;min-width:28px" id="week-lbl">W${w}</span></div>`;
   h+=shd('Labor Signs');
-  [{s:'Regular contractions',d:'5-1-1: 5 min apart, 1 min long, 1 hr — call provider',c:'#C4614A'},{s:'Water breaks',d:'Clear/pinkish fluid — call provider immediately',c:'#E79A7D'},{s:'Bloody show',d:'Pink or brown mucus — labor may be near',c:'#F4C7C2'},{s:'Baby drops (lightening)',d:'Easier to breathe, more pelvic pressure',c:'#A8C5A1'}].forEach(s=>h+=`<div style="display:flex;gap:9px;padding:7px 0;border-bottom:1.5px solid #F5F1EC"><div style="width:4px;border-radius:2px;background:${s.c};flex-shrink:0"></div><div><div style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#3B3B3B">${s.s}</div><div style="font-size:11px;color:#8E8A86;margin-top:1px">${s.d}</div></div></div>`);
+  [{s:'Regular contractions',d:'5-1-1 rule: 5 min apart, 1 min long, 1 hour — call provider',c:'#F87171'},{s:'Water breaks',d:'Clear/pinkish fluid — call provider immediately',c:'#FB923C'},{s:'Bloody show',d:'Pink or brown mucus — labor hours or days away',c:'#FCA5A5'},{s:'Baby drops (lightening)',d:'Easier to breathe, more pelvic pressure',c:'#86EFAC'}].forEach(s=>h+=`<div style="display:flex;gap:9px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)"><div style="width:3px;background:${s.c};border-radius:3px;flex-shrink:0"></div><div><div style="font-size:12px;color:#EDE8FA;font-weight:500">${s.s}</div><div style="font-size:10px;color:#9B87BF;margin-top:1px">${s.d}</div></div></div>`);
   el.innerHTML=h;
-  document.getElementById('week-slider')?.addEventListener('input',function(){
-    const w2=+this.value;S.pregWeek=w2;
-    const wd2=getWD(w2);const pct2=Math.round((w2/40)*100);
-    document.getElementById('week-lbl').textContent='W'+w2;
-    const sizeEl=document.querySelector('.size-big');if(sizeEl)sizeEl.textContent=wd2.s;
-    const nameEl=document.getElementById('wk-size-name');if(nameEl)nameEl.textContent='Size of a '+wd2.n;
-    const devEl=document.getElementById('wk-dev');if(devEl)devEl.textContent=wd2.d;
-    const tipEl=document.getElementById('wk-tip');if(tipEl)tipEl.textContent='💡 '+wd2.tip;
-    const fillEl=document.getElementById('prog-fill');if(fillEl)fillEl.style.width=pct2+'%';
-    const pctEl=document.getElementById('wk-pct');if(pctEl)pctEl.textContent=pct2+'%';
-  });
+  document.getElementById('week-slider')?.addEventListener('input',function(){S.pregWeek=+this.value;document.getElementById('week-lbl').textContent='W'+this.value;rWeek();});
 }
 
 let cActive=false,cStart=null,cIv=null;
@@ -416,215 +413,329 @@ function rPregTrack(){
   const el=document.getElementById('p-track');if(!el)return;
   const todayK=S.kicks.filter(k=>k.date===tod()).length;
   let h=shd('👣 Kick Counter');
-  h+=`<div style="text-align:center;margin-bottom:12px"><div style="font-family:'Nunito',sans-serif;font-size:52px;font-weight:800;color:#9B72CF;line-height:1">${todayK}</div><div style="font-size:12px;color:#8E8A86;margin-top:4px">kicks today · goal: 10 in 2 hours ${todayK>=10?'✅':''}</div></div>`;
-  h+=`<button class="prim-btn" style="background:linear-gradient(135deg,#D9C6E6,#C4A8E0);margin-bottom:14px" onclick="S.kicks.push({id:uid(),date:tod(),time:nw()});sv();rPregTrack()">👶 Baby Kicked!</button>`;
+  h+=`<div style="text-align:center;margin-bottom:10px"><div style="font-size:46px;font-weight:300;color:#FBCFE8;line-height:1">${todayK}</div><div style="font-size:10px;color:#7A6AAA;margin-top:3px">kicks today · goal: 10 in 2 hours ${todayK>=10?'✅':''}</div></div>`;
+  h+=`<button class="primary-btn" id="kick-btn" style="background:rgba(236,72,153,.15);color:#FBCFE8;border:1px solid rgba(236,72,153,.25);margin-bottom:12px">👶 Baby Kicked!</button>`;
   h+=shd('⏱️ Contraction Timer');
   const lastC=S.contractions.slice(-1)[0];
-  if(lastC)h+=`<div class="info-b">Last: ${lastC.dur}s · ${lastC.date} ${lastC.time}</div>`;
-  h+=`<button class="prim-btn" id="cbtn" style="background:linear-gradient(135deg,#F4C7C2,#E79A7D);margin-bottom:10px" onclick="contrTap()">${cActive?'⏹ Stop':'⏱ Start Contraction'}</button>`;
+  if(lastC)h+=`<div class="info-box">Last: ${lastC.dur}s · ${lastC.date} ${lastC.time}</div>`;
+  h+=`<button class="primary-btn" id="contr-btn" style="background:rgba(167,139,250,.1);color:#C4B5FD;border:1px solid rgba(167,139,250,.25);margin-bottom:8px">${cActive?'⏹ Stop':'⏱ Start Contraction'}</button>`;
+  if(S.contractions.length>=3){const last3=S.contractions.slice(-3);const avgD=Math.round(last3.reduce((s,c)=>s+c.dur,0)/3);h+=`<div class="panel"><div style="font-size:11px;color:#9B87BF">Last 3 avg: <strong style="color:#C4B5FD">${avgD}s</strong></div></div>`;}
   h+=shd('⚖️ Weight');
-  h+=`<div style="display:flex;gap:7px;margin-bottom:9px"><input type="number" id="pwlb" placeholder="lbs" style="flex:1;padding:8px 10px;border-radius:11px;font-size:13px"><input type="number" id="pwoz" placeholder="oz" style="flex:1;padding:8px 10px;border-radius:11px;font-size:13px"><button onclick="addPW()" style="padding:8px 14px;border-radius:11px;border:none;background:#A8C5A1;color:#fff;font-size:13px;font-weight:700;cursor:pointer">+Add</button></div>`;
-  if(S.pregWeight.length){const lw=S.pregWeight[S.pregWeight.length-1];h+=`<div class="info-b">Latest: <strong>${fwt(lw.kg)}</strong> on ${lw.date}</div>`;}
+  h+=`<div style="display:flex;gap:6px;margin-bottom:8px"><input type="number" id="pwlb" placeholder="lbs" style="flex:1;padding:7px 9px;border-radius:9px;font-size:12px"><input type="number" id="pwoz" placeholder="oz" style="flex:1;padding:7px 9px;border-radius:9px;font-size:12px"><button id="addpw-btn" style="padding:7px 12px;border-radius:9px;border:none;background:rgba(167,139,250,.2);color:#C4B5FD;font-size:12px;cursor:pointer">+Add</button></div>`;
+  if(S.pregWeight.length){const lw=S.pregWeight[S.pregWeight.length-1];h+=`<div class="info-box">Latest: <strong style="color:#C4B5FD">${fwt(lw.kg)}</strong> on ${lw.date}</div>`;}
   h+=shd('🤒 Today\'s Symptoms');
   const todaySym=S.pregSymptoms.filter(s=>s.date===tod()).flatMap(s=>s.syms);
   h+=`<div style="display:flex;flex-wrap:wrap">`;
-  PSYM.forEach(sym=>{h+=`<span class="chip${todaySym.includes(sym)?' on':''}" onclick="togPSym('${sym}')">${sym}</span>`;});
+  PSYM.forEach(sym=>{h+=`<span class="chip-tag${todaySym.includes(sym)?' on':''}" data-sym="${sym}">${sym}</span>`;});
   h+=`</div>`;
   el.innerHTML=h;
+  el.querySelector('#kick-btn')?.addEventListener('click',()=>{S.kicks.push({id:uid(),date:tod(),time:nw()});sv();rPregTrack();});
+  el.querySelector('#contr-btn')?.addEventListener('click',contrTap);
+  el.querySelector('#addpw-btn')?.addEventListener('click',()=>{const lb=+document.getElementById('pwlb').value||0;const oz=+document.getElementById('pwoz').value||0;if(!lb&&!oz)return;S.pregWeight.push({id:uid(),kg:lbKg(lb,oz),date:tod()});sv();rPregTrack();});
+  el.querySelectorAll('[data-sym]').forEach(chip=>chip.addEventListener('click',function(){let t=S.pregSymptoms.find(s=>s.date===tod());if(!t){t={id:uid(),date:tod(),syms:[]};S.pregSymptoms.push(t);}const sym=this.dataset.sym;if(t.syms.includes(sym))t.syms=t.syms.filter(s=>s!==sym);else t.syms.push(sym);sv();rPregTrack();}));
 }
-function contrTap(){if(!cActive){cActive=true;cStart=Date.now();clearInterval(cIv);cIv=setInterval(()=>{const b=document.getElementById('cbtn');if(b)b.textContent=`⏹ Stop (${Math.round((Date.now()-cStart)/1000)}s)`;},500);}else{clearInterval(cIv);const dur=Math.round((Date.now()-cStart)/1000);S.contractions.push({id:uid(),dur,date:tod(),time:nw()});cActive=false;cStart=null;sv();rPregTrack();}}
-function addPW(){const lb=+document.getElementById('pwlb').value||0;const oz=+document.getElementById('pwoz').value||0;if(!lb&&!oz)return;S.pregWeight.push({id:uid(),kg:lbKg(lb,oz),date:tod()});sv();rPregTrack();}
-function togPSym(sym){let t=S.pregSymptoms.find(s=>s.date===tod());if(!t){t={id:uid(),date:tod(),syms:[]};S.pregSymptoms.push(t);}if(t.syms.includes(sym))t.syms=t.syms.filter(s=>s!==sym);else t.syms.push(sym);sv();rPregTrack();}
+function contrTap(){
+  if(!cActive){cActive=true;cStart=Date.now();clearInterval(cIv);cIv=setInterval(()=>{const b=document.getElementById('contr-btn');if(b)b.textContent=`⏹ Stop (${Math.round((Date.now()-cStart)/1000)}s)`;},500);}
+  else{clearInterval(cIv);const dur=Math.round((Date.now()-cStart)/1000);S.contractions.push({id:uid(),dur,date:tod(),time:nw()});cActive=false;cStart=null;sv();rPregTrack();}
+}
 
 function rAppts(){
   const el=document.getElementById('p-appts');if(!el)return;
-  let h=`<button class="prim-btn" style="margin-bottom:11px" onclick="openM('appt')">+ Add Appointment</button>`;
+  let h=`<button class="primary-btn" id="add-appt" style="margin-bottom:11px">+ Add Appointment</button>`;
   const up=S.appts.filter(a=>a.upcoming),past=S.appts.filter(a=>!a.upcoming);
-  if(up.length){h+=shd('Upcoming');up.forEach(a=>{h+=`<div class="card" style="border-left:4px solid #D9C6E6"><div style="display:flex;justify-content:space-between"><div><div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#3B3B3B">${a.type||'Appt'}</div><div style="font-size:12px;color:#8E8A86">📅 ${a.date||''}${a.time?' · '+a.time:''}</div>${a.note?`<div style="font-size:11px;color:#6B6560;margin-top:2px">${a.note}</div>`:''}</div><button class="x-btn" onclick="S.appts=S.appts.filter(x=>x.id!=='${a.id}');sv();ra()">×</button></div></div>`;});}
-  if(past.length){h+=shd('Past');past.slice(-4).forEach(a=>{h+=`<div class="log-row"><div><div style="font-size:13px;font-weight:600;color:#3B3B3B">${a.type||'Appt'}</div><div style="font-size:11px;color:#8E8A86">${a.date||''}</div></div><button class="x-btn" onclick="S.appts=S.appts.filter(x=>x.id!=='${a.id}');sv();ra()">×</button></div>`;});}
-  if(!S.appts.length)h+=`<div style="text-align:center;padding:20px;color:#B8AFA8;font-size:13px">No appointments yet.</div>`;
+  if(up.length){h+=shd('Upcoming');up.forEach(a=>{h+=`<div class="panel" style="border-left:3px solid rgba(167,139,250,.5)"><div style="display:flex;justify-content:space-between"><div><div style="font-size:13px;color:#EDE8FA;font-weight:500">${a.type||'Appt'}</div><div style="font-size:11px;color:#8875B0;margin-top:2px">📅 ${a.date||''}${a.time?' · '+a.time:''}</div>${a.note?`<div style="font-size:10px;color:#7A6AAA;margin-top:2px">${a.note}</div>`:''}</div><button class="x-btn" data-del="${a.id}">×</button></div></div>`;});}
+  if(past.length){h+=shd('Past');past.slice(-4).forEach(a=>{h+=`<div class="log-row"><div><div style="font-size:12px;color:#C8D8F0">${a.type||'Appt'}</div><div style="font-size:10px;color:#7A6AAA">${a.date||''}</div></div><button class="x-btn" data-del="${a.id}">×</button></div>`;});}
+  if(!S.appts.length)h+=`<div style="text-align:center;padding:20px;color:#3D2E58;font-size:11px">No appointments yet.</div>`;
   el.innerHTML=h;
+  el.querySelector('#add-appt')?.addEventListener('click',()=>openM('appt'));
+  el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){S.appts=S.appts.filter(x=>x.id!==this.dataset.del);sv();ra();}));
 }
 
 function rBirthPlan(){
   const el=document.getElementById('p-birthplan');if(!el)return;
-  if(!S.birthPlan)S.birthPlan={};
-  let h=`<p class="intro">Select your preferences — share with your care team.</p>`;
-  h+=`<div class="info-b" style="margin-bottom:12px">💡 Be flexible — hospital policy or complications may require adjustments.</div>`;
-  BPQ.forEach(q=>{h+=`<div class="bp-sec"><div class="bp-q">${q.q}</div><div class="bp-opts">`;q.opts.forEach(opt=>{h+=`<div class="bp-opt${S.birthPlan[q.id]===opt?' sel':''}" onclick="S.birthPlan['${q.id}']='${opt}';sv();rBirthPlan()">${opt}</div>`;});h+=`</div></div>`;});
+  let h=`<p style="font-size:12px;color:#8875B0;margin-bottom:10px;line-height:1.6">Select your preferences — share with your care team.</p>`;
+  BPQ.forEach(q=>{h+=`<div class="bp-section"><div class="bp-q">${q.q}</div><div class="bp-opts">`;q.opts.forEach(opt=>{h+=`<button class="bp-opt${S.birthPlan[q.id]===opt?' sel':''}" data-q="${q.id}" data-opt="${opt}">${opt}</button>`;});h+=`</div></div>`;});
   el.innerHTML=h;
+  el.querySelectorAll('.bp-opt').forEach(btn=>btn.addEventListener('click',function(){S.birthPlan[this.dataset.q]=this.dataset.opt;sv();rBirthPlan();}));
 }
 
-function rNursery(){
-  const el=document.getElementById('p-nursery');if(!el)return;
-  if(!S.nurseryCheck)S.nurseryCheck={};
-  const HOSPITAL=[{id:'h-id',cat:'📄 Documents',t:'ID + insurance card'},{id:'h-bp',cat:'📄 Documents',t:'Printed birth plan (3 copies)'},{id:'h-snacks',cat:'🧡 For You',t:'Snacks & drinks for labor'},{id:'h-charger',cat:'🧡 For You',t:'Phone charger + portable battery'},{id:'h-toiletries',cat:'🧡 For You',t:'Toiletries'},{id:'h-robe',cat:'🧡 For You',t:'Robe or cozy layers'},{id:'h-gown',cat:'🧡 For You',t:'Loose going-home outfit'},{id:'h-nursing',cat:'🧡 For You',t:'Nursing bra + pads'},{id:'h-pads',cat:'🧡 For You',t:'Extra-long pads'},{id:'h-slippers',cat:'🧡 For You',t:'Slippers + flip flops for shower'},{id:'h-carseat',cat:'🐞 Baby',t:'Car seat — installed + inspected'},{id:'h-bodysuit',cat:'🐞 Baby',t:'2–3 newborn + 0–3mo sleepers'},{id:'h-blanket',cat:'🐞 Baby',t:'Swaddle blanket'},{id:'h-outfit',cat:'🐞 Baby',t:'Going-home outfit'},{id:'h-partner',cat:'🤝 Partner',t:'Change of clothes + snacks'},{id:'h-pcharger',cat:'🤝 Partner',t:'Phone charger + camera'}];
-  const NURSERY=[{id:'n-crib',cat:'😴 Sleep',t:'Crib or bassinet assembled and tested'},{id:'n-mattress',cat:'😴 Sleep',t:'Firm mattress + 2 waterproof covers'},{id:'n-sheets',cat:'😴 Sleep',t:'3–4 fitted sheets'},{id:'n-swaddles',cat:'😴 Sleep',t:'4–6 swaddle blankets'},{id:'n-sleepsacks',cat:'😴 Sleep',t:'2–3 sleep sacks (newborn)'},{id:'n-monitor',cat:'😴 Sleep',t:'Baby monitor set up'},{id:'n-noise',cat:'😴 Sleep',t:'White noise machine tested'},{id:'n-blackout',cat:'😴 Sleep',t:'Blackout curtains installed'},{id:'n-washed',cat:'👗 Clothing',t:'All clothes washed (fragrance-free)'},{id:'n-diapers',cat:'🧷 Diapering',t:'Diapers stocked — newborn + size 1'},{id:'n-wipes',cat:'🧷 Diapering',t:'Wipes stocked (fragrance-free)'},{id:'n-table',cat:'🧷 Diapering',t:'Changing table or pad set up'},{id:'n-cream',cat:'🧷 Diapering',t:'Diaper cream (zinc oxide)'},{id:'n-tub',cat:'🛁 Bath',t:'Baby tub + infant insert'},{id:'n-wash',cat:'🛁 Bath',t:'Baby wash + shampoo (fragrance-free)'},{id:'n-towels',cat:'🛁 Bath',t:'Hooded towels + washcloths'},{id:'n-bottles',cat:'🍼 Feeding',t:'4–6 bottles'},{id:'n-pump',cat:'🍼 Feeding',t:'Breast pump + parts cleaned'},{id:'n-nursing-pillow',cat:'🍼 Feeding',t:'Nursing pillow (Boppy)'},{id:'n-burp',cat:'🍼 Feeding',t:'8–10 burp cloths'},{id:'n-thermometer',cat:'🩺 Health',t:'Rectal thermometer'},{id:'n-bulb',cat:'🩺 Health',t:'Nasal aspirator (Frida)'},{id:'n-vitd',cat:'🩺 Health',t:'Vitamin D drops'},{id:'n-carseat2',cat:'🚗 On the Go',t:'Car seat base installed in car'},{id:'n-stroller',cat:'🚗 On the Go',t:'Stroller assembled and tested'},{id:'n-carrier',cat:'🚗 On the Go',t:'Baby carrier or wrap'},{id:'n-bag',cat:'🚗 On the Go',t:'Diaper bag packed'}];
-  const tab=S.nurseryTab||'hospital';
-  const list=tab==='hospital'?HOSPITAL:NURSERY;
-  const done=list.filter(item=>S.nurseryCheck[item.id]).length;
-  let h=`<div class="tab-bar"><button class="tbtn${tab==='hospital'?' active':''}" onclick="S.nurseryTab='hospital';rNursery()">🧳 Hospital Bag</button><button class="tbtn${tab==='nursery'?' active':''}" onclick="S.nurseryTab='nursery';rNursery()">🛏️ Nursery Prep</button></div>`;
-  h+=`<div class="info-b" style="margin-bottom:10px">${done}/${list.length} complete</div><div class="card">`;
-  let curCat='';
-  list.forEach(item=>{if(item.cat!==curCat){h+=`<div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:#E79A7D;text-transform:uppercase;letter-spacing:.07em;margin:10px 0 4px">${item.cat}</div>`;curCat=item.cat;}const d2=!!S.nurseryCheck[item.id];h+=`<div class="cl-row"><div class="cl-box${d2?' done':''}" onclick="S.nurseryCheck['${item.id}']=!S.nurseryCheck['${item.id}'];sv();rNursery()">${d2?'✓':''}</div><div style="font-size:13px;color:${d2?'#B8AFA8':'#3B3B3B'};font-weight:600;${d2?'text-decoration:line-through':''}">${item.t}</div></div>`;});
+// Baby
+function rBabyTrack(){
+  const el=document.getElementById('p-track');if(!el)return;
+  const d=getAD(S.babyAge);const ls=lastOf('sleep');const si=ls?since(ls):null;const wwm=parseInt(d.ww)*60||90;const elap=si?si.total:0;const rem=Math.max(0,wwm-elap);const pct=Math.min(100,Math.round((elap/wwm)*100));const wc=rem<15?'#EF5350':rem<30?'#EF9348':'#81C784';
+  let h=`<div class="ww-box"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:9px;color:#B09ADE;text-transform:uppercase;letter-spacing:.08em">Wake Window</div><div style="font-size:9px;color:#7A6AAA">${d.ww} target</div></div><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:32px;font-weight:700;color:${wc};line-height:1">${rem>0?Math.floor(rem/60)+':'+(rem%60<10?'0':'')+rem%60:'nap time!'}</div><div style="font-size:10px;color:#7A6AAA">${si?si.s+' awake':'not logged'}</div></div><div style="height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin-top:7px"><div style="height:100%;width:${pct}%;background:${wc};border-radius:2px"></div></div></div>`;
+  h+=`<div class="since-row">`;
+  [{t:'feed',i:'🍼',l:'Feed'},{t:'sleep',i:'😴',l:'Sleep'},{t:'diaper',i:'👶',l:'Diaper'},{t:'pump',i:'🍶',l:'Pump'}].forEach(({t,i,l})=>{const last=lastOf(t);const s2=last?since(last):null;const ur=s2?(t==='feed'?s2.total>210?'urgent':s2.total>150?'late':'ok':t==='diaper'?s2.total>240?'urgent':s2.total>150?'late':'ok':'ok'):'';h+=`<div class="since-chip ${ur}" data-modal="${t}"><span style="font-size:20px">${i}</span><span style="font-size:12px;font-weight:500;color:#EDE8FA">${s2?s2.s:'—'}</span><span style="font-size:8px;color:#7A6AAA;text-transform:uppercase">${l}</span></div>`;});
   h+=`</div>`;
+  h+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:12px;background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.18);margin-bottom:10px"><div><div style="font-size:9px;color:#2DD4BF;text-transform:uppercase;font-weight:600">Tummy Time</div><div style="font-size:24px;font-weight:700;color:#EDE8FA;line-height:1.2">${S.ttMins||0}<span style="font-size:10px;color:#4DB6AC"> min</span></div></div><div style="display:flex;gap:5px"><button id="tt5" style="padding:7px 10px;border-radius:8px;border:none;background:rgba(20,184,166,.12);color:#2DD4BF;font-size:11px;cursor:pointer">+5m</button><button id="tt10" style="padding:7px 10px;border-radius:8px;border:none;background:rgba(20,184,166,.12);color:#2DD4BF;font-size:11px;cursor:pointer">+10m</button><button id="ttr" style="padding:7px 10px;border-radius:8px;border:none;background:rgba(255,255,255,.05);color:#5A4878;font-size:11px;cursor:pointer">↺</button></div></div>`;
+  const tl=S.logs.filter(l=>l.date===tod());const fc=tl.filter(l=>l.type==='feed').length;const ml2=tl.filter(l=>l.type==='feed'&&l.ml).reduce((s,l)=>s+l.ml,0);const nc=tl.filter(l=>l.type==='sleep').length;const dc=tl.filter(l=>l.type==='diaper').length;
+  h+=`<div class="rings"><div class="ring"><div class="rv">${fc}</div><div class="rl">Feeds</div></div><div class="ring"><div class="rv">${fv(ml2)}</div><div class="rl">Volume</div></div><div class="ring"><div class="rv">${nc}</div><div class="rl">Naps</div></div><div class="ring"><div class="rv">${dc}</div><div class="rl">Diapers</div></div></div>`;
+  h+=`<div class="log-grid"><button class="log-card" data-modal="feed"><span class="ei">🍼</span><span>Log Feed</span></button><button class="log-card" data-modal="sleep"><span class="ei">😴</span><span>Log Sleep</span></button><button class="log-card" data-modal="diaper"><span class="ei">👶</span><span>Log Diaper</span></button><button class="log-card" data-modal="pump"><span class="ei">🍶</span><span>Log Pump</span></button></div>`;
+  if(d.sol)h+=`<button class="log-card" data-modal="solids" style="width:100%;flex-direction:row;gap:8px;margin-bottom:8px;padding:12px"><span class="ei">🥣</span><span>Log Solids</span></button>`;
+  h+=shd("Today's Log");
+  const icons={feed:'🍼',sleep:'😴',diaper:'👶',pump:'🍶',note:'📝',solids:'🥣'};
+  if(!S.logs.length)h+=`<div style="text-align:center;padding:16px;color:#2D1F3D;font-size:11px">No entries yet — tap above to start.</div>`;
+  else S.logs.slice(0,18).forEach(l=>{const det=l.vd||(l.ml?fv(l.ml):'')||(l.dur?l.dur+' min':'')||(l.dtype||'');h+=`<div class="log-row"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">${icons[l.type]||'📝'}</span><div><div style="font-size:12px;color:#EDE8FA;font-weight:500">${l.type}${det?' — '+det:''}</div><div style="font-size:10px;color:#7A6AAA">${l.date} ${l.time}</div></div></div><button class="x-btn" data-del="${l.id}">×</button></div>`;});
   el.innerHTML=h;
+  el.querySelectorAll('[data-modal]').forEach(btn=>btn.addEventListener('click',function(){openM(this.dataset.modal);}));
+  el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){S.logs=S.logs.filter(x=>x.id!==this.dataset.del);sv();ra();}));
+  el.querySelector('#tt5')?.addEventListener('click',()=>{S.ttMins=(S.ttMins||0)+5;sv();ra();});
+  el.querySelector('#tt10')?.addEventListener('click',()=>{S.ttMins=(S.ttMins||0)+10;sv();ra();});
+  el.querySelector('#ttr')?.addEventListener('click',()=>{S.ttMins=0;sv();ra();});
 }
 
-// ── BABY ──
 function rSchedule(){
   const el=document.getElementById('p-schedule');if(!el)return;
   const d=getAD(S.babyAge);
-  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px"><div style="font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:#3B3B3B">${ALF[S.babyAge]||'?'}</div><select onchange="S.babyAge=parseInt(this.value);S.exp=null;sv();ra()" style="padding:6px 10px;border-radius:10px;font-size:11px;background:#F0F7EF;border:1.5px solid #C8DEC5;color:#4A6844;font-weight:600">${Object.keys(ALF).map(a=>`<option value="${a}"${+a===S.babyAge?' selected':''}>${ALF[a]}</option>`).join('')}</select></div>`;
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px"><div style="font-size:14px;color:#EDE8FA;font-weight:500">${ALF[S.babyAge]||'?'}</div><select id="age-sel" style="padding:6px 10px;border-radius:9px;font-size:11px;background:rgba(160,102,255,.1);border:1px solid rgba(160,102,255,.2);color:#D4C0F5">${Object.keys(ALF).map(a=>`<option value="${a}"${+a===S.babyAge?' selected':''}>${ALF[a]}</option>`).join('')}</select></div>`;
   h+=`<div class="tl"><div class="tl-line"></div>`;
-  d.sch.forEach((item,i)=>{const k=`s${i}`,o=S.exp===k;h+=`<div class="tl-row"><div class="tl-dw"><div class="tl-dot" style="background:${item.c}"></div></div><div class="tl-card" onclick="tog('${k}')" style="border-left-color:${item.c}${o?';background:#FAF8F4':''}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px">${item.i}</span><div><div class="tl-label">${item.l}</div><div class="tl-time">${item.t}</div></div></div><div style="display:flex;align-items:center;gap:5px">${(item.ml||0)>0?`<span style="font-size:11px;padding:2px 7px;border-radius:8px;background:#FFF5EE;color:#E79A7D;font-weight:600">${fv(item.ml)}</span>`:''}<span class="chev${o?' open':''}">▾</span></div></div><div class="tl-det${o?' open':''}">${item.mn||item.d||''}</div></div></div>`;});
+  d.sch.forEach((item,i)=>{const k=`s${i}`,o=S.exp===k;h+=`<div class="tl-row"><div class="tl-dot-wrap"><div class="tl-dot" style="background:${item.c}"></div></div><div class="tl-card" data-acc="${k}" style="border-left-color:${item.c}${o?';background:rgba(255,255,255,.04)':''}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12px">${item.i}</span><div><div class="tl-label">${item.l}</div><div class="tl-time">${item.t}</div></div></div><div style="display:flex;align-items:center;gap:5px">${(item.ml||0)>0?`<span style="font-size:10px;padding:2px 6px;border-radius:5px;background:rgba(239,147,72,.12);color:#EF9348">${fv(item.ml)}</span>`:''}<span class="chev${o?' open':''}">▾</span></div></div><div class="tl-detail${o?' open':''}">${item.mn||item.d||''}</div></div></div>`;});
   h+=`</div>`;
   el.innerHTML=h;
-}
-
-function rBabyTrack(){
-  const el=document.getElementById('p-track');if(!el)return;
-  const d=getAD(S.babyAge);const ls=lastOf('sleep');const si=ls?since(ls):null;const wwm=parseInt(d.ww)*60||90;const elap=si?si.total:0;const rem=Math.max(0,wwm-elap);const pct=Math.min(100,Math.round((elap/wwm)*100));const wc=rem<15?'#C4614A':rem<30?'#E79A7D':'#4A6844';
-  let h=`<div class="ww-hero"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:#4A6844;text-transform:uppercase;letter-spacing:.08em">⏰ Wake Window</div><div style="font-size:10px;color:#8E8A86">${d.ww} target</div></div><div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-family:'Nunito',sans-serif;font-size:34px;font-weight:800;color:${wc};line-height:1">${rem>0?Math.floor(rem/60)+':'+(rem%60<10?'0':'')+rem%60:'nap time!'}</div><div style="font-size:11px;color:#8E8A86">${si?si.s+' awake':'not logged'}</div></div><div style="height:4px;background:rgba(255,255,255,.5);border-radius:2px;overflow:hidden;margin-top:8px"><div style="height:100%;width:${pct}%;background:${wc};border-radius:2px"></div></div></div>`;
-  h+=`<div class="since-row">`;
-  [{t:'feed',i:'🍼',l:'Feed'},{t:'sleep',i:'😴',l:'Sleep'},{t:'diaper',i:'👶',l:'Diaper'},{t:'pump',i:'🍶',l:'Pump'}].forEach(({t,i,l})=>{const last=lastOf(t);const s2=last?since(last):null;const ur=s2?(t==='feed'?s2.total>210?'urgent':s2.total>150?'late':'ok':t==='diaper'?s2.total>240?'urgent':s2.total>150?'late':'ok':'ok'):'';h+=`<div class="since-chip ${ur}" onclick="openM('${t}')"><span style="font-size:20px">${i}</span><span style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:#3B3B3B">${s2?s2.s:'—'}</span><span style="font-size:8px;color:#8E8A86;text-transform:uppercase;font-weight:600">${l}</span></div>`;});
-  h+=`</div>`;
-  h+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:13px;background:#F0F7EF;border:1.5px solid #C8DEC5;margin-bottom:10px"><div><div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:#4A6844;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">🐢 Tummy Time</div><div style="font-family:'Nunito',sans-serif;font-size:26px;font-weight:800;color:#3B3B3B;line-height:1.2">${S.ttMins||0}<span style="font-size:11px;color:#8E8A86"> min</span></div></div><div style="display:flex;gap:6px"><button onclick="S.ttMins=(S.ttMins||0)+5;sv();ra()" style="padding:7px 11px;border-radius:10px;border:1.5px solid #C8DEC5;background:#fff;color:#4A6844;font-size:12px;font-weight:600;cursor:pointer">+5m</button><button onclick="S.ttMins=(S.ttMins||0)+10;sv();ra()" style="padding:7px 11px;border-radius:10px;border:1.5px solid #C8DEC5;background:#fff;color:#4A6844;font-size:12px;font-weight:600;cursor:pointer">+10m</button><button onclick="S.ttMins=0;sv();ra()" style="padding:7px 11px;border-radius:10px;border:1.5px solid #E8E0D8;background:#FAF8F4;color:#B8AFA8;font-size:12px;cursor:pointer">↺</button></div></div>`;
-  const tl=S.logs.filter(l=>l.date===tod());const fc=tl.filter(l=>l.type==='feed').length;const ml2=tl.filter(l=>l.type==='feed'&&l.ml).reduce((s,l)=>s+l.ml,0);const nc=tl.filter(l=>l.type==='sleep').length;const dc=tl.filter(l=>l.type==='diaper').length;
-  h+=`<div class="rings"><div class="ring"><div class="rv">${fc}</div><div class="rl">Feeds</div></div><div class="ring"><div class="rv">${fv(ml2)}</div><div class="rl">Volume</div></div><div class="ring"><div class="rv">${nc}</div><div class="rl">Naps</div></div><div class="ring"><div class="rv">${dc}</div><div class="rl">Diapers</div></div></div>`;
-  h+=`<div class="log-grid"><button class="log-card" onclick="openM('feed')"><span class="ei">🍼</span><span>Log Feed</span></button><button class="log-card" onclick="openM('sleep')"><span class="ei">😴</span><span>Log Sleep</span></button><button class="log-card" onclick="openM('diaper')"><span class="ei">👶</span><span>Log Diaper</span></button><button class="log-card" onclick="openM('pump')"><span class="ei">🍶</span><span>Log Pump</span></button></div>`;
-  if(d.sol)h+=`<button class="log-card" onclick="openM('solids')" style="width:100%;flex-direction:row;gap:8px;margin-bottom:8px;padding:12px 16px"><span class="ei">🥣</span><span style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700">Log Solids</span></button>`;
-  h+=shd("Today's Log");
-  const icons={feed:'🍼',sleep:'😴',diaper:'👶',pump:'🍶',note:'📝',solids:'🥣'};
-  if(!S.logs.length)h+=`<div style="text-align:center;padding:18px;color:#B8AFA8;font-size:13px">No entries yet — tap above to start 🐞</div>`;
-  else S.logs.slice(0,18).forEach(l=>{const det=l.vd||(l.ml?fv(l.ml):'')||(l.dur?l.dur+' min':'')||(l.dtype||'');h+=`<div class="log-row"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:17px">${icons[l.type]||'📝'}</span><div><div style="font-size:13px;font-weight:600;color:#3B3B3B">${l.type}${det?' — '+det:''}</div><div style="font-size:11px;color:#8E8A86">${l.date} ${l.time}</div></div></div><button class="x-btn" onclick="S.logs=S.logs.filter(x=>x.id!=='${l.id}');sv();ra()">×</button></div>`;});
-  el.innerHTML=h;
+  document.getElementById('age-sel')?.addEventListener('change',function(){S.babyAge=+this.value;S.exp=null;sv();ra();});
+  el.querySelectorAll('[data-acc]').forEach(btn=>btn.addEventListener('click',function(){tog(this.dataset.acc);}));
 }
 
 function rFeeds(){
   const el=document.getElementById('p-feeds');if(!el)return;
   const d=getAD(S.babyAge);
-  let h=`<div class="tab-bar"><button class="tbtn${S.fsTab==='milk'?' active':''}" onclick="S.fsTab='milk';ra()">🍼 Milk</button><button class="tbtn${S.fsTab==='solids'?' active':''}" onclick="S.fsTab='solids';ra()"${S.babyAge<5?' disabled style="opacity:.4"':''}>🥣 Solids</button></div>`;
+  let h=`<div class="tab-bar"><button class="tab-opt${S.fsTab==='milk'?' active':''}" data-tab="milk">🍼 Milk</button><button class="tab-opt${S.fsTab==='solids'?' active':''}" data-tab="solids"${S.babyAge<5?' disabled style="opacity:.4"':''}>🥣 Solids</button></div>`;
   if(S.fsTab==='milk'){
     const kg=S.wtKg;const calcMl=kg?Math.round(kg*150):null;
-    h+=`<div class="card" style="background:#FFF8F4;border-color:#F4D4C2"><div style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#E79A7D;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px">⚖️ Weight-Based Calculator</div><div style="display:flex;gap:7px;align-items:center;margin-bottom:9px"><input type="number" id="wlb" placeholder="lbs" step="1" min="0" max="30" value="${kg?kgLb(kg).lb:''}" oninput="updWt()" style="max-width:58px;padding:7px 9px;border-radius:10px;font-size:13px"><span style="font-size:11px;color:#8E8A86">lbs</span><input type="number" id="woz" placeholder="oz" step="1" min="0" max="15" value="${kg?kgLb(kg).oz:''}" oninput="updWt()" style="max-width:52px;padding:7px 9px;border-radius:10px;font-size:13px"><span style="font-size:11px;color:#8E8A86">oz</span>${calcMl?`<div style="margin-left:auto;text-align:right"><div style="font-family:'Nunito',sans-serif;font-size:19px;font-weight:800;color:#E79A7D">${fv(calcMl)}</div><div style="font-size:9px;color:#8E8A86">/day goal</div></div>`:''}</div><div style="display:flex;justify-content:space-around;padding-top:9px;border-top:1.5px solid #F0EBE3"><div style="text-align:center"><div style="font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:#E79A7D">${d.mlpf>0?fv(d.mlpf):'—'}</div><div style="font-size:9px;color:#8E8A86;text-transform:uppercase;font-weight:600">Per Feed</div></div><div style="text-align:center"><div style="font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:#E79A7D">${d.fpd||'—'}</div><div style="font-size:9px;color:#8E8A86;text-transform:uppercase;font-weight:600">Feeds/Day</div></div><div style="text-align:center"><div style="font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:#E79A7D">${d.tml>0?fv(d.tml):'—'}</div><div style="font-size:9px;color:#8E8A86;text-transform:uppercase;font-weight:600">Daily Total</div></div></div></div>`;
-    if(S.babyAge>=12)h+=`<div class="info-b">🎉 Transition to whole cow's milk (~14–17oz/day) in an open cup. Bottle fully weaned per AAP.</div>`;
+    h+=`<div class="panel" style="background:rgba(239,147,72,.04);border-color:rgba(239,147,72,.18)"><div style="font-size:9px;color:#EF9348;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">⚖️ Weight-Based Calculator</div><div style="display:flex;gap:6px;align-items:center;margin-bottom:8px"><input type="number" id="wlb" placeholder="lbs" step="1" min="0" max="30" value="${kg?kgLb(kg).lb:''}" style="max-width:55px;padding:7px 9px;border-radius:8px;font-size:12px"><span style="font-size:10px;color:#7A6AAA">lbs</span><input type="number" id="woz" placeholder="oz" step="1" min="0" max="15" value="${kg?kgLb(kg).oz:''}" style="max-width:50px;padding:7px 9px;border-radius:8px;font-size:12px"><span style="font-size:10px;color:#7A6AAA">oz</span>${calcMl?`<div style="margin-left:auto;text-align:right"><div style="font-size:17px;font-weight:700;color:#EF9348">${fv(calcMl)}</div><div style="font-size:8px;color:#7A6AAA">/day</div></div>`:''}</div><div style="display:flex;justify-content:space-around;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)"><div style="text-align:center"><div style="font-size:13px;font-weight:500;color:#EF9348">${d.mlpf>0?fv(d.mlpf):'—'}</div><div style="font-size:8px;color:#7A6AAA;text-transform:uppercase">Per Feed</div></div><div style="text-align:center"><div style="font-size:13px;font-weight:500;color:#EF9348">${d.fpd||'—'}</div><div style="font-size:8px;color:#7A6AAA;text-transform:uppercase">Feeds/Day</div></div><div style="text-align:center"><div style="font-size:13px;font-weight:500;color:#EF9348">${d.tml>0?fv(d.tml):'—'}</div><div style="font-size:8px;color:#7A6AAA;text-transform:uppercase">Daily Total</div></div></div></div>`;
+    if(S.babyAge>=12)h+=`<div class="info-box">🎉 At 12 months: transition to whole cow's milk in an open cup. Bottle fully weaned per AAP.</div>`;
   }
   if(S.fsTab==='solids'){
-    if(S.babyAge<5)h+=`<div class="info-b">🥣 Solid food introduction recommended at 6 months.</div>`;
+    if(S.babyAge<5){h+=`<div class="info-box">🥣 Solid food introduction recommended at 6 months.</div>`;}
     else{
       const ak=S.babyAge>=10?'prep10':S.babyAge>=8?'prep8':'prep6';const tk=S.babyAge>=10?'tex10':S.babyAge>=8?'tex8':'tex6';
       const tried=S.foods.map(f=>f.food);
-      h+=`<div class="info-b" style="font-size:12px">🌟 <strong>One new food at a time.</strong> Wait 3–5 days before another allergen. Watch 2+ hrs after any new food.</div>`;
+      h+=`<div class="info-box" style="font-size:11px">🌟 <strong style="color:#EDE8FA">One new food at a time.</strong> Wait 3–5 days before another allergen. Watch 2+ hrs after any new food.</div>`;
       SOLIDS.forEach((food,i)=>{
         const o=S.solidIdx===i;const hasTried=tried.includes(food.name);const steps=food[ak]||food.prep6;const tex=food[tk]||food.tex6;
-        h+=`<div class="sf-card"><div class="sf-head${o?' open':''}" onclick="S.solidIdx=S.solidIdx===${i}?null:${i};rFeeds()"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:21px">${food.e}</span><div><div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#3B3B3B">${food.name}</div><div style="font-size:11px;color:#8E8A86;margin-top:1px">${tex}</div></div></div><div style="display:flex;align-items:center;gap:5px">${hasTried?'<span style="font-size:10px;padding:2px 8px;border-radius:8px;background:#F0F7EF;color:#4A6844;font-weight:700">✓</span>':''}${food.al?'<span style="font-size:10px;padding:2px 8px;border-radius:8px;background:#FFF5F3;color:#C4614A;font-weight:700">⚠️</span>':''}<span class="chev${o?' open':''}">▾</span></div></div><div class="sf-body${o?' open':''}">`;
-        if(food.al)h+=`<div class="warn-b" style="font-size:11px;margin-bottom:8px">⚠️ ${food.alNote}</div>`;
-        h+=`<div style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#4A6844;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">How to Prepare — ${ALF[S.babyAge]}</div>`;
-        steps.forEach((step,si)=>h+=`<div class="prep-row"><div class="prep-num">${si+1}</div><div style="font-size:12px;color:#6B6560;line-height:1.6">${step}</div></div>`);
-        h+=`<div style="margin:9px 0 5px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#8E8A86;text-transform:uppercase;letter-spacing:.07em">Nutrients</div><div>${food.nut.map(n=>`<span style="display:inline-flex;padding:3px 9px;border-radius:10px;font-size:11px;background:#F5F0FF;color:#7A5CA8;margin:2px;font-weight:600">${n}</span>`).join('')}</div>`;
-        h+=`<button class="prim-btn" onclick="S.foods.unshift({id:uid(),food:'${food.name}',date:tod(),time:nw(),type:'solids'});sv();rFeeds()" style="margin-top:9px">${hasTried?'✓ Log another serving':'+ Log as introduced'}</button>`;
+        h+=`<div class="sf-card"><div class="sf-head${o?' open':''}" data-si="${i}"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">${food.e}</span><div><div style="font-size:13px;color:#EDE8FA;font-weight:500">${food.name}</div><div style="font-size:10px;color:#7A6AAA;margin-top:1px">${tex}</div></div></div><div style="display:flex;align-items:center;gap:5px">${hasTried?'<span style="font-size:9px;padding:2px 7px;border-radius:5px;background:rgba(134,239,172,.12);color:#86EFAC;font-weight:600">✓</span>':''}${food.al?'<span style="font-size:9px;padding:2px 7px;border-radius:5px;background:rgba(251,146,60,.12);color:#FDB97D;font-weight:600">⚠️</span>':''}<span class="chev${o?' open':''}">▾</span></div></div><div class="sf-body${o?' open':''}">`;
+        if(food.al)h+=`<div class="warn-box" style="font-size:10px;margin-bottom:8px">⚠️ ${food.alNote}</div>`;
+        h+=`<div style="font-size:10px;color:#86EFAC;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:6px">How to Prepare — ${ALF[S.babyAge]||'this age'}</div>`;
+        steps.forEach((step,si)=>h+=`<div class="prep-row"><div class="prep-num">${si+1}</div><div style="font-size:11px;color:#9B87BF;line-height:1.6">${step}</div></div>`);
+        h+=`<div style="margin:9px 0 4px;font-size:10px;color:#A5B4FC;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Nutrients</div><div>${food.nut.map(n=>`<span style="display:inline-flex;padding:3px 8px;border-radius:6px;font-size:10px;background:rgba(99,102,241,.1);color:#A5B4FC;margin:2px">${n}</span>`).join('')}</div>`;
+        h+=`<button class="primary-btn" data-log="${food.name}" style="margin-top:9px;background:rgba(129,199,132,.12);color:#86EFAC;border:1px solid rgba(129,199,132,.25)">${hasTried?'✓ Log another serving':'+ Log as introduced'}</button>`;
         h+=`</div></div>`;
       });
     }
   }
   el.innerHTML=h;
+  el.querySelectorAll('.tab-opt').forEach(btn=>btn.addEventListener('click',function(){if(!this.disabled){S.fsTab=this.dataset.tab;ra();}}));
+  document.getElementById('wlb')?.addEventListener('input',updWt);
+  document.getElementById('woz')?.addEventListener('input',updWt);
+  el.querySelectorAll('[data-si]').forEach(btn=>btn.addEventListener('click',function(){S.solidIdx=S.solidIdx===+this.dataset.si?null:+this.dataset.si;rFeeds();}));
+  el.querySelectorAll('[data-log]').forEach(btn=>btn.addEventListener('click',function(e){e.stopPropagation();S.foods.unshift({id:uid(),food:this.dataset.log,date:tod(),time:nw(),type:'solids'});sv();rFeeds();}));
 }
 function updWt(){const lb=+document.getElementById('wlb')?.value||0;const oz=+document.getElementById('woz')?.value||0;S.wtKg=(lb||oz)?lbKg(lb,oz):null;sv();rFeeds();}
 
 function rSleep(){
   const el=document.getElementById('p-sleep');if(!el)return;
-  let h=`<p class="intro">From building the foundation to sleeping through the night.</p>`;
+  let h=`<p style="font-size:12px;color:#8875B0;margin-bottom:10px;line-height:1.6">From building the foundation to sleeping through the night.</p>`;
   h+=shd('🗺️ Road to STTN');
-  h+=`<div class="card">${[{a:'2mo',l:'2 Night Feeds',n:'Dream feed + 1 night feed. Normal.',done:S.babyAge>=2},{a:'3mo',l:'Dream Feed Only',n:'Push night feed later each week.',done:S.babyAge>=3},{a:'4mo',l:'Self-Settling',n:'Drowsy-but-awake at every sleep.',done:S.babyAge>=4},{a:'5–6mo',l:'Sleeping Through',n:'10–12 hrs once self-settling is solid.',done:S.babyAge>=5}].map(s=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1.5px solid #F5F1EC"><div style="width:20px;height:20px;border-radius:50%;background:${s.done?'#A8C5A1':'#F0EBE3'};border:2px solid ${s.done?'#A8C5A1':'#E8E0D8'};display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;flex-shrink:0;margin-top:1px">${s.done?'✓':''}</div><div><div style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:${s.done?'#3B3B3B':'#B8AFA8'}">${s.a} — ${s.l}</div><div style="font-size:11px;color:#8E8A86;line-height:1.5;margin-top:1px">${s.n}</div></div></div>`).join('')}</div>`;
-  h+=`<div class="info-b"><strong>Drowsy-but-awake</strong> is the single most important sleep skill. Baby placed in crib slightly awake learns to fall asleep independently.</div>`;
+  h+=`<div class="panel">${[{a:'2mo',l:'2 Night Feeds',n:'Dream feed + 1 night feed. Normal.',done:S.babyAge>=2},{a:'3mo',l:'Dream Feed Only',n:'Push night feed later each week.',done:S.babyAge>=3},{a:'4mo',l:'Self-Settling',n:'Drowsy-but-awake at every sleep. 4mo regression peaks.',done:S.babyAge>=4},{a:'5–6mo',l:'Sleeping Through',n:'10–12 hrs once self-settling is solid.',done:S.babyAge>=5}].map(s=>`<div style="display:flex;gap:9px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)"><div style="width:18px;height:18px;border-radius:50%;background:${s.done?'rgba(76,175,80,.3)':'rgba(255,255,255,.06)'};border:1px solid ${s.done?'rgba(76,175,80,.5)':'rgba(255,255,255,.08)'};display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px">${s.done?'✓':''}</div><div><div style="font-size:12px;color:${s.done?'#C8D8F0':'#4A6080'}">${s.a} — ${s.l}</div><div style="font-size:10px;color:#7A6AAA;line-height:1.5">${s.n}</div></div></div>`).join('')}</div>`;
+  h+=`<div class="info-box"><strong style="color:#EDE8FA">Drowsy-but-awake</strong> is the single most important sleep skill. Baby placed in crib slightly awake learns to fall asleep independently — so they can resettle between cycles without your help.</div>`;
   h+=shd('📚 Sleep Training Methods');
-  [{n:'Ferber (Graduated)',tag:'Moderate',tagC:'#E79A7D',d:'Put down awake. Return at increasing intervals (3→5→10 min) without picking up. Results in 3–7 days.',age:'4–6 months+'},{n:'Extinction (CIO)',tag:'Direct',tagC:'#C4614A',d:'Put down awake. Don\'t return until morning. Often 1–3 nights. Hard but fastest.',age:'4–6 months+'},{n:'Chair Method',tag:'Gentle',tagC:'#4A6844',d:'Sit in chair next to crib. Move chair farther every 3 nights. Takes 2–3 weeks.',age:'4–6 months+'},{n:'Fading Method',tag:'Gentle',tagC:'#4A6844',d:'Gradually reduce the prop (rocking/feeding) over days by 1 min per night.',age:'2–6 months'}].forEach((m,i)=>{const k=`sm${i}`,o=S.exp===k;h+=`<div class="acc"><div class="acc-h${o?' open':''}" onclick="tog('${k}')"><div><div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#3B3B3B">${m.n}</div><div style="font-size:10px;color:#8E8A86;margin-top:2px">${m.age}</div></div><div style="display:flex;align-items:center;gap:7px"><span style="font-size:10px;padding:3px 9px;border-radius:8px;background:#FAF8F4;border:1.5px solid #E8E0D8;color:${m.tagC};font-weight:700">${m.tag}</span><span class="chev${o?' open':''}">▾</span></div></div><div class="acc-b${o?' open':''}">${m.d}</div></div>`;});
+  [{n:'Ferber (Graduated)',tag:'Moderate',d:'Put down awake. Return at increasing intervals (3→5→10 min) to reassure without picking up. Results in 3–7 days.',age:'4–6 months+'},{n:'Extinction (CIO)',tag:'Direct',d:'Put down awake. Don\'t return until morning. Often 1–3 nights. Hard but fastest.',age:'4–6 months+'},{n:'Chair Method',tag:'Gentle',d:'Sit in chair next to crib. Move chair farther every 3 nights. Takes 2–3 weeks.',age:'4–6 months+'},{n:'Fading Method',tag:'Gentle',d:'Gradually reduce the prop (rocking/feeding to sleep) over days by 1 min per night.',age:'2–6 months'}].forEach((m,i)=>{
+    const k=`sm${i}`,o=S.exp===k;
+    h+=`<div class="acc-wrap"><div class="acc-head${o?' open':''}" data-acc="${k}"><div><div style="font-size:13px;color:#EDE8FA;font-weight:500">${m.n}</div><div style="font-size:9px;color:#7A6AAA;margin-top:1px">${m.age}</div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-body${o?' open':''}">${m.d}</div></div>`;
+  });
+  h+=`<div class="info-box">📚 All evidence-based sleep training methods show <strong style="color:#EDE8FA">no long-term negative effects</strong> on child development.</div>`;
   el.innerHTML=h;
+  el.querySelectorAll('[data-acc]').forEach(btn=>btn.addEventListener('click',function(){tog(this.dataset.acc);}));
 }
 
 function rDevelop(){
   const el=document.getElementById('p-develop');if(!el)return;
   const d=getAD(S.babyAge);
-  let h=`<div class="tab-bar"><button class="tbtn${S.devTab==='activities'?' active':''}" onclick="S.devTab='activities';S.exp=null;ra()">👶 Activities</button><button class="tbtn${S.devTab==='stretches'?' active':''}" onclick="S.devTab='stretches';S.exp=null;ra()">🤸 Stretches</button><button class="tbtn${S.devTab==='milestones'?' active':''}" onclick="S.devTab='milestones';S.exp=null;ra()">⭐ Milestones</button></div>`;
-  if(S.devTab==='activities'){d.act.forEach((a,i)=>{const k=`a${i}`,o=S.exp===k;h+=`<div class="acc"><div class="acc-h${o?' open':''}" onclick="tog('${k}')"><div style="display:flex;align-items:center;gap:9px"><span style="font-size:20px">${a.i}</span><div><div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#3B3B3B">${a.n}</div><div style="font-size:11px;color:#E79A7D;font-weight:600;margin-top:1px">⭐ ${a.ms} · ${a.dur}</div></div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-b${o?' open':''}"><p style="margin-bottom:5px"><strong style="color:#4A6844">Why:</strong> ${a.w}</p><div style="padding:7px 9px;border-radius:9px;background:#F0F7EF;border:1.5px solid #C8DEC5"><strong>How:</strong> ${a.h}</div></div></div>`;});}
+  let h=`<div class="tab-bar"><button class="tab-opt${S.devTab==='activities'?' active':''}" data-tab="activities">👶 Activities</button><button class="tab-opt${S.devTab==='stretches'?' active':''}" data-tab="stretches">🤸 Stretches</button><button class="tab-opt${S.devTab==='milestones'?' active':''}" data-tab="milestones">⭐ Milestones</button></div>`;
+  if(S.devTab==='activities'){
+    d.act.forEach((a,i)=>{const k=`a${i}`,o=S.exp===k;h+=`<div class="acc-wrap"><div class="acc-head${o?' open':''}" data-acc="${k}"><div style="display:flex;align-items:center;gap:9px"><span style="font-size:19px">${a.i}</span><div><div style="font-size:13px;color:#EDE8FA;font-weight:500">${a.n}</div><div style="font-size:10px;color:#A066FF;margin-top:1px">⭐ ${a.ms} · ${a.dur}</div></div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-body${o?' open':''}"><p style="margin-bottom:5px"><strong style="color:#6C8EBF">Why:</strong> ${a.w}</p><div style="padding:6px 9px;border-radius:7px;background:rgba(108,142,191,.07);border:1px solid rgba(108,142,191,.15)"><strong style="color:#C8D8F0">How:</strong> ${a.h}</div></div></div>`;});
+  }
   if(S.devTab==='stretches'){
-    (d.gen||[]).forEach((s,i)=>{const k=`g${i}`,o=S.exp===k;h+=`<div class="card" style="cursor:pointer;background:#F4FAF3;border-color:#C8DEC5" onclick="tog('${k}')"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:17px">${s.i}</span><div><div style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#4A6844">${s.n}</div><div style="font-size:11px;color:#8E8A86;margin-top:1px">${s.sets}</div></div></div><span class="chev${o?' open':''}">▾</span></div>${o?`<div style="margin-top:8px"><div style="font-size:12px;color:#6B6560;line-height:1.7;margin-bottom:5px">${s.d}</div><div style="font-size:11px;color:#4A6844;padding:6px 9px;border-radius:9px;background:#E8F4E7;border:1.5px solid #C8DEC5">💡 ${s.tip}</div></div>`:''}</div>`;});
+    (d.gen||[]).forEach((s,i)=>{const k=`g${i}`,o=S.exp===k;h+=`<div class="panel" style="cursor:pointer;background:rgba(20,184,166,.04);border-color:rgba(20,184,166,.15)" data-acc="${k}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:17px">${s.i}</span><div><div style="font-size:12px;color:#2DD4BF;font-weight:500">${s.n}</div><div style="font-size:10px;color:#14B8A6;margin-top:1px">${s.sets}</div></div></div><span class="chev${o?' open':''}">▾</span></div>${o?`<div style="margin-top:8px"><div style="font-size:11px;color:#9B87BF;line-height:1.7;margin-bottom:4px">${s.d}</div><div style="font-size:10px;color:#2DD4BF;padding:6px 8px;border-radius:7px;background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.15)">💡 ${s.tip}</div></div>`:''}</div>`;});
     if(d.tort&&d.tort.length){
       h+=shd('🎯 Torticollis PT Stretches');
-      h+=`<div class="warn-b">⚕️ Always follow your PT's specific protocol.</div>`;
+      h+=`<div class="warn-box">⚕️ Always follow your PT's specific protocol.</div>`;
       const ts=S.wtSets||{L:0,R:0};
-      h+=`<div class="card" style="display:flex;gap:14px;text-align:center"><div style="flex:1"><div style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:#A8C5A1">${ts.L||0}</div><div style="font-size:9px;color:#8E8A86;text-transform:uppercase;font-weight:600">Left Sets</div></div><div style="flex:1"><div style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:#A8C5A1">${ts.R||0}</div><div style="font-size:9px;color:#8E8A86;text-transform:uppercase;font-weight:600">Right Sets</div></div><div style="flex:1"><div style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:#A8C5A1">${(ts.L||0)+(ts.R||0)}</div><div style="font-size:9px;color:#8E8A86;text-transform:uppercase;font-weight:600">Total</div></div></div>`;
-      d.tort.forEach((s,i)=>{const k=`t${i}`,o=S.exp===k;h+=`<div class="card" style="cursor:pointer;background:#F4FAF3;border-color:#C8DEC5" onclick="tog('${k}')"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:17px">${s.i}</span><div><div style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#4A6844">${s.n}</div><div style="font-size:11px;color:#8E8A86;margin-top:1px">${s.sets}</div></div></div><span class="chev${o?' open':''}">▾</span></div>${o?`<div style="margin-top:8px"><div style="font-size:12px;color:#6B6560;margin-bottom:5px">${s.d}</div><div style="font-size:11px;color:#4A6844;padding:6px 9px;border-radius:9px;background:#E8F4E7;border:1.5px solid #C8DEC5;margin-bottom:8px">💡 ${s.tip}</div><div style="display:flex;gap:6px"><button onclick="event.stopPropagation();S.wtSets.L=(S.wtSets.L||0)+1;sv();ra()" style="padding:6px 12px;border-radius:9px;border:1.5px solid #C8DEC5;background:#fff;color:#4A6844;font-size:12px;font-weight:600;cursor:pointer">+ Left</button><button onclick="event.stopPropagation();S.wtSets.R=(S.wtSets.R||0)+1;sv();ra()" style="padding:6px 12px;border-radius:9px;border:1.5px solid #C8DEC5;background:#fff;color:#4A6844;font-size:12px;font-weight:600;cursor:pointer">+ Right</button></div></div>`:''}</div>`;});
+      h+=`<div class="panel" style="display:flex;gap:12px;text-align:center"><div style="flex:1"><div style="font-size:16px;font-weight:500;color:#80CBC4">${ts.L||0}</div><div style="font-size:8px;color:#7A6AAA;text-transform:uppercase">Left Sets</div></div><div style="flex:1"><div style="font-size:16px;font-weight:500;color:#80CBC4">${ts.R||0}</div><div style="font-size:8px;color:#7A6AAA;text-transform:uppercase">Right Sets</div></div><div style="flex:1"><div style="font-size:16px;font-weight:500;color:#80CBC4">${(ts.L||0)+(ts.R||0)}</div><div style="font-size:8px;color:#7A6AAA;text-transform:uppercase">Total</div></div></div>`;
+      d.tort.forEach((s,i)=>{const k=`t${i}`,o=S.exp===k;h+=`<div class="panel" style="cursor:pointer;background:rgba(20,184,166,.04);border-color:rgba(20,184,166,.15)" data-acc="${k}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:17px">${s.i}</span><div><div style="font-size:12px;color:#2DD4BF;font-weight:500">${s.n}</div><div style="font-size:10px;color:#14B8A6;margin-top:1px">${s.sets}</div></div></div><span class="chev${o?' open':''}">▾</span></div>${o?`<div style="margin-top:8px"><div style="font-size:11px;color:#9B87BF;margin-bottom:4px">${s.d}</div><div style="font-size:10px;color:#2DD4BF;padding:6px 8px;border-radius:7px;background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.15);margin-bottom:7px">💡 ${s.tip}</div><div style="display:flex;gap:6px"><button data-side="L" style="padding:6px 11px;border-radius:8px;border:none;background:rgba(20,184,166,.12);color:#14B8A6;font-size:11px;cursor:pointer">+ Left</button><button data-side="R" style="padding:6px 11px;border-radius:8px;border:none;background:rgba(20,184,166,.12);color:#14B8A6;font-size:11px;cursor:pointer">+ Right</button></div></div>`:''}</div>`;});
     }
     h+=shd('📏 Growth');
-    h+=`<div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap"><input type="number" id="gwlb" placeholder="lbs" style="flex:1;min-width:55px;padding:7px 9px;border-radius:10px;font-size:13px"><input type="number" id="gwoz2" placeholder="oz" style="flex:1;min-width:50px;padding:7px 9px;border-radius:10px;font-size:13px"><input type="number" id="glin" placeholder="in (height)" step=".25" style="flex:1;min-width:65px;padding:7px 9px;border-radius:10px;font-size:13px"><button onclick="addG()" style="padding:7px 12px;border-radius:10px;border:none;background:#A8C5A1;color:#fff;font-size:12px;font-weight:700;cursor:pointer">+ Add</button></div>`;
-    if(S.growth.length){h+=`<div class="card"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th style="color:#8E8A86;text-align:left;padding:4px 6px;border-bottom:1.5px solid #F0EBE3;font-size:10px;text-transform:uppercase;font-weight:600">Date</th><th style="color:#8E8A86;text-align:left;padding:4px 6px;border-bottom:1.5px solid #F0EBE3;font-size:10px;text-transform:uppercase;font-weight:600">Weight</th><th style="color:#8E8A86;text-align:left;padding:4px 6px;border-bottom:1.5px solid #F0EBE3;font-size:10px;text-transform:uppercase;font-weight:600">Height</th></tr></thead><tbody>`;[...S.growth].reverse().slice(0,5).forEach(g=>{h+=`<tr><td style="padding:7px 6px;border-bottom:1px solid #F5F1EC;color:#6B6560">${g.date}</td><td style="padding:7px 6px;border-bottom:1px solid #F5F1EC;color:#6B6560">${g.kg?fwt(g.kg):'—'}</td><td style="padding:7px 6px;border-bottom:1px solid #F5F1EC;color:#6B6560">${g.lin?g.lin+'"':'—'}</td></tr>`;});h+=`</tbody></table></div>`;}
+    h+=`<div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap"><input type="number" id="gwlb" placeholder="lbs" style="flex:1;min-width:55px;padding:7px 8px;border-radius:8px;font-size:12px"><input type="number" id="gwoz2" placeholder="oz" style="flex:1;min-width:50px;padding:7px 8px;border-radius:8px;font-size:12px"><input type="number" id="glin" placeholder="in (height)" step=".25" style="flex:1;min-width:60px;padding:7px 8px;border-radius:8px;font-size:12px"><button id="addg-btn" style="padding:7px 11px;border-radius:8px;border:none;background:rgba(160,102,255,.22);color:#D4C0F5;font-size:12px;cursor:pointer">+ Add</button></div>`;
+    if(S.growth.length){h+=`<div class="panel"><table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr><th style="color:#7A6AAA;text-align:left;padding:4px 6px;border-bottom:1px solid rgba(255,255,255,.07);font-size:9px;text-transform:uppercase">Date</th><th style="color:#7A6AAA;text-align:left;padding:4px 6px;border-bottom:1px solid rgba(255,255,255,.07);font-size:9px;text-transform:uppercase">Weight</th><th style="color:#7A6AAA;text-align:left;padding:4px 6px;border-bottom:1px solid rgba(255,255,255,.07);font-size:9px;text-transform:uppercase">Height</th></tr></thead><tbody>`;[...S.growth].reverse().slice(0,5).forEach(g=>{h+=`<tr><td style="padding:6px;border-bottom:1px solid rgba(255,255,255,.05);color:#9B87BF">${g.date}</td><td style="padding:6px;border-bottom:1px solid rgba(255,255,255,.05);color:#9B87BF">${g.kg?fwt(g.kg):'—'}</td><td style="padding:6px;border-bottom:1px solid rgba(255,255,255,.05);color:#9B87BF">${g.lin?g.lin+'"':'—'}</td></tr>`;});h+=`</tbody></table></div>`;}
+    else h+=`<div style="text-align:center;padding:12px;color:#3D2E58;font-size:11px">No measurements yet.</div>`;
   }
   if(S.devTab==='milestones'){
     const k2=`ms${S.babyAge}`;if(!S.ms[k2])S.ms[k2]={};
-    h+=`<div class="info-b" style="margin-bottom:9px">${Object.keys(S.ms[k2]).length}/${d.ms.length} reached · ${ALF[S.babyAge]}</div><div class="card">`;
-    d.ms.forEach((m,i)=>{const dn=!!S.ms[k2][i];h+=`<div class="cl-row"><div class="cl-box${dn?' done':''}" onclick="togMs(${i})">${dn?'✓':''}</div><div><div style="font-size:13px;color:${dn?'#B8AFA8':'#3B3B3B'};font-weight:600;${dn?'text-decoration:line-through':''}">${m}</div>${dn?`<div style="font-size:11px;color:#8E8A86;margin-top:1px">✨ ${S.ms[k2][i]}</div>`:''}</div></div>`;});
+    h+=`<div class="info-box" style="margin-bottom:9px">${Object.keys(S.ms[k2]).length}/${d.ms.length} reached · ${ALF[S.babyAge]||'?'}</div><div class="panel">`;
+    d.ms.forEach((m,i)=>{const dn=!!S.ms[k2][i];h+=`<div class="cl-row"><div class="cl-check${dn?' done':''}" data-ms="${i}">${dn?'✓':''}</div><div><div style="font-size:12px;color:${dn?'#5A4878':'#EDE8FA'};${dn?'text-decoration:line-through':''}">${m}</div>${dn?`<div style="font-size:10px;color:#7A6AAA;margin-top:1px">✨ ${S.ms[k2][i]}</div>`:''}</div></div>`;});
     h+=`</div>`;
   }
   el.innerHTML=h;
+  el.querySelectorAll('.tab-opt').forEach(btn=>btn.addEventListener('click',function(){S.devTab=this.dataset.tab;S.exp=null;ra();}));
+  el.querySelectorAll('[data-acc]').forEach(btn=>btn.addEventListener('click',function(){tog(this.dataset.acc);}));
+  el.querySelectorAll('[data-ms]').forEach(btn=>btn.addEventListener('click',function(){const k=`ms${S.babyAge}`;if(!S.ms[k])S.ms[k]={};const i=+this.dataset.ms;if(S.ms[k][i])delete S.ms[k][i];else S.ms[k][i]=tod();sv();ra();}));
+  el.querySelectorAll('[data-side]').forEach(btn=>btn.addEventListener('click',function(e){e.stopPropagation();const s=this.dataset.side;S.wtSets[s]=(S.wtSets[s]||0)+1;sv();ra();}));
+  el.querySelector('#addg-btn')?.addEventListener('click',()=>{const lb=+document.getElementById('gwlb').value||0;const oz=+document.getElementById('gwoz2').value||0;const lin=+document.getElementById('glin').value||null;if(!lb&&!oz&&!lin)return;const kg=(lb||oz)?lbKg(lb,oz):null;S.growth.push({date:tod(),kg,lin});if(kg)S.wtKg=kg;sv();rDevelop();});
 }
-function togMs(i){const k=`ms${S.babyAge}`;if(!S.ms[k])S.ms[k]={};if(S.ms[k][i])delete S.ms[k][i];else S.ms[k][i]=tod();sv();ra();}
-function addG(){const lb=+document.getElementById('gwlb').value||0;const oz=+document.getElementById('gwoz2').value||0;const lin=+document.getElementById('glin').value||null;if(!lb&&!oz&&!lin)return;const kg=(lb||oz)?lbKg(lb,oz):null;S.growth.push({date:tod(),kg,lin});if(kg)S.wtKg=kg;sv();rDevelop();}
 
 function rHealth(){
   const el=document.getElementById('p-health');if(!el)return;
-  let h=`<p class="intro">Medicine dosing, temperature, vaccines, visits, and your wellbeing.</p>`;
-  h+=`<div class="dose-box"><div style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#7A5CA8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px">💊 Medicine Dosing Calculator</div><div style="display:flex;gap:7px;align-items:center;margin-bottom:9px"><input type="number" id="d-lb" placeholder="lbs" step="1" min="0" max="50" value="${S.wtKg?kgLb(S.wtKg).lb:''}" oninput="calcDose()" style="max-width:60px;padding:7px 9px;border-radius:10px;font-size:13px"><span style="font-size:11px;color:#8E8A86">lbs</span><input type="number" id="d-oz" placeholder="oz" step="1" min="0" max="15" value="${S.wtKg?kgLb(S.wtKg).oz:''}" oninput="calcDose()" style="max-width:54px;padding:7px 9px;border-radius:10px;font-size:13px"><span style="font-size:11px;color:#8E8A86">oz</span></div><select id="d-med" oninput="calcDose()" style="width:100%;padding:9px 11px;border-radius:11px;font-size:13px;margin-bottom:9px;background:#fff;border:1.5px solid #D9C6E6;color:#3B3B3B">${Object.keys(MEDS).map(m=>`<option>${m}</option>`).join('')}</select><div id="dose-result"></div><div class="warn-b" style="margin-top:9px;margin-bottom:0;font-size:11px">⚕️ <strong>Always confirm with your pediatrician.</strong> Never give ibuprofen under 6 months.</div></div>`;
-  setTimeout(calcDose,50);
+  let h=`<p style="font-size:12px;color:#8875B0;margin-bottom:10px;line-height:1.6">Medicine dosing, temperature, vaccines, visits, and your wellbeing.</p>`;
+  h+=`<div class="dose-box"><div style="font-size:9px;color:#818CF8;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:9px">💊 Medicine Dosing Calculator</div><div style="display:flex;gap:6px;align-items:center;margin-bottom:9px"><input type="number" id="d-lb" placeholder="lbs" step="1" min="0" max="50" value="${S.wtKg?kgLb(S.wtKg).lb:''}" style="max-width:58px;padding:7px 9px;border-radius:8px;font-size:12px"><span style="font-size:10px;color:#7A6AAA">lbs</span><input type="number" id="d-oz" placeholder="oz" step="1" min="0" max="15" value="${S.wtKg?kgLb(S.wtKg).oz:''}" style="max-width:52px;padding:7px 9px;border-radius:8px;font-size:12px"><span style="font-size:10px;color:#7A6AAA">oz</span></div><select id="d-med" style="width:100%;padding:8px 11px;border-radius:9px;font-size:12px;margin-bottom:9px;color:#EDE8FA;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">${Object.keys(MEDS).map(m=>`<option>${m}</option>`).join('')}</select><div id="dose-result"></div><div class="warn-box" style="margin-top:9px;margin-bottom:0;font-size:10px">⚕️ <strong>Always confirm dosing with your pediatrician.</strong> Never give ibuprofen under 6 months.</div></div>`;
   h+=shd('Medication Log');
-  h+=`<div style="text-align:right;margin-bottom:7px"><button onclick="openM('med')" style="padding:6px 12px;border-radius:9px;border:none;background:#F5F0FF;color:#7A5CA8;font-size:12px;font-weight:600;cursor:pointer">+ Log</button></div>`;
-  if(!S.health.meds.length)h+=`<div style="font-size:13px;color:#B8AFA8;padding:6px 0">No medications logged.</div>`;
-  else S.health.meds.slice(0,4).forEach(m=>{h+=`<div class="log-row"><div><div style="font-size:13px;font-weight:600;color:#3B3B3B">${m.med} — ${m.dose||'?'}</div><div style="font-size:11px;color:#8E8A86">${m.reason||''} · ${m.date}</div></div><button class="x-btn" onclick="S.health.meds=S.health.meds.filter(x=>x.id!=='${m.id}');sv();ra()">×</button></div>`;});
+  h+=`<div style="text-align:right;margin-bottom:7px"><button id="btn-log-med" style="padding:6px 11px;border-radius:8px;border:none;background:rgba(99,102,241,.18);color:#A5B4FC;font-size:11px;cursor:pointer">+ Log</button></div>`;
+  if(!S.health.meds.length)h+=`<div style="font-size:11px;color:#3D2E58;padding:6px 0">No medications logged.</div>`;
+  else S.health.meds.slice(0,4).forEach(m=>{h+=`<div class="log-row"><div><div style="font-size:12px;color:#C8D8F0">${m.med} — ${m.dose||'?'}</div><div style="font-size:10px;color:#7A6AAA">${m.reason||''} · ${m.date}</div></div><button class="x-btn" data-delmed="${m.id}">×</button></div>`;});
   h+=shd('🌡️ Temperature');
-  h+=`<div style="text-align:right;margin-bottom:7px"><button onclick="openM('temp')" style="padding:6px 12px;border-radius:9px;border:none;background:#FFF5F3;color:#C4614A;font-size:12px;font-weight:600;cursor:pointer">+ Log</button></div>`;
-  if(!S.health.temps.length)h+=`<div style="font-size:13px;color:#B8AFA8;padding:6px 0">No temperatures logged.</div>`;
-  else S.health.temps.slice(0,3).forEach(t=>{const hi=t.f>=100.4;h+=`<div class="log-row"><span style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:${hi?'#C4614A':'#4A6844'}">${t.f}°F ${hi?'🌡️':''}</span><div style="margin-left:9px"><div style="font-size:11px;color:#8E8A86">${t.meth} · ${t.date}</div></div><button class="x-btn" onclick="S.health.temps=S.health.temps.filter(x=>x.id!=='${t.id}');sv();ra()">×</button></div>`;});
+  h+=`<div style="text-align:right;margin-bottom:7px"><button id="btn-log-temp" style="padding:6px 11px;border-radius:8px;border:none;background:rgba(244,114,182,.12);color:#F9A8D4;font-size:11px;cursor:pointer">+ Log</button></div>`;
+  if(!S.health.temps.length)h+=`<div style="font-size:11px;color:#3D2E58;padding:6px 0">No temperatures logged.</div>`;
+  else S.health.temps.slice(0,3).forEach(t=>{const hi=t.f>=100.4;h+=`<div class="log-row"><span style="font-size:13px;font-weight:600;color:${hi?'#EF5350':'#81C784'}">${t.f}°F ${hi?'🌡️':''}</span><div style="margin-left:8px"><div style="font-size:10px;color:#7A6AAA">${t.meth} · ${t.date}</div></div><button class="x-btn" data-deltemp="${t.id}">×</button></div>`;});
   h+=shd('💉 Vaccines');
   const dueV=[];Object.entries(VACCS).forEach(([a,vs])=>{if(+a<=S.babyAge+1)vs.forEach(v=>dueV.push(v));});
-  h+=`<div style="display:flex;flex-wrap:wrap;margin-bottom:6px">${[...new Set(dueV)].map(v=>{const dn=(S.health.vaccs||[]).includes(v);return`<span class="chip${dn?' done':''}" onclick="togVacc('${v}')">${dn?'✓ ':''} ${v}</span>`;}).join('')}</div>`;
+  h+=`<div style="display:flex;flex-wrap:wrap;margin-bottom:5px">${[...new Set(dueV)].map(v=>{const dn=(S.health.vaccs||[]).includes(v);return`<span class="chip-tag${dn?' done':''}" data-vacc="${v}">${dn?'✓ ':''} ${v}</span>`;}).join('')}</div>`;
   h+=shd('🩺 Doctor Visits');
-  h+=`<div style="text-align:right;margin-bottom:7px"><button onclick="openM('visit')" style="padding:6px 12px;border-radius:9px;border:none;background:#F0F7EF;color:#4A6844;font-size:12px;font-weight:600;cursor:pointer">+ Log</button></div>`;
-  if(!S.health.visits.length)h+=`<div style="font-size:13px;color:#B8AFA8;padding:6px 0">No visits logged.</div>`;
-  else S.health.visits.slice(0,3).forEach(v=>{h+=`<div class="card"><div style="display:flex;justify-content:space-between"><div><div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#3B3B3B">${v.vt} · ${v.date}</div>${v.weight?`<div style="font-size:12px;color:#8E8A86">Weight: ${v.weight}</div>`:''}</div><button class="x-btn" onclick="S.health.visits=S.health.visits.filter(x=>x.id!=='${v.id}');sv();ra()">×</button></div></div>`;});
+  h+=`<div style="text-align:right;margin-bottom:7px"><button id="btn-log-visit" style="padding:6px 11px;border-radius:8px;border:none;background:rgba(129,199,132,.1);color:#86EFAC;font-size:11px;cursor:pointer">+ Log</button></div>`;
+  if(!S.health.visits.length)h+=`<div style="font-size:11px;color:#3D2E58;padding:6px 0">No visits logged.</div>`;
+  else S.health.visits.slice(0,3).forEach(v=>{h+=`<div class="panel"><div style="display:flex;justify-content:space-between"><div><div style="font-size:12px;color:#C8D8F0;font-weight:500">${v.vt} · ${v.date}</div>${v.weight?`<div style="font-size:10px;color:#7A6AAA">Weight: ${v.weight}</div>`:''}</div><button class="x-btn" data-delvisit="${v.id}">×</button></div></div>`;});
   h+=shd('💙 Your Wellbeing');
   const todayM=S.health.moods.find(m=>m.date===tod());
-  h+=`<div class="card"><div style="font-size:13px;color:#6B6560;margin-bottom:9px;line-height:1.6">How are you feeling today?</div><div style="display:flex;gap:6px;margin-bottom:9px">${['😩','😔','😐','🙂','😊'].map((e,i)=>{const sel=todayM&&todayM.score===i+1;return`<div onclick="logMood(${i+1},'${e}')" style="flex:1;padding:10px 2px;border-radius:12px;border:2px solid ${sel?'#A8C5A1':'#F0EBE3'};background:${sel?'#F0F7EF':'#FAF8F4'};font-size:22px;text-align:center;cursor:pointer">${e}</div>`;}).join('')}</div><div class="info-b" style="margin-bottom:0">Persistently sad or overwhelmed? Reach out to your OB or therapist. <strong>Postpartum mood disorders are common and very treatable.</strong> 💙</div></div>`;
+  h+=`<div class="panel"><div style="font-size:11px;color:#8875B0;margin-bottom:8px;line-height:1.6">How are you feeling today?</div><div style="display:flex;gap:5px;margin-bottom:8px">${['😩','😔','😐','🙂','😊'].map((e,i)=>{const sel=todayM&&todayM.score===i+1;return`<div class="mood-btn" data-score="${i+1}" data-emoji="${e}" style="flex:1;padding:9px 2px;border-radius:10px;border:1px solid ${sel?'rgba(160,102,255,.45)':'rgba(255,255,255,.07)'};background:${sel?'rgba(160,102,255,.15)':'rgba(255,255,255,.03)'};font-size:20px;text-align:center;cursor:pointer">${e}</div>`;}).join('')}</div><div class="info-box" style="margin-bottom:0">Persistently sad or overwhelmed? Reach out to your OB or therapist. <strong style="color:#C4B5FD">Postpartum mood disorders are common and very treatable.</strong> 💙</div></div>`;
   el.innerHTML=h;
+  // Wire up all health events
+  document.getElementById('d-lb')?.addEventListener('input',calcDose);
+  document.getElementById('d-oz')?.addEventListener('input',calcDose);
+  document.getElementById('d-med')?.addEventListener('change',calcDose);
+  setTimeout(calcDose,50);
+  el.querySelector('#btn-log-med')?.addEventListener('click',()=>openM('med'));
+  el.querySelector('#btn-log-temp')?.addEventListener('click',()=>openM('temp'));
+  el.querySelector('#btn-log-visit')?.addEventListener('click',()=>openM('visit'));
+  el.querySelectorAll('[data-vacc]').forEach(btn=>btn.addEventListener('click',function(){const v=this.dataset.vacc;if(!S.health.vaccs)S.health.vaccs=[];if(S.health.vaccs.includes(v))S.health.vaccs=S.health.vaccs.filter(x=>x!==v);else S.health.vaccs.push(v);sv();ra();}));
+  el.querySelectorAll('.mood-btn').forEach(btn=>btn.addEventListener('click',function(){const score=+this.dataset.score;const emoji=this.dataset.emoji;const idx=S.health.moods.findIndex(m=>m.date===tod());if(idx>=0)S.health.moods[idx]={...S.health.moods[idx],score,emoji};else S.health.moods.unshift({id:uid(),score,emoji,date:tod(),time:nw()});sv();ra();}));
+  el.querySelectorAll('[data-delmed]').forEach(btn=>btn.addEventListener('click',function(){S.health.meds=S.health.meds.filter(x=>x.id!==this.dataset.delmed);sv();ra();}));
+  el.querySelectorAll('[data-deltemp]').forEach(btn=>btn.addEventListener('click',function(){S.health.temps=S.health.temps.filter(x=>x.id!==this.dataset.deltemp);sv();ra();}));
+  el.querySelectorAll('[data-delvisit]').forEach(btn=>btn.addEventListener('click',function(){S.health.visits=S.health.visits.filter(x=>x.id!==this.dataset.delvisit);sv();ra();}));
 }
-function calcDose(){const lb=+document.getElementById('d-lb')?.value||0;const oz=+document.getElementById('d-oz')?.value||0;const el=document.getElementById('dose-result');if(!el||(!lb&&!oz)){if(el)el.innerHTML='';return;}const kg=lbKg(lb,oz);S.wtKg=kg;sv();const mn=document.getElementById('d-med')?.value;const med=MEDS[mn];if(!med){el.innerHTML='';return;}const note=med.calc(kg);el.innerHTML=`<div class="dose-res"><div class="dose-big">${note.split('·')[0].trim()}</div><div style="font-size:11px;color:#7A5CA8;margin-top:5px;line-height:1.7">${note}${med.interval?'<br>Frequency: <strong>'+med.interval+'</strong>':''}<br>${med.note}</div></div>`;}
-function togVacc(v){if(!S.health.vaccs)S.health.vaccs=[];if(S.health.vaccs.includes(v))S.health.vaccs=S.health.vaccs.filter(x=>x!==v);else S.health.vaccs.push(v);sv();ra();}
-function logMood(score,emoji){const idx=S.health.moods.findIndex(m=>m.date===tod());if(idx>=0)S.health.moods[idx]={...S.health.moods[idx],score,emoji};else S.health.moods.unshift({id:uid(),score,emoji,date:tod(),time:nw()});sv();ra();}
-
-function rNewborn(){
-  const el=document.getElementById('p-newborn');if(!el)return;
-  if(!S.newbornCheck)S.newbornCheck={};
-  const TASKS=[{id:'nb-bc',cat:'📄 Legal',t:'Order birth certificate',s:'Request through hospital or vital records — usually within 1–2 weeks',urgent:true},{id:'nb-ssn',cat:'📄 Legal',t:'Apply for Social Security Number',s:'Can do at hospital or SSA office',urgent:true},{id:'nb-ins',cat:'🏥 Healthcare',t:'Add baby to health insurance',s:'Must be done within 30 days — don\'t miss this!',urgent:true},{id:'nb-ped',cat:'🏥 Healthcare',t:'First pediatrician visit (2–5 days)',s:'Weight check, jaundice, feeding assessment',urgent:true},{id:'nb-ped2',cat:'🏥 Healthcare',t:'2-week pediatrician visit',s:'Weight should be back to birth weight'},{id:'nb-vitd',cat:'🏥 Healthcare',t:'Start Vitamin D drops',s:'All breastfed babies need 400 IU/day'},{id:'nb-life',cat:'💰 Financial',t:'Add baby to life insurance',s:'Update beneficiaries too'},{id:'nb-529',cat:'💰 Financial',t:'Open a 529 college savings account',s:'Even $25/month started now makes a huge difference'},{id:'nb-carseat',cat:'🏠 Home',t:'Car seat inspected by certified tech',s:'Many fire stations offer free inspections'},{id:'nb-6wk',cat:'👩 Mom\'s Health',t:'Schedule 6-week postpartum checkup',s:'Book it now. Non-negotiable.',urgent:true},{id:'nb-lactation',cat:'👩 Mom\'s Health',t:'Connect with lactation consultant',s:'Most hospitals have one. Insurance often covers it.'},{id:'nb-support',cat:'👩 Mom\'s Health',t:'Identify your postpartum support network',s:'Who can you call at 2am?'}];
-  const SUPPS=[{stage:'Newborn (0–3 months)',c:'#E79A7D',items:[{n:'Vitamin D Drops (400 IU)',for:'Baby',why:'Breastmilk doesn\'t have enough Vitamin D. All breastfed babies need this from day 1.',brand:'Carlson Baby D Drops, Nordic Naturals'},{n:'Probiotic drops',for:'Baby',why:'Evidence supports reducing colic and crying time.',brand:'BioGaia Protectis, Gerber Soothe'},{n:'Continue prenatal vitamins',for:'Mom',why:'If breastfeeding, you\'re still baby\'s nutritional source.',brand:'Any quality prenatal with DHA'},{n:'DHA / Omega-3',for:'Mom',why:'Critical for baby\'s brain development through breast milk.',brand:'Nordic Naturals Postnatal Omega-3'},{n:'Iron supplement',for:'Mom',why:'Postpartum blood loss depletes iron.',brand:'Slow Fe, Ferrochel — take with Vitamin C'},{n:'Stool softener (Colace)',for:'Mom',why:'First postpartum bowel movement can be very painful. Take from day 1 home.',brand:'Colace, generic docusate sodium'}]},{stage:'1–4 months',c:'#A8C5A1',items:[{n:'Vitamin D Drops (continue)',for:'Baby',why:'Continue through at least 12 months.',brand:'Same as above'},{n:'Gas drops or gripe water',for:'Baby',why:'Gas and colic peak around 6 weeks.',brand:'Mylicon, Mommy\'s Bliss Gripe Water'},{n:'Postnatal multivitamin',for:'Mom',why:'Higher iron, iodine, and choline vs standard prenatals.',brand:'Ritual Postnatal, Needed Postnatal'}]},{stage:'6–12 months',c:'#D9C6E6',items:[{n:'Iron-rich foods + possibly iron drops',for:'Baby',why:'Iron from food should be primary. Drops if intake is low.',brand:'Discuss with pediatrician'},{n:'Vitamin D (continue)',for:'Baby',why:'Continue even as solids increase.',brand:'Same drops'},{n:'Probiotic (optional)',for:'Baby',why:'Supports gut health during solids introduction.',brand:'BioGaia, Culturelle Baby'}]}];
-  const tab=S.newbornTab||'checklist';
-  const done=Object.values(S.newbornCheck).filter(Boolean).length;
-  let h=`<div class="tab-bar"><button class="tbtn${tab==='checklist'?' active':''}" onclick="S.newbornTab='checklist';S.exp=null;rNewborn()">✅ After Birth</button><button class="tbtn${tab==='supps'?' active':''}" onclick="S.newbornTab='supps';S.exp=null;rNewborn()">💊 Supplements</button></div>`;
-  if(tab==='checklist'){
-    h+=`<div class="info-b" style="margin-bottom:10px">${done}/${TASKS.length} complete · Take it week by week.</div>`;
-    let curCat='';
-    TASKS.forEach(item=>{if(item.cat!==curCat){h+=`<div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:#E79A7D;text-transform:uppercase;letter-spacing:.07em;margin:11px 0 4px">${item.cat}</div>`;curCat=item.cat;}const d2=!!S.newbornCheck[item.id];h+=`<div class="cl-row"><div class="cl-box${d2?' done':''}" onclick="S.newbornCheck['${item.id}']=!S.newbornCheck['${item.id}'];sv();rNewborn()">${d2?'✓':''}</div><div><div style="display:flex;align-items:center;gap:6px"><span style="font-size:13px;color:${d2?'#B8AFA8':'#3B3B3B'};font-weight:600;${d2?'text-decoration:line-through':''}">${item.t}</span>${item.urgent&&!d2?'<span style="font-size:9px;padding:2px 7px;border-radius:7px;background:#FFF5F3;color:#C4614A;font-weight:700;border:1px solid #F4C7C2">Urgent</span>':''}</div><div style="font-size:11px;color:#8E8A86;margin-top:1px">${item.s}</div></div></div>`;});
-  }
-  if(tab==='supps'){
-    h+=`<div class="info-b">Always confirm with your pediatrician. These are general evidence-based recommendations.</div>`;
-    SUPPS.forEach((stage,si)=>{h+=`<div style="margin-bottom:13px"><div style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:${stage.c};text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px">📅 ${stage.stage}</div>`;stage.items.forEach((item,ii)=>{const k=`supp-${si}-${ii}`;const o=S.exp===k;h+=`<div class="acc"><div class="acc-h${o?' open':''}" onclick="tog('${k}')"><div style="flex:1"><div style="display:flex;align-items:center;gap:7px"><div style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#3B3B3B">${item.n}</div><span style="font-size:9px;padding:2px 8px;border-radius:7px;font-weight:700;background:${item.for==='Baby'?'#F0F7EF':'#F5F0FF'};color:${item.for==='Baby'?'#4A6844':'#7A5CA8'}">${item.for}</span></div></div><span class="chev${o?' open':''}">▾</span></div><div class="acc-b${o?' open':''}"><p style="margin-bottom:5px"><strong style="color:#4A6844">Why:</strong> ${item.why}</p><p><strong>Brands:</strong> ${item.brand}</p></div></div>`;});h+=`</div>`;});
-  }
-  el.innerHTML=h;
+function calcDose(){
+  const lb=+document.getElementById('d-lb')?.value||0;const oz=+document.getElementById('d-oz')?.value||0;
+  const el=document.getElementById('dose-result');if(!el||(!lb&&!oz)){if(el)el.innerHTML='';return;}
+  const kg=lbKg(lb,oz);S.wtKg=kg;sv();
+  const mn=document.getElementById('d-med')?.value;const med=MEDS[mn];if(!med){el.innerHTML='';return;}
+  const note=med.calc(kg);
+  el.innerHTML=`<div class="dose-result"><div class="dose-amount">${note.split('·')[0].trim()}</div><div style="font-size:10px;color:#818CF8;margin-top:4px;line-height:1.7">${note}${med.interval?'<br>Frequency: <strong style="color:#C4B5FD">'+med.interval+'</strong>':''}<br>${med.note}</div></div>`;
 }
 
-function rPostpartum(){
-  const el=document.getElementById('p-postpartum');if(!el)return;
-  const tab=S.ppTab||'recovery';
-  let h=`<div class="tab-bar"><button class="tbtn${tab==='recovery'?' active':''}" onclick="S.ppTab='recovery';S.exp=null;rPostpartum()">💙 Recovery</button><button class="tbtn${tab==='exercise'?' active':''}" onclick="S.ppTab='exercise';S.exp=null;rPostpartum()">🏃 Exercise</button><button class="tbtn${tab==='mental'?' active':''}" onclick="S.ppTab='mental';S.exp=null;rPostpartum()">🧠 Mental Health</button></div>`;
-  if(tab==='recovery'){
-    h+=`<div class="warn-b">🩸 Heavy bleeding, fever over 100.4°F, severe pain, or redness at incision → call your provider immediately.</div>`;
-    [{i:'🩸',t:'Vaginal Bleeding (Lochia)',d:'Normal for 4–6 weeks. Starts bright red → pink → yellow/white. Soaking more than 1 pad/hour for 2+ hours → call provider. No tampons until 6-week checkup.',k:'pp-bleed'},{i:'🪡',t:'Perineal Care',d:'Use peri bottle with warm water after every bathroom trip. Witch hazel pads reduce swelling. Ice packs first 24 hrs. Sitz bath 2–3× daily.',k:'pp-peri'},{i:'🔪',t:'C-Section Incision Care',d:'Keep clean and dry. Pat — never rub. No lifting more than baby for 6 weeks. Watch for redness, swelling, or discharge.',k:'pp-csec'},{i:'💊',t:'Pain Management',d:'Ibuprofen (600mg every 6–8 hrs with food) is most effective. Acetaminophen for breakthrough. Both safe while breastfeeding. Start stool softeners day 1 home.',k:'pp-pain'},{i:'🍽️',t:'Nutrition & Hydration',d:'If breastfeeding: eat 300–500 extra calories/day. Iron-rich foods help replenish blood loss. Aim for 80–100oz water/day. Keep taking prenatal vitamins.',k:'pp-nutrition'},{i:'😴',t:'Sleep & Rest',d:'Sleep when baby sleeps is real advice. Even 20-min naps matter. Accept every offer of help. Lower your standards for housework. Your healing cannot wait.',k:'pp-sleep'},{i:'🤱',t:'Breastfeeding Recovery',d:'Nipple soreness normal first 2 weeks — lanolin cream after every feed. Engorgement peaks at 3–5 days — cold cabbage leaves between feeds. Mastitis (flu-like + red hard breast) → call provider same day.',k:'pp-bf'},{i:'💇',t:'Hair Loss (Postpartum Shedding)',d:'Completely normal! Estrogen drop causes hair shed at 3–6 months. Usually peaks around
+// ASK
+const CH={ttc:[],preg:[],baby:[]};
+const SQS={ttc:['How do I find my fertile window?','What prenatal vitamins do I need?','How can we improve our chances?'],preg:['Is this symptom normal?','What should I eat this trimester?','How do I know when labor starts?'],baby:['Why does my baby wake every 45 min?','When should I start sleep training?','How do I introduce allergens safely?']};
+function rAsk(){
+  const mode=S.mode;const el=document.getElementById('p-ask');if(!el)return;
+  const ch=CH[mode]||[];
+  el.innerHTML=`<div class="chat-wrap"><div style="padding:12px 0 8px;flex-shrink:0;text-align:center"><div style="font-size:22px;margin-bottom:4px">${mode==='ttc'?'🌸':mode==='preg'?'🤰':'✨'}</div><div style="font-size:18px;font-weight:700;color:#F5EEFF;margin-bottom:2px">Ask Lullaby</div><div style="font-size:11px;color:#8875B0">${mode==='ttc'?'TTC & fertility guide':mode==='preg'?'Pregnancy specialist':'Baby care guide'}</div></div><div class="chat-msgs" id="chat-msgs">${ch.length===0?`<div class="chat-msg bot">Hi! I'm your ${mode==='ttc'?'TTC':mode==='preg'?'pregnancy':'baby'} guide. Ask me anything. 💜</div><div class="sq-list">${(SQS[mode]||[]).map(q=>`<button class="sq-btn" data-q="${q}">${q}</button>`).join('')}</div>`:ch.map(m=>`<div class="chat-msg ${m.role==='user'?'user':'bot'}">${m.content}</div>`).join('')}</div><div class="chat-input-row"><textarea class="chat-input" id="chat-input" placeholder="Ask anything…" rows="1"></textarea><button class="chat-go" id="chat-go">↑</button></div></div>`;
+  el.querySelectorAll('.sq-btn').forEach(btn=>btn.addEventListener('click',function(){document.getElementById('chat-input').value=this.dataset.q;sendChat();}));
+  document.getElementById('chat-go')?.addEventListener('click',sendChat);
+  document.getElementById('chat-input')?.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+  const msgs=document.getElementById('chat-msgs');if(msgs)setTimeout(()=>msgs.scrollTop=msgs.scrollHeight,50);
+}
+async function sendChat(){
+  const mode=S.mode;const input=document.getElementById('chat-input');const btn=document.getElementById('chat-go');
+  const q=(input?.value||'').trim();if(!q)return;
+  CH[mode]=CH[mode]||[];CH[mode].push({role:'user',content:q});
+  input.value='';if(btn)btn.disabled=true;
+  const msgs=document.getElementById('chat-msgs');
+  if(msgs){msgs.innerHTML=CH[mode].map(m=>`<div class="chat-msg ${m.role==='user'?'user':'bot'}">${m.content}</div>`).join('')+`<div class="chat-msg bot typing"><span>●</span><span>●</span><span>●</span></div>`;msgs.scrollTop=msgs.scrollHeight;}
+  let ctx='';
+  if(mode==='ttc')ctx=`User is TTC. Cycle: ${S.cycleLen}d. Periods logged: ${S.periods.length}.`;
+  else if(mode==='preg'){const w=calcW();ctx=`Pregnant. Week: ${w}. Due: ${S.pregDue||'not set'}. Trimester: ${trimOf(w)}.`;}
+  else{const d=getAD(S.babyAge);const tl=S.logs.filter(l=>l.date===tod());ctx=`Baby age: ${ALF[S.babyAge]}. Name: ${S.babyName||'not set'}. Wake window: ${d.ww}. Feeds today: ${tl.filter(l=>l.type==='feed').length}.`;}
+  const sys=`You are Lullaby, a warm evidence-based ${mode==='ttc'?'TTC/fertility':mode==='preg'?'pregnancy':'baby care'} assistant. Context: ${ctx} Keep responses to 2–3 short paragraphs. Use **bold** for key terms. Never diagnose.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:CH[mode].map(m=>({role:m.role==='user'?'user':'assistant',content:m.content}))})});
+    const data=await res.json();const reply=(data.content?.[0]?.text||'Trouble connecting.').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n[-•]/g,'<br>•');
+    CH[mode].push({role:'assistant',content:reply});
+  }catch(e){CH[mode].push({role:'assistant',content:'Sorry, couldn\'t connect. Try again. 💜'});}
+  const msgs2=document.getElementById('chat-msgs');if(msgs2){msgs2.innerHTML=CH[mode].map(m=>`<div class="chat-msg ${m.role==='user'?'user':'bot'}">${m.content}</div>`).join('');msgs2.scrollTop=msgs2.scrollHeight;}
+  if(btn)btn.disabled=false;
+}
+
+// MODAL
+function openM(type){
+  S.mType=type;
+  const tv=new Date().toTimeString().slice(0,5);
+  const ttls={feed:'Log Feed 🍼',sleep:'Log Sleep 😴',diaper:'Log Diaper 👶',pump:'Log Pump 🍶',temp:'Temperature 🌡️',med:'Medication 💊',visit:'Doctor Visit 🩺',solids:'Log Solids 🥣',settings:'Settings ⚙️',period:'Log Period 🔴',bbt:'Log BBT 🌡️',lh:'LH Test ⭐','sym-ttc':'Symptoms 📝',appt:'Appointment 📅'};
+  document.getElementById('modal-title').textContent=ttls[type]||'Log';
+  let f='';
+  if(type==='settings'){f=`<div class="field"><label>Name</label><input type="text" id="m-name" value="${S.mode==='baby'?S.babyName:S.mode==='preg'?S.pregName:S.ttcName}" placeholder="Name"></div>${S.mode==='preg'?`<div class="field"><label>Due Date</label><input type="date" id="m-due" value="${S.pregDue}"></div>`:''}${S.mode==='baby'?`<div class="field"><label>Baby Age</label><select id="m-age">${Object.keys(ALF).map(a=>`<option value="${a}"${+a===S.babyAge?' selected':''}>${ALF[a]}</option>`).join('')}</select></div>`:''}${S.mode==='baby'?`<div class="field"><label>Units</label><div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,.1)"><button id="u-oz" style="padding:7px 13px;border:none;background:${S.unit==='oz'?'rgba(160,102,255,.25)':'transparent'};color:${S.unit==='oz'?'#EDE8FA':'#7A6AAA'};font-size:12px;cursor:pointer">oz</button><button id="u-ml" style="padding:7px 13px;border:none;background:${S.unit==='ml'?'rgba(160,102,255,.25)':'transparent'};color:${S.unit==='ml'?'#EDE8FA':'#7A6AAA'};font-size:12px;cursor:pointer">ml</button></div></div>`:''}`;
+  }else if(type==='feed'){f=`<div class="field"><label>Amount (${S.unit})</label><input type="number" id="m-vol" placeholder="${S.unit==='oz'?'4':'120'}" step="${S.unit==='oz'?'.5':'5'}"></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div><div class="field"><label>Notes</label><textarea id="m-note" placeholder="fussy, spit up..."></textarea></div>`;}
+  else if(type==='pump'){f=`<div class="field"><label>Amount (${S.unit})</label><input type="number" id="m-vol" placeholder="${S.unit==='oz'?'3':'90'}"></div><div class="field"><label>Duration (min)</label><input type="number" id="m-dur" placeholder="15"></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div>`;}
+  else if(type==='sleep'){f=`<div class="field"><label>Duration (minutes)</label><input type="number" id="m-dur" placeholder="60"></div><div class="field"><label>Time put down</label><input type="time" id="m-time" value="${tv}"></div><div class="field"><label>Settling</label><select id="m-sq"><option value="">Select...</option><option value="great">😴 Great</option><option value="ok">😐 OK</option><option value="rough">😩 Rough</option></select></div>`;}
+  else if(type==='diaper'){f=`<div class="field"><label>Type</label><select id="m-diaper"><option>Wet</option><option>Dirty</option><option>Both</option></select></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div>`;}
+  else if(type==='solids'){f=`<div class="field"><label>Food</label><input type="text" id="m-food" placeholder="e.g. Sweet Potato"></div><div class="field"><label>Meal</label><select id="m-meal"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div><div class="field"><label>Reaction</label><select id="m-rx"><option value="">Select...</option><option value="loved">😍 Loved it</option><option value="ok">😐 Ate some</option><option value="refused">🙅 Refused</option></select></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div>`;}
+  else if(type==='temp'){f=`<div class="field"><label>Temperature (°F)</label><input type="number" id="m-tempf" placeholder="98.6" step=".1" min="95" max="106"></div><div class="field"><label>Method</label><select id="m-tmeth"><option>Rectal</option><option>Axillary</option><option>Ear</option><option>Forehead</option></select></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div>`;}
+  else if(type==='med'){f=`<div class="field"><label>Medication</label><select id="m-med"><option>Acetaminophen (Tylenol)</option><option>Ibuprofen (Motrin)</option><option>Vitamin D drops</option><option>Probiotics</option><option>Other</option></select></div><div class="field"><label>Dose</label><input type="text" id="m-dose" placeholder="e.g. 1.25ml"></div><div class="field"><label>Reason</label><input type="text" id="m-reason" placeholder="fever, post-vaccine..."></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div>`;}
+  else if(type==='visit'){f=`<div class="field"><label>Visit Type</label><select id="m-vt"><option>Well visit</option><option>Sick visit</option><option>Follow-up</option></select></div><div class="field"><label>Date</label><input type="date" id="m-vdate"></div><div class="field"><label>Weight</label><div style="display:flex;gap:5px"><input type="number" id="m-vlb" placeholder="lbs" style="flex:1"><input type="number" id="m-voz2" placeholder="oz" style="flex:1" min="0" max="15"></div></div><div class="field"><label>Notes</label><textarea id="m-note"></textarea></div>`;}
+  else if(type==='period'){f=`<div class="field"><label>Start Date</label><input type="date" id="m-pdate"></div><div class="field"><label>Flow Duration (days)</label><input type="number" id="m-pdays" placeholder="${S.periodLen}" min="1" max="10"></div>`;}
+  else if(type==='bbt'){f=`<div class="field"><label>Temperature (°F)</label><input type="number" id="m-bbtf" placeholder="97.5" step=".01" min="96" max="100"></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div><div class="field"><label>Notes</label><textarea id="m-note" placeholder="unusual sleep, sick..."></textarea></div>`;}
+  else if(type==='lh'){f=`<div class="field"><label>Result</label><select id="m-lhres"><option>Negative</option><option>Peak / Positive ⭐</option><option>Low</option></select></div><div class="field"><label>Time</label><input type="time" id="m-time" value="${tv}"></div>`;}
+  else if(type==='sym-ttc'){const SYMS=['Cramps','Spotting','Bloating','Breast tenderness','Mood changes','Fatigue','Headache','Nausea','Increased discharge'];f=`<div class="field"><label>Symptoms (tap to select)</label><div style="display:flex;flex-wrap:wrap">${SYMS.map(s=>`<span class="chip-tag" data-sym="${s}">${s}</span>`).join('')}</div></div><div class="field"><label>Notes</label><textarea id="m-note"></textarea></div>`;}
+  else if(type==='appt'){f=`<div class="field"><label>Type</label><input type="text" id="m-atype" placeholder="e.g. 20-week anatomy scan"></div><div class="field"><label>Date</label><input type="date" id="m-adate"></div><div class="field"><label>Time (optional)</label><input type="time" id="m-atime"></div><div class="field"><label>Notes</label><textarea id="m-note"></textarea></div>`;}
+  document.getElementById('modal-fields').innerHTML=f;
+  document.getElementById('modal-overlay').classList.add('open');
+  // Wire up sym chips
+  document.querySelectorAll('#modal-fields [data-sym]').forEach(chip=>chip.addEventListener('click',function(){this.classList.toggle('on');}));
+  // Unit buttons
+  document.getElementById('u-oz')?.addEventListener('click',()=>{S.unit='oz';openM('settings');});
+  document.getElementById('u-ml')?.addEventListener('click',()=>{S.unit='ml';openM('settings');});
+}
+function closeM(){document.getElementById('modal-overlay').classList.remove('open');S.mType=null;}
+function saveM(){
+  const type=S.mType;if(!type)return;
+  if(type==='settings'){const n=document.getElementById('m-name')?.value.trim();if(n){if(S.mode==='baby')S.babyName=n;else if(S.mode==='preg')S.pregName=n;else S.ttcName=n;}const due=document.getElementById('m-due')?.value;if(due)S.pregDue=due;const age=document.getElementById('m-age')?.value;if(age)S.babyAge=+age;sv();closeM();ra();return;}
+  const tv=document.getElementById('m-time')?.value;const e={id:uid(),type,time:tv||nw(),date:tod()};
+  if(type==='feed'||type==='pump'){const v=+document.getElementById('m-vol')?.value;if(v){e.ml=S.unit==='oz'?ozToMl(v):Math.round(v);e.vd=S.unit==='oz'?v+'oz':v+'ml';}}
+  const dEl=document.getElementById('m-dur');if(dEl?.value)e.dur=+dEl.value;
+  const nEl=document.getElementById('m-note');if(nEl?.value)e.note=nEl.value;
+  if(type==='diaper')e.dtype=document.getElementById('m-diaper')?.value;
+  if(type==='sleep')e.sq=document.getElementById('m-sq')?.value;
+  if(type==='solids'){e.food=document.getElementById('m-food')?.value;e.meal=document.getElementById('m-meal')?.value;e.rx=document.getElementById('m-rx')?.value;S.foods.unshift(e);}
+  else if(type==='temp'){const tf=+document.getElementById('m-tempf')?.value;if(tf)S.health.temps.unshift({id:uid(),f:tf,meth:document.getElementById('m-tmeth')?.value,time:e.time,date:e.date});}
+  else if(type==='med')S.health.meds.unshift({id:uid(),med:document.getElementById('m-med')?.value,dose:document.getElementById('m-dose')?.value,reason:document.getElementById('m-reason')?.value,time:e.time,date:e.date});
+  else if(type==='visit'){const lb=+document.getElementById('m-vlb')?.value||0;const oz=+document.getElementById('m-voz2')?.value||0;const kg=(lb||oz)?lbKg(lb,oz):null;if(kg)S.wtKg=kg;S.health.visits.unshift({id:uid(),vt:document.getElementById('m-vt')?.value,date:document.getElementById('m-vdate')?.value||tod(),weight:fwt(kg),note:e.note});}
+  else if(type==='period'){const pd=document.getElementById('m-pdate')?.value;const dt=pd?new Date(pd):new Date();const label=dt.toLocaleDateString([],{month:'short',day:'numeric'});S.periods.push({id:uid(),iso:pd||new Date().toISOString().slice(0,10),days:+document.getElementById('m-pdays')?.value||S.periodLen,date:label,label:`Period started ${label}`});}
+  else if(type==='bbt'){const t=+document.getElementById('m-bbtf')?.value;if(t)S.bbt.push({id:uid(),temp:t,time:e.time,date:e.date,note:e.note,label:`BBT ${t}°F`});}
+  else if(type==='lh'){const res=document.getElementById('m-lhres')?.value;S.lh.push({id:uid(),result:res,time:e.time,date:e.date,label:`LH: ${res}`});}
+  else if(type==='sym-ttc'){const cd=cycDay();const SYMS=['Cramps','Spotting','Bloating','Breast tenderness','Mood changes','Fatigue','Headache','Nausea','Increased discharge'];const sel=SYMS.filter(s=>document.querySelector(`[data-sym="${s}"]`)?.classList.contains('on'));S.symptoms.push({id:uid(),syms:sel,day:cd,date:e.date,time:e.time,label:sel.join(', ')});}
+  else if(type==='appt'){const adate=document.getElementById('m-adate')?.value;S.appts.push({id:uid(),type:document.getElementById('m-atype')?.value||'Appointment',date:adate||tod(),time:document.getElementById('m-atime')?.value,note:e.note,upcoming:!!adate&&new Date(adate)>=new Date()});}
+  else if(['feed','sleep','diaper','pump'].includes(type))S.logs.unshift(e);
+  sv();closeM();ra();
+}
+
+// INIT
+ld();
+if(S.mode){
+  document.getElementById('screen-landing').style.display='none';
+  document.getElementById('screen-app').style.display='flex';
+  ra();
+}
+
+// Landing buttons
+document.getElementById('btn-ttc').addEventListener('click',()=>setMode('ttc'));
+document.getElementById('btn-preg').addEventListener('click',()=>setMode('preg'));
+document.getElementById('btn-baby').addEventListener('click',()=>setMode('baby'));
+
+// Modal close + save
+document.getElementById('modal-cancel').addEventListener('click',closeM);
+document.getElementById('modal-save').addEventListener('click',saveM);
+document.getElementById('modal-overlay').addEventListener('click',function(e){if(e.target===this)closeM();});
+
+// Header buttons
+document.getElementById('mode-pill').addEventListener('click',switchMode);
+document.getElementById('settings-btn').addEventListener('click',()=>openM('settings'));
+document.getElementById('brand-sub').addEventListener('click',()=>openM('settings'));
+</script>
+</body>
+</html>
