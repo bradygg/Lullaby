@@ -216,7 +216,23 @@ select option{background:#fff;color:#3B3B3B}
 <!-- LANDING -->
 <div id="screen-landing">
   <div class="land-logo-wrap">
-    <img src="logo.png" alt="LittleBug" style="width:160px;height:auto">
+    <img src="logo.png" alt="LittleBug" style="width:160px;height:auto;display:block;margin:0 auto"
+      onerror="this.style.display='none';document.getElementById('fallback-logo').style.display='block'">
+    <svg id="fallback-logo" style="display:none" width="110" height="120" viewBox="0 0 110 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M45 30 Q38 16 31 10" stroke="#5C3D2E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M65 30 Q72 16 79 10" stroke="#5C3D2E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="30" cy="9" r="3.5" fill="#5C3D2E"/>
+      <circle cx="80" cy="9" r="3.5" fill="#5C3D2E"/>
+      <ellipse cx="55" cy="34" rx="13" ry="11" fill="#5C3D2E"/>
+      <path d="M55 48 C55 48 18 42 16 67 C14 89 38 105 55 118 Z" fill="#E8957A"/>
+      <path d="M55 48 C55 48 92 42 94 67 C96 89 72 105 55 118 Z" fill="#E8957A"/>
+      <line x1="55" y1="47" x2="55" y2="116" stroke="#5C3D2E" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="37" cy="68" r="7" fill="#5C3D2E" fill-opacity=".3"/>
+      <circle cx="33" cy="90" r="6" fill="#5C3D2E" fill-opacity=".3"/>
+      <circle cx="73" cy="68" r="7" fill="#5C3D2E" fill-opacity=".3"/>
+      <circle cx="77" cy="90" r="6" fill="#5C3D2E" fill-opacity=".3"/>
+      <path d="M55 70 C51 65 44 68 44 74 C44 83 55 90 55 90 C55 90 66 83 66 74 C66 68 59 65 55 70Z" fill="#5C3D2E" fill-opacity=".35"/>
+    </svg>
   </div>
   <div style="font-family:'Nunito',sans-serif;font-size:38px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px">
     <span style="color:#5C3D2E">Little</span><span style="color:#A8C5A1">Bug</span>
